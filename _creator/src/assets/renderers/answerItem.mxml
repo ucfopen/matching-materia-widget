@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	height="100%"
+	verticalScrollPolicy="off"
+	implements="mx.controls.listClasses.IListItemRenderer"
+	click="editMode(event)"
+	>
+	<mx:states>
+		<mx:State name="editMode">
+			<mx:RemoveChild target="{label1}"/>
+			<mx:RemoveChild target="{label2}"/>
+			<mx:AddChild position="lastChild">
+				<mx:TextArea verticalCenter="-8" left="10" text="{data.a}"
+					id="txtA" focusOut="showMode()" right="10"
+					change="updateText(event)" maxChars="150"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Label id="errorLabel" text="" left="5" bottom="0"
+					fontSize="10" color="#D50334"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import creators.matching.assets.QuestionEvent;
+			//our our set data function so we can reset the colors.
+			override public function set data(value:Object):void {
+				if(value !=null)
+				{
+					super.data = value;
+					//we have to reset the colors now.
+					label1.setStyle("color", "#000000");
+					label2.text = "[Click to edit]";
+					label2.setStyle("color", "#000000");
+					//but show the error if there is one..
+					if( !value.avalid )
+					{
+						label1.text = "Problem with this answer.";
+						label1.setStyle("color", "#D50334");
+						label2.text = value.aerror;
+						label2.setStyle("color", "#D50334");
+					}
+				}
+			}
+			private function editMode(e:*):void
+			{
+				if(currentState != "editMode")
+				{
+					currentState = "editMode";
+					txtA.setFocus();
+					txtA.setSelection(0, txtA.text.length);
+					txtA.addEventListener(KeyboardEvent.KEY_UP, keyPress);
+				}
+			}
+			private function keyPress(e:KeyboardEvent):void {
+				if(e.keyCode == 13)
+				{
+					showMode();
+					parentDocument.btnNewQuestion.setFocus();
+				}
+			}
+			private function showMode():void
+			{
+				currentState = "";
+			}
+			private function checkErrors():Boolean
+			{
+				if( txtA.text.length < 1 )
+				{
+					errorLabel.text = "Text is too short.";
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "aerror", errorLabel.text));
+					return true;
+				}
+				else if ( txtA.text.length > 150)
+				{
+					errorLabel.text = "Text is too long. Max of 30 characters.";
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "aerror", errorLabel.text));
+					return true;
+				}else {
+					errorLabel.text = "";
+				}
+				this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "aerror", errorLabel.text));
+				return false;
+			}
+			private function updateText(e:*):void
+			{
+				if( !checkErrors() )
+				{
+					//reset colors and default text
+					label1.setStyle("color", "#000000");
+					label2.text = "[Click to edit]";
+					label2.setStyle("color", "#000000");
+					//save the text
+					data.a = txtA.text;
+					label1.text = data.a;
+					//let the parent know text got changed...
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "avalid", true));
+				}
+				else
+				{
+					label1.text = "Problem with this answer.";
+					label1.setStyle("color", "#D50334");
+					label2.text = errorLabel.text;
+					label2.setStyle("color", "#D50334");
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "avalid", false));
+				}
+				this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "a", txtA.text));
+			}
+		]]>
+	</mx:Script>
+	<mx:TextArea text="{data.a}" verticalCenter="-8" left="5" id="label1" height="42" editable="false" right="5"
+		backgroundAlpha="0.0" borderStyle="none"/>
+	<mx:Label text="[Click to edit]" bottom="2" left="5" fontSize="10" id="label2" />
+</mx:Canvas>
