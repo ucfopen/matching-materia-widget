@@ -1,0 +1,80 @@
+.FCButton, .FCButtonSmall, .FCMenuBar {
+	fontSize:18;
+	color:#FFFFFF;
+	fontFamily: "Delicious Heavy";
+	fontWeight: bold;
+	border-thickness: 1;
+	border-color:#000000;
+	fill-colors: #5699FE, #0033FF;
+	text-selected-color: #FFFFFF;
+	paddingButtom:0;
+	fillAlphas: 0.62, 0.62, 0.62, 0.62;
+}
+.sectionTitle,.sectionTitleSmall, .cardTitle {
+	fontSize: 24;
+	fontFamily: "Delicious Heavy";
+	color:#ffffff;
+}
+.sectionTitleSmall {
+	fontSize:11;
+	fontFamily: "Verdana";
+	fontWeight:bold;
+}
+.cardTitle {
+	fontSize: 18;
+}
+.cardDataGridNum {
+	fontSize:35;
+	color:#333333;
+	fontFamily: "Delicious Heavy";
+}
+.FCMenuBar {
+	fontWeight: normal;
+}
+.FCDataGrid {
+	headerStyleName: "FCDataGridHeaderStyle";
+}
+.FCDataGridHeaderStyle {
+	fontSize:16;
+	fontWeight: normal;
+	color:#333333;
+	/*fontFamily: "Delicious Heavy";*/ /*Note: Setting the font here does not seem to work.*/
+}
+.FCButtonSmall {
+	fontSize:11;
+	fontFamily: "Verdana";
+}
+.FCTitle, .FCTitleEdit, .DeckCardTitle {
+	fontSize:35;
+	fontFamily: "Complete in Him";
+	fontWeight: bold;
+	color: #ffffff;
+}
+.FCText
+{
+	fontFamily: "Complete in Him";
+}
+.DeckCardTitle {
+	fontSize: 26;
+	fontWeight: normal;
+	color: #000000;
+}
+.FCTitleEdit {
+	color: #FFFFFF;
+	backgroundAlpha:0;
+	borderAlpha:0;
+}
+.WhatPanel {
+   titleStyleName: "panelTitle";
+   color: #FFFFFF;
+   fontSize: 14;
+   borderThicknessTop:1;
+   borderThicknessBottom:1;
+   borderThicknessLeft:1;
+   borderThicknessRight:1;
+   borderColor:#377AA6;
+   backgroundColor:#C2C2C2;
+   borderAlpha:0.2;
+   backgroundAlpha:0.1;
+   roundedBottomCorners:true;
+}

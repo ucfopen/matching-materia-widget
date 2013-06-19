@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	xmlns:components="components.*" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:Script>
+		<![CDATA[
+			import creators.matching.assets.QuestionEvent;
+			//[Bindable]
+			//private var trashIcon:TrashIcon = new TrashIcon();
+			private function deleteQuestion(e:MouseEvent):void
+			{
+				//parentDocument.deleteQuestionSet();
+				this.dispatchEvent(Event(new Event(QuestionEvent.QUESTION_DELETE, true)));
+			}
+		]]>
+	</mx:Script>
+	<mx:Label text="{data.id}" horizontalCenter="0" verticalCenter="-16"
+		styleName="cardDataGridNum" textAlign="center"/>
+	<mx:Button label="Delete" horizontalCenter="0" verticalCenter="19" click="deleteQuestion(event)"/>
+	<!--
+	<mx:SWFLoader width="40" height="40"
+		source="{trashIcon}" horizontalCenter="20"
+		verticalCenter="15" click="deleteQuestion(event)"/>
+	-->
+</mx:Canvas>

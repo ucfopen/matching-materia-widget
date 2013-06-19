@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<materia:CreatorBase xmlns:mx="http://www.adobe.com/2006/mxml"
+					 xmlns:materia="materia.*"
+					 xmlns:components="materia.components.*"
+                     xmlns:questionanswerdatagrid="materia.components.questionAnswerDataGrid.*"
+                     width="100%" height="100%" backgroundColor="#333333" cornerRadius="0" borderStyle="none"
+                     borderColor="#333333" backgroundSize="100%"
+                     addedToStage="{onAddedToStage()}"
+		>
+	<mx:Style source="/assets/FCstyle.css"/>
+	<mx:Style>
+		.questionInputListStyle
+		{
+			backgroundImage: ClassReference("materia.components.GradientBackground");
+			backgroundSize: "100%";
+			gradientType: radial;
+			fillColors: #FFFFFF, #377aa6;
+			fillAlphas: .34, .09;
+			angle: 210;
+			focalPointRatio: 0.45;
+		}
+		.whiteText
+		{
+			color:#ffffff;
+		}
+	</mx:Style>
+<mx:Script>
+<![CDATA[
+	import materia.questionStorage.Question;
+	import materia.questionStorage.QuestionGroup;
+	import materia.questionStorage.QuestionSet;
+	import mx.managers.PopUpManager;
+	import mx.controls.Alert;
+	protected static const TRACE_STRING:String = "MatchingCreator.mxml";
+	protected static const PLAIN_MATCHING_LABEL:String = "Style: Plain Matching";
+	protected static const SPACE_MATCHING_LABEL:String = "Style: Last Chance Cadet";
+   	//--------------------------------------------------------------------------
+    //
+    //  Variables
+    //
+    //--------------------------------------------------------------------------
+	private var addedToStage:Boolean = false;
+    //----------------------------------
+    //  Default vars
+    //----------------------------------
+    /**
+     *  Default game title
+     */
+    // [Bindable]
+	// private var gameTitle:String = "New Matching Widget";
+    /**
+     *  Default info to show in the datagrid on load
+     */
+    [Bindable]
+	//  the columns used for the question input list
+	// has a number column, a question input column, and an answer input column
+	protected var questionInputColumns:Array = [];
+	//----------------------------------
+    //  Other vars
+    //----------------------------------
+    /**
+     *  Need to keep track of row that's selected.
+     */
+	private var editingRow:int = -1;
+	protected static const SPACE_MATCHING_GRID:int = 13;
+	protected static const PLAIN_MATCHING_GRID:int = 14;
+    //--------------------------------------------------------------------------
+    //
+    //  Overridden methods
+    //
+    //--------------------------------------------------------------------------
+    /**
+     *	Constructor.
+     */
+	public function onAddedToStage():void
+	{
+		// ensure this is only called once
+		if(addedToStage) return;
+		addedToStage = true;
+		_inst_id = PLAIN_MATCHING_GRID
+		//hot keys?
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, hdlKeyDown, false, 0, true);
+		//Manage datagrid
+		questionInputList.answerHeaderLabel = "Right Side";
+		questionInputList.questionHeaderLabel = "Left Side";
+		questionInputList.equalizeColumnWidths();
+	}
+
+	/**
+	 *	Called once for each question that was selected to be imported.
+	 */
+	public override function addImportedQuestion(question:Question):Question
+	{
+		var q:Question = super.addImportedQuestion(question);
+		this.addNewQuestion(q.questions[0].text, q.answers[0].text, q.id);
+		return q;
+	}
+
+	public override function onSaveClicked(mode:String = 'save'):void
+	{
+		if(!checkForErrors())
+		{
+			var theQSet:QuestionSet = new QuestionSet(instanceTitle);
+			theQSet.addChild(questionInputList.generateQGroup());
+			theQSet.addOption("caseSensitive", false);
+			super.validateQIDs(theQSet);
+			ExternalInterface.call("__materia_flash_save", instanceTitle, theQSet.convertToObject(), questionSetVersion);
+		}
+	}
+
+	/**
+	 *	When loading a game to edit
+	 */
+	protected override function initExistingWidget(title:String, widget:Object, qset:Object, version:String, baseUrl:String):void
+	{
+		// currently, the questions list starts as empty,
+		//   so we dont have to worry about removing its items
+		super.initExistingWidget(title, widget, qset, version, baseUrl);
+		var q:Array = questionSet.getQuestions();
+		for(var i:int = 0; i<q.length; i++)
+		{
+			this.addNewQuestion(q[i].questions[0].text, q[i].answers[0].text, q[i].id);
+		}
+		// NOTE: removing case sensitive option
+		//chkCaseSensitive.selected = (qsetObject.options["caseSensitive"] == '1');
+		// hide the style popup if we are editing
+	}
+	// when initQSet will not be called
+	public override function initNewWidget(widget:Object, baseUrl:String):void
+	{
+		super.initNewWidget(widget, baseUrl);
+		
+		instanceTitle = "New Matching Widget";
+		
+		questionInputList.addQuestion(null, false);
+	}
+	
+    //--------------------------------------------------------------------------
+    //
+    //  Methods
+    //
+    //--------------------------------------------------------------------------
+	/**
+	 *	Called whenever a key is pressed
+	 */
+	private function hdlKeyDown(e:KeyboardEvent):void
+	{
+		//ctrl+n = new question?
+		if(e.ctrlKey && e.keyCode == 78) this.newQuestion();
+	}
+	/**
+	 *	Check to make sure we have valid info everywhere
+	 *
+	 *	<p>Will display an Alert with the errors found</p>
+	 *
+	 *	@return A value of <code>true</code> means there was an error;
+	 *	A value of <code>false</code> means there is no error.
+	 */
+	private function checkForErrors():Boolean
+	{
+		// problems with the game title will be caught by the popup at the end of the game
+		if(questionInputList.dataProvider.length == 1)
+		{
+			Alert.show("Game cannot be saved with no questions.", "Game Errors");
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * Select the title when clicked
+	 */
+	private function titleClick(e:Event):void {
+		txtTitle.setSelection(0, txtTitle.text.length);
+	}
+	/**
+	 *	Actually adds the info into the question array
+	 */
+	private function addNewQuestion(question:String, answer:String, id:Number = 0):void
+	{
+		//var questionNum:int = questionListArray.length+1;
+		//questionListArray.addItem({id:questionNum, q: question, a: answer, qvalid: true, avalid: true, id:id});
+		var q:Question = new Question('QA',null, id);
+		q.addAnswer(answer);
+		q.addQuestion(question);
+		questionInputList.addQuestion(q);
+	}
+	/**
+	 *	Called when the New Question button is clicked
+	 */
+	private function newQuestion():void {
+		editingRow = 0;
+		this.addNewQuestion('', '');
+	}
+]]>
+</mx:Script>
+	<mx:VBox top="5" bottom="5" left="5" right="5">
+		<mx:HBox width="100%" height="50" verticalAlign="middle">
+			<mx:Label text="Widget Title:" styleName="sectionLabel"/>
+			<mx:TextInput height="40" width="100%" text="{instanceTitle}" change="{instanceTitle=txtTitle.text;}" focusIn="titleClick(event)" id="txtTitle" maxChars="100" tabIndex="1" styleName="titleField"/>
+		</mx:HBox>
+		<mx:HRule strokeColor="#C4CCCC" width="100%"/>
+		<mx:Canvas height="100%" width="100%" styleName="creatorSectionMajor">
+			<mx:Canvas top="10" bottom="10" left="10" right="10" styleName="creatorSectionMinor">
+				<questionanswerdatagrid:QuestionAnswerDataGrid
+					id="questionInputList"
+					left="10"
+					right="10"
+					top="51"
+					bottom="56"
+					tabIndex="3" />
+				<mx:Label y="10.3" styleName="sectionLabel"
+					text="Matching Terms:"
+					left="10" fontSize="18" fontWeight="normal"/>
+				<mx:Button label="New Question"
+					fontSize="14" fontWeight="bold" styleName="gameButton"
+					bottom="10"
+					toolTip="Add new question."
+					click="newQuestion()" id="btnNewQuestion" fillAlphas="[1.0, 1.0, 1.0, 1.0]" right="10" height="38" width="151" tabIndex="5"/>
+				<mx:Label styleName="whiteText"
+					text="Questions: {questionInputList.dataProvider.length - 1}" fontSize="16" left="10" bottom="10" height="24"/>
+			</mx:Canvas>
+		</mx:Canvas>
+	</mx:VBox>
+</materia:CreatorBase>

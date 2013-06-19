@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	verticalScrollPolicy="off" click="{editMode(event)}" creationComplete="{onCreationComplete();}">
+	<mx:states>
+		<mx:State name="editMode">
+			<mx:RemoveChild target="{label1}"/>
+			<mx:RemoveChild target="{label2}"/>
+			<mx:AddChild position="lastChild">
+				<mx:TextArea verticalCenter="-8" left="10" text="{data.q}" id="txtQ" focusOut="showMode()" right="10" change="updateText(event)" maxChars="150"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Label id="errorLabel" text="" left="10" bottom="0" fontSize="10" color="#D50334"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:Script>
+		<![CDATA[
+			import creators.matching.assets.QuestionEvent;
+			public static const QUESTION_READY:String = "QUESTION_READY";
+			protected var _isCreationComplete:Boolean = false;
+			protected var _startInEditMode:Boolean = false;
+			protected function onCreationComplete():void
+			{
+				_isCreationComplete = true;
+				if( _startInEditMode == true)
+				{
+					editMode();
+				}
+			}
+			/**
+			 * Our set data function so we can reset the colors.
+			 */
+			override public function set data(value:Object):void {
+				if(value !=null)
+				{
+					var changed:Boolean = true;
+					if( super.data == value) changed =false;
+					super.data = value;
+					//we have to reset the colors now.
+					label1.setStyle("color", "#000000");
+					label2.text = "[Click to edit]";
+					label2.setStyle("color", "#000000");
+					//but show the error if there is one..
+					if( !value.qvalid )
+					{
+						label1.text = "Problem with this question.";
+						label1.setStyle("color", "#D50334");
+						label2.text = value.qerror;
+						label2.setStyle("color", "#D50334");
+					}
+					if( changed ) dispatchEvent(new Event(QUESTION_READY, true));
+				}
+			}
+			public function editMode(e:* = null):void
+			{
+				if(! _isCreationComplete)
+				{
+					_startInEditMode = true;
+				}
+				else if(currentState != "editMode")
+				{
+					currentState = "editMode";
+					txtQ.setFocus();
+					txtQ.setSelection(0, txtQ.text.length);
+					txtQ.addEventListener(KeyboardEvent.KEY_UP, keyPress, false, 0, true);
+				}
+			}
+			private function keyPress(e:KeyboardEvent):void {
+				if(e.keyCode == 13)
+				{
+					showMode();
+					parentDocument.btnNewQuestion.setFocus();
+				}
+			}
+			private function showMode():void
+			{
+				currentState = "";
+			}
+			private function checkErrors():Boolean
+			{
+				if( txtQ.text.length < 1 )
+				{
+					errorLabel.text = "Text is too short.";
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "qerror", errorLabel.text));
+					return true;
+				}
+				else if ( txtQ.text.length > 150)
+				{
+					errorLabel.text = "Text is too long. Max of 30 characters.";
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "qerror", errorLabel.text));
+					return true;
+				}else {
+					errorLabel.text = "";
+				}
+				this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "qerror", errorLabel.text));
+				return false;
+			}
+			private function updateText(e:*):void
+			{
+				if( !checkErrors() )
+				{
+					//reset colors and default text
+					label1.setStyle("color", "#000000");
+					label2.text = "[Click to edit]";
+					label2.setStyle("color", "#000000");
+					//save the text
+					data.q = txtQ.text;
+					label1.text = data.q;
+					//let the parent know text is vaid...
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "qvalid", true));
+				}
+				else
+				{
+					label1.text = "Problem with this question.";
+					label1.setStyle("color", "#D50334");
+					label2.text = errorLabel.text;
+					label2.setStyle("color", "#D50334");
+					this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "qvalid", false));
+				}
+				this.dispatchEvent(new QuestionEvent(QuestionEvent.QUESTION_EVENT, "q", txtQ.text));
+			}
+		]]>
+	</mx:Script>
+	<mx:TextArea text="{data.q}" verticalCenter="-8" left="5" color="#000000" id="label1" height="42"
+		editable="false" right="5" backgroundAlpha="0.0" borderStyle="none"/>
+	<mx:Label text="[Click to edit]" bottom="2" left="5" fontSize="10" color="#000000" id="label2"/>
+</mx:Canvas>

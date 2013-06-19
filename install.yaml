@@ -1,0 +1,36 @@
+---
+general:
+  name: Matching
+  group: Materia
+  height: 593
+  width: 800
+  in_catalog: Yes
+  is_editable: Yes
+  is_playable: Yes
+  is_qset_encrypted: Yes
+  is_answer_encrypted: Yes
+  is_storage_enabled: No
+  api_version: 2
+files:
+  creator: swf/matching-creator.swf
+  player: swf/matching-engine.swf
+  flash_version: 10
+score:
+  is_scorable: Yes
+  score_module: MatchingGS
+  score_type: SERVER
+meta_data:
+  features:
+    - Customizable
+    - Scorable
+  supported_data:
+    - Question/Answer
+  excerpt: >
+    Students must match one set of words or
+    phrases to a corresponding word, phrase,
+    or definition.
+  about: >
+    Matching provides a left and a right list.
+    Students are asked to match the items on
+    the left with the corresponding item on
+    the right.
