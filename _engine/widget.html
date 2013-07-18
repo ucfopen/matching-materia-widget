@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>HTML Widget Engine</title>
+		<meta charset="utf-8" />
+		<style type="text/css"></style>
+		<link rel="stylesheet/less" type="text/css" href="css/widget.less">
+		<script type="text/javascript" src="/js/materia.require.js"></script>
+		<script type="text/javascript">
+			require(['enginecore', 'score', 'less', 'cs!js/draw', 'cs!js/widget', 'js/d3.v3.min'], function(util) {
+				Materia.Engine.start(Matching.Engine);
+			});
+		</script>
+	</head>
+	<body onmousedown="event.preventDefault?event.preventDefault():event.returnValue=false">
+
+<header class="header">
+	<center><h1></h1></center>
+</header>
+
+<section class="main"></section>
+
+<section id="page-selector">
+	<span class="button unselectable" id="prev-button">Previous</span>
+	<span id="page-num"></span>
+	<span class="button unselectable" id="next-button">Next</span>
+</section>
+
+<script type="text/template" id="t-board"><section class="gameboard">
+		<ul class="column column1"></ul>
+		<ul class="column column2"></ul>
+		<section class="matching-container"><svg></svg></section>
+</section></script>
+
+<script type="text/template" id="column-element"><li class="word">
+	<span class="word-text"></span>
+	<div class='popup'></div>
+	<div class="popup-text"></div>
+	<span></span>
+</li></script>
+
+<section id="submit">
+	<div id="questions-answered"><svg></svg></div>
+	<div class="unselectable" id="submit-button">Done</div>
+</section>
+
+	</body>
+</html>

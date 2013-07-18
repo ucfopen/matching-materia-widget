@@ -17,11 +17,12 @@
  * @package	    Main
  * @subpackage  scoring
  * @category    Modules
-  * @author      ADD NAME HERE
+ * @author      ADD NAME HERE
  */
 namespace Materia;
-class Score_Modules_MatchingGS extends Score_Module
+class Score_Modules_Matching extends Score_Module
 {
+	
 	/** @var unknown NEEDS DOCUMENTATION */
 	public $is_case_sensitive;
 	public function __construct($play_id, $inst)
