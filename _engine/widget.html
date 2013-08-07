@@ -14,15 +14,17 @@
 	</head>
 	<body onmousedown="event.preventDefault?event.preventDefault():event.returnValue=false">
 
-<header class="header">
-	<center><h1></h1></center>
+<header id="header">
+	<center><h1 id="title"></h1></center>
 </header>
 
-<section class="main"></section>
+<section id="main"></section>
 
 <section id="page-selector">
 	<span class="button unselectable" id="prev-button">Previous</span>
-	<span id="page-num"></span>
+	<span id="page-num">
+		Page <span id="page">1</span>
+	</span>
 	<span class="button unselectable" id="next-button">Next</span>
 </section>
 

@@ -6,6 +6,6 @@ app_class: src/Creator.mxml
 target: swf/matching-creator.swf
 sources:
   - src/
-  - ../_engine/src/
+  - engine_src/src/
 libs:
   - libs/
