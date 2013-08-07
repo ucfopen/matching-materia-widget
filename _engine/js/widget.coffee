@@ -1,14 +1,13 @@
 Namespace('Matching').Engine = do ->
 	# Elements.
-	_$main               = null
+	_$mainScreen         = null
 	_$board              = null
 	_$columnElement      = null
+	_$popupText          = null
+	_pageNum             = null
+	_pageNumStyle        = null
 	_$prevButton         = null
 	_$nextButton         = null
-	_$submitButton       = null
-	_$popup              = null
-	_$popupText          = null
-	_$pageNum            = null
 
 	_qset                = null
 	_questions           = []
@@ -23,6 +22,15 @@ Namespace('Matching').Engine = do ->
 	_totalQuestions      = null
 	_remainingQsetItems  = null
 
+	# Event handling.
+	_ms     = window.navigator.msPointerEnabled
+	_mobile = navigator.userAgent.match /(iPhone|iPod|iPad|Android|BlackBerry)/
+
+	downEventType = switch
+		when _ms     then "MSPointerDown"
+		when _mobile then "touchstart"
+		else              "mousedown"
+
 	# Called by Materia.Engine when widget Engine should start the user experience.
 	start = (instance, qset, version = '1') ->
 		_qset = qset
@@ -31,21 +39,19 @@ Namespace('Matching').Engine = do ->
 		_shuffleWords()
 		_drawBoard(instance.name)
 		_cacheLateVariables()
-		_setEventListeners()
-		Matching.Draw.setDrawEventListeners()
+		Matching.Draw.setEventListeners()
 
 	_cacheVariables = ->
-		_$main           = $('.main')
+		_$mainScreen     = $('#main')
 		_$board          = $($('#t-board').html())
 		_$columnElement  = $($('#column-element').html())
 		_$prevButton     = $('#prev-button')
 		_$nextButton     = $('#next-button')
-		_$submitButton   = $('#submit-button')
 
 	_cacheLateVariables = ->
-		_$popup          = $('.popup')
 		_$popupText      = $('.popup-text')
-		_$pageNum        = $('#page-num')
+		_pageNum         = document.getElementById('page')
+		_pageNumStyle    = document.getElementById('page-num').style
 
 	# Store questions and answers in arrays.
 	_storeWords = ->
@@ -95,17 +101,12 @@ Namespace('Matching').Engine = do ->
 	_drawBoard = (title) ->
 		_remainingQsetItems = _totalQuestions
 
-		# Populate the game title and number of boards.
-		$('.header h1').html title
-		$('#page-num').html 'Page <span id="page">1</span>'
-
-		# Main's id stores the total questions to be accessed by all namespaces.
-		$('.main').attr('id', _totalQuestions) 
+		# Populate the game title.
+		document.getElementById('title').innerHTML = title
 
 		# Set event listeners for toggling pages.
 		if _numGameboards > 1 
-			_$nextButton.removeClass('unselectable').css('right', 0)
-			_setGameboardToggling()
+			_$nextButton.removeClass('unselectable').addClass('shown')
 
 		wordId = 0
 		questionsPerBoard = 5
@@ -117,22 +118,18 @@ Namespace('Matching').Engine = do ->
 				questionsPerBoard = if (_totalQuestions-(i*5))<3 then (_totalQuestions-(i*5))+2 else (_totalQuestions-(i*5))
 
 			# Clone a new gameboard.
-			_$main.append(_$board.clone().attr('id', 'board'+i))
-			if i > 0 then $('#board'+i).css 
-				'-webkit-transform' : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
-				'-moz-transform'    : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
-				'-ms-transform'     : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
-				'transform'         : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
+			_$mainScreen.append(_$board.clone().attr('id', 'board'+i))
+			if i > 0 then $('#board'+i).addClass('hidden')
 
-			$('#board'+i+' .matching-container').attr('id', 'container'+i)
-			Matching.Draw.paper.push d3.select('body').select('#container'+i).select('svg')
+			# Find the current board's drawing canvas and store it.
+			document.getElementById('board'+i).children[2].id = 'container'+i
+			Matching.Draw.paper.push(d3.select('body').select('#container'+i).select('svg'))
 
 			for j in [0..questionsPerBoard-1]
 				# Populate the left column.
 				$('#board'+i+' .column1').append(_$columnElement.clone().attr('id', 'w'+wordId))
 				$('#board'+i+' .column1 #w'+wordId+' .word-text').html(_questions[i][_shuffledQuestions[i][j]]).addClass('left')
-				$('#board'+i+' .column1 #w'+wordId+' .popup').attr('id', 'popup'+wordId)
-				$('#board'+i+' .column1 #w'+wordId+' .popup-text').html(_questions[i][_shuffledQuestions[i][j]])
+				$('#board'+i+' .column1 #w'+wordId+' .popup-text').attr('id', 'popup'+wordId).html(_questions[i][_shuffledQuestions[i][j]])
 				Matching.Draw.setWordObject(Matching.Draw.paper[i], wordId, 1, i, j)
 
 				wordId++
@@ -140,8 +137,7 @@ Namespace('Matching').Engine = do ->
 				# Populate the right column.
 				$('#board'+i+' .column2').append(_$columnElement.clone().attr('id', 'w'+wordId).addClass('right'))
 				$('#board'+i+' .column2 #w'+wordId+' .word-text').html(_answers[i][_shuffledAnswers[i][j]]).addClass('right')
-				$('#board'+i+' .column2 #w'+wordId+'.popup').attr('id', 'popup'+wordId)
-				$('#board'+i+' .column2 #w'+wordId+' .popup-text').html(_answers[i][_shuffledAnswers[i][j]])
+				$('#board'+i+' .column2 #w'+wordId+' .popup-text').attr('id', 'popup'+wordId).html(_answers[i][_shuffledAnswers[i][j]])
 				Matching.Draw.setWordObject(Matching.Draw.paper[i], wordId, 2, i, j)
 
 				wordId++
@@ -150,114 +146,86 @@ Namespace('Matching').Engine = do ->
 		Matching.Draw.paper.push d3.select('body').select('#questions-answered').select('svg')
 		Matching.Draw.drawProgressBar()
 
-	_setGameboardToggling = ->
-		# The user goes to the previous gameboard.
-		_$prevButton.on 'click', ->
-			if not _animating
-				_animating = true;
-				setTimeout -> 
-					_animating = false
-				, 600
+	handlePrevButton = ->
+		if not _animating
+			_animating = true;
+			setTimeout -> 
+				_animating = false
+			, 600
 
-				# Dont allow the user to go to a nonexistant gameboard!
-				if _currentGameboard > 0
-					$('#board'+_currentGameboard).css 
-						'-webkit-transform' : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
-						'-moz-transform'    : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
-						'-ms-transform'     : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
-						'transform'         : 'rotateX(90deg) translateY(-550px) translateZ(-550px)'
+			# Dont allow the user to go to a nonexistant gameboard!
+			if _currentGameboard > 0
+				$('#board'+_currentGameboard).addClass('hidden')
 
-					_currentGameboard--
-					if _currentGameboard is 0
-						_$prevButton.addClass('unselectable').css('left', '40%')
-					if _currentGameboard is _numGameboards - 2
-						_$nextButton.removeClass('unselectable').css('right', 0)
+				_currentGameboard--
+				if _currentGameboard is 0
+					_$prevButton.addClass('unselectable').removeClass('shown')
+				if _currentGameboard is _numGameboards - 2
+					_$nextButton.removeClass('unselectable').addClass('shown')
 
-					setTimeout ->
-						$('#board'+_currentGameboard).css 
-							'-webkit-transform' : 'rotateX(0deg)'
-							'-moz-transform'    : 'rotateX(0deg)'
-							'-ms-transform'     : 'rotateX(0deg)'
-							'transform'         : 'rotateX(0deg)'
-					, 300
+				setTimeout ->
+					$('#board'+_currentGameboard).removeClass('hidden')
+				, 300
 
-					_$pageNum.css
-						'-webkit-transform' : 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
-						'-moz-transform'    : 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
-						'-ms-transform'     : 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
-						'transform'         : 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
+				_pageNumStyle.webkitTransform = 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
+				_pageNumStyle.mozTransform    = 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
+				_pageNumStyle.msTransform     = 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
+				_pageNumStyle.transform       = 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
 
-					setTimeout ->
-						$('#page').html(_currentGameboard+1)
-					, 300
+				setTimeout ->
+					_pageNum.innerHTML = _currentGameboard+1
+				, 300
 
-		# The user goes to the next gameboard.
-		_$nextButton.on 'click', ->
-			if not _animating
-				_animating = true;
-				setTimeout -> 
-					_animating = false
-				, 600
-				
-				if _currentGameboard < _numGameboards - 1
-					$('#board'+_currentGameboard).css 
-						'-webkit-transform' : 'rotateX(-90deg) translateY(-550px) translateZ(550px)'
-						'-moz-transform'    : 'rotateX(-90deg) translateY(-550px) translateZ(550px)'
-						'-ms-transform'     : 'rotateX(-90deg) translateY(-550px) translateZ(550px)'
-						'transform'         : 'rotateX(-90deg) translateY(-550px) translateZ(550px)'
+	handleNextButton = ->
+		if not _animating
+			_animating = true;
+			setTimeout -> 
+				_animating = false
+			, 600
+			
+			if _currentGameboard < _numGameboards - 1
+				$('#board'+_currentGameboard).addClass('hidden')
 
-					_currentGameboard++
-					if _currentGameboard is 1
-						_$prevButton.removeClass('unselectable').css('left', 0)
-					if _currentGameboard is _numGameboards - 1
-						_$nextButton.addClass('unselectable').css('right', '40%')
+				_currentGameboard++
+				if _currentGameboard is 1
+					_$prevButton.removeClass('unselectable').addClass('shown')
+				if _currentGameboard is _numGameboards - 1
+					_$nextButton.addClass('unselectable').removeClass('shown')
 
-					setTimeout ->
-						$('#board'+_currentGameboard).css 
-							'-webkit-transform' : 'rotateX(0deg)'
-							'-moz-transform'    : 'rotateX(0deg)'
-							'-ms-transform'     : 'rotateX(0deg)'
-							'transform'         : 'rotateX(0deg)'
-					, 300
+				setTimeout ->
+					$('#board'+_currentGameboard).removeClass('hidden')
+				, 300
 
-					_$pageNum.css
-						'-webkit-transform' : 'rotate('+(360*_currentGameboard)+'deg)'
-						'-moz-transform'    : 'rotate('+(360*_currentGameboard)+'deg)'
-						'-ms-transform'     : 'rotate('+(360*_currentGameboard)+'deg)'
-						'transform'         : 'rotate('+(360*_currentGameboard)+'deg)'
+				_pageNumStyle.webkitTransform = 'rotate('+(360*_currentGameboard)+'deg)'
+				_pageNumStyle.mozTransform    = 'rotate('+(360*_currentGameboard)+'deg)'
+				_pageNumStyle.msTransform     = 'rotate('+(360*_currentGameboard)+'deg)'
+				_pageNumStyle.transform       = 'rotate('+(360*_currentGameboard)+'deg)'
 
-					setTimeout ->
-						$('#page').html(_currentGameboard+1)
-					, 300
+				setTimeout ->
+					_pageNum.innerHTML = _currentGameboard+1
+				, 300
 
-	_setEventListeners = ->
-		# Disable right click and page scrolling on tablets.
-		$(document)[0]
-			.oncontextmenu = -> 
-				false
-		$(document)
-			.mousedown (e) -> 
-				if e.button is 2 then false else true
-			.bind 'touchmove', (e) ->
-				e.preventDefault()
+	handleSubmitButton = ->
+		_submitAnswers()
+		Materia.Engine.end()
 
-
-		_$submitButton.on 'click', ->
-			_submitAnswers()
-			_end()
+	getTotalQuestions = ->
+		return _totalQuestions
 
 	# Submit matched words for scoring.
 	_submitAnswers = ->
 		# We need to look through all matchable questions.
-		for i in [0..Matching.Draw.words.length-1] by 10
+		for i in [0..Matching.Draw.getWords().length-1]
 			do ->
 				for j in [0.._qset.items[0].items.length-1]
 					if _qset.items[0].items[j].questions[0].text == Matching.Draw.words[i].word
 						Materia.Score.submitQuestionForScoring(_qset.items[0].items[j].id, Matching.Draw.words[Matching.Draw.words[i].matched].word)
 						break
-
-	_end = ->
-		Materia.Engine.end()
+		
 
 	# Public Methods:
-	start: start
+	start              : start
+	handlePrevButton   : handlePrevButton
+	handleNextButton   : handleNextButton
+	handleSubmitButton : handleSubmitButton
+	getTotalQuestions  : getTotalQuestions
