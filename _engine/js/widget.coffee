@@ -9,6 +9,9 @@ Namespace('Matching').Engine = do ->
 	_$prevButton         = null
 	_$nextButton         = null
 
+	_prevButton          = null
+	_nextButton          = null
+
 	_qset                = null
 	_questions           = []
 	_answers             = []
@@ -47,6 +50,9 @@ Namespace('Matching').Engine = do ->
 		_$columnElement  = $($('#column-element').html())
 		_$prevButton     = $('#prev-button')
 		_$nextButton     = $('#next-button')
+
+		_prevButton      = document.getElementById('prev-button')
+		_nextButton      = document.getElementById('next-button')
 
 	_cacheLateVariables = ->
 		_$popupText      = $('.popup-text')
@@ -106,7 +112,8 @@ Namespace('Matching').Engine = do ->
 
 		# Set event listeners for toggling pages.
 		if _numGameboards > 1 
-			_$nextButton.removeClass('unselectable').addClass('shown')
+			_nextButton.className = 'button shown'
+			# _$nextButton.removeClass('unselectable').addClass('shown')
 
 		wordId = 0
 		questionsPerBoard = 5
@@ -119,7 +126,8 @@ Namespace('Matching').Engine = do ->
 
 			# Clone a new gameboard.
 			_$mainScreen.append(_$board.clone().attr('id', 'board'+i))
-			if i > 0 then $('#board'+i).addClass('hidden')
+			if i > 0 then document.getElementById('board'+i).className = 'gameboard hidden'
+			# $('#board'+i).addClass('hidden')
 
 			# Find the current board's drawing canvas and store it.
 			document.getElementById('board'+i).children[2].id = 'container'+i
@@ -155,16 +163,21 @@ Namespace('Matching').Engine = do ->
 
 			# Dont allow the user to go to a nonexistant gameboard!
 			if _currentGameboard > 0
-				$('#board'+_currentGameboard).addClass('hidden')
+				document.getElementById('board'+_currentGameboard).className = 'gameboard hidden'
+				# $('#board'+_currentGameboard).addClass('hidden')
 
 				_currentGameboard--
 				if _currentGameboard is 0
-					_$prevButton.addClass('unselectable').removeClass('shown')
+					_prevButton.className = 'button unselectable'
+					# _$prevButton.addClass('unselectable').removeClass('shown')
 				if _currentGameboard is _numGameboards - 2
-					_$nextButton.removeClass('unselectable').addClass('shown')
+					_nextButton.className = 'button shown'
+					# _$nextButton.removeClass('unselectable').addClass('shown')
 
+				# Unhide the board we're bringing in.
 				setTimeout ->
-					$('#board'+_currentGameboard).removeClass('hidden')
+					document.getElementById('board'+_currentGameboard).className = 'gameboard'
+					# $('#board'+_currentGameboard).removeClass('hidden')
 				, 300
 
 				_pageNumStyle.webkitTransform = 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
@@ -184,16 +197,20 @@ Namespace('Matching').Engine = do ->
 			, 600
 			
 			if _currentGameboard < _numGameboards - 1
-				$('#board'+_currentGameboard).addClass('hidden')
+				document.getElementById('board'+_currentGameboard).className = 'gameboard hidden'
+				# $('#board'+_currentGameboard).addClass('hidden')
 
 				_currentGameboard++
 				if _currentGameboard is 1
-					_$prevButton.removeClass('unselectable').addClass('shown')
+					_prevButton.className = 'button shown'
+					# _$prevButton.removeClass('unselectable').addClass('shown')
 				if _currentGameboard is _numGameboards - 1
-					_$nextButton.addClass('unselectable').removeClass('shown')
+					_nextButton.className = 'button unselectable'
+					# _$nextButton.addClass('unselectable').removeClass('shown')
 
 				setTimeout ->
-					$('#board'+_currentGameboard).removeClass('hidden')
+					document.getElementById('board'+_currentGameboard).className = 'gameboard'
+					# $('#board'+_currentGameboard).removeClass('hidden')
 				, 300
 
 				_pageNumStyle.webkitTransform = 'rotate('+(360*_currentGameboard)+'deg)'
@@ -214,12 +231,13 @@ Namespace('Matching').Engine = do ->
 
 	# Submit matched words for scoring.
 	_submitAnswers = ->
+		words = Matching.Draw.getWords()
 		# We need to look through all matchable questions.
-		for i in [0..Matching.Draw.getWords().length-1]
+		for i in [0..words.length-1]
 			do ->
 				for j in [0.._qset.items[0].items.length-1]
-					if _qset.items[0].items[j].questions[0].text == Matching.Draw.words[i].word
-						Materia.Score.submitQuestionForScoring(_qset.items[0].items[j].id, Matching.Draw.words[Matching.Draw.words[i].matched].word)
+					if _qset.items[0].items[j].questions[0].text == words[i].word
+						Materia.Score.submitQuestionForScoring(_qset.items[0].items[j].id, words[words[i].matched].word)
 						break
 		
 

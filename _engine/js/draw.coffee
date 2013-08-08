@@ -64,9 +64,9 @@ Namespace('Matching').Draw = do ->
 		document.addEventListener 'touchmove', (e) -> e.preventDefault()
 
 		document.addEventListener downEventType, (e) ->
-			target = e.target
-
+			target  = e.target
 			$target = $(target)
+
 			if $target.hasClass('word') or $target.hasClass('popup-text')
 				if not animating
 					inRectangle = true
@@ -81,7 +81,6 @@ Namespace('Matching').Draw = do ->
 				Matching.Engine.handleNextButton()
 			else if target.id == 'submit-button'
 				Matching.Engine.handleSubmitButton()
-
 
 		document.addEventListener moveEventType, (e) ->
 			if pointerdown
@@ -105,16 +104,16 @@ Namespace('Matching').Draw = do ->
 				target = document.elementFromPoint(pointerX, pointerY)
 			else
 				target = e.target
-
 			$target = $(target)
+
 			if $target.hasClass('word') or $target.hasClass('popup-text')
 				dragEndId = target.id.replace regexNonDigit, ''
 				rectPointerUp(dragEndId)
 
-			downX        = null
-			downY        = null
-			first        = true
-			pointerdown  = false
+			downX       = null
+			downY       = null
+			first       = true
+			pointerdown = false
 
 			# The drag id represents the id of the selected word.
 			# The end drag id represents the word that will be matched with the selected word.
@@ -122,13 +121,6 @@ Namespace('Matching').Draw = do ->
 			else if dragId > -1 and (dragEndId%2) == (dragId%2) then returnCircle()
 			dragId = -1
 			dragEndId = -1
-
-		document.addEventListener leaveEventType, (e) ->
-			target = e.target
-
-			if $(target).className == 'popup-text shown'
-				_id = e.target.id.replace regexNonDigit, ''
-				animatePopupIn(this.id)
 
 		$(document)
 		.on enterEventType, '.word', (e) ->
@@ -139,7 +131,7 @@ Namespace('Matching').Draw = do ->
 				.attr('r', 13).duration(400).ease('elastic')
 
 		.on leaveEventType, '.word', (e) -> 
-			_id     = e.target.id.replace regexNonDigit, ''
+			_id = e.target.id.replace regexNonDigit, ''
 			if words[_id].longWord then animatePopupOut(this.id)
 			inRectangle = false
 			words[_id].hollowCircle.transition()
@@ -147,6 +139,34 @@ Namespace('Matching').Draw = do ->
 				
 
 		randColor = hsvToRgb(hue, 0.5, 0.95)
+
+	setWordObject = (paper, id, column, gameboard, i) ->
+		x = if column is 1 then 270 else 480
+		tempObj = document.getElementById('w'+id)
+
+		paper.append('g').attr('class', 'g'+id)
+
+		words[id] =
+			id           : id
+			column       : column
+			gameboard    : gameboard
+			selected     : false
+			matched      : -1
+			line         : paper.select('.g'+id).append('line')
+								.attr('x1', x).attr('y1', (i+1)*70.3+65).attr('x2', x).attr('y2', (i+1)*70.3+65)
+			hollowCircle : paper.select('.g'+id).append('circle')
+								.attr('class', 'hollow-circle')
+								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 10)
+			holderCircle : paper.select('.g'+id).append('circle')
+								.attr('class', 'holder-circle c'+id)
+								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 0)
+			innerCircle  : paper.select('.g'+id).append('circle')
+								.attr('class', 'inner-circle c'+id)
+								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 0)
+			circleGroup  : paper.select('.g'+id).selectAll('.c'+id)
+			word         : tempObj.children[0].innerHTML
+			longWord     : tempObj.children[0].innerHTML.length>18
+			DOMelement   : tempObj
 
 	getWords = ->
 		return words
@@ -184,35 +204,6 @@ Namespace('Matching').Draw = do ->
 			popup.style.display = 'none'
 		, 300
 
-	setWordObject = (paper, id, column, gameboard, i) ->
-		x = if column is 1 then 270 else 480
-		tempObj = document.getElementById('w'+id)
-
-		paper.append('g').attr('class', 'g'+id)
-
-		words[id] =
-			id           : id
-			column       : column
-			gameboard    : gameboard
-			selected     : false
-			matched      : -1
-			line         : paper.select('.g'+id).append('line')
-								.attr('x1', x).attr('y1', (i+1)*70.3+65).attr('x2', x).attr('y2', (i+1)*70.3+65)
-			hollowCircle : paper.select('.g'+id).append('circle')
-								.attr('class', 'hollow-circle')
-								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 10)
-			holderCircle : paper.select('.g'+id).append('circle')
-								.attr('class', 'holder-circle c'+id)
-								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 0)
-			innerCircle  : paper.select('.g'+id).append('circle')
-								.attr('class', 'inner-circle c'+id)
-								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 0)
-			circleGroup  : paper.select('.g'+id).selectAll('.c'+id)
-			word         : tempObj.children[0].innerHTML
-			longWord     : tempObj.children[0].innerHTML.length>18
-			textElement  : $(tempObj.children[0])
-			DOMelement   : $(tempObj)
-
 	rectPointerDown = (id) ->
 		# A word within the same column is already selected.
 		for i in [0..words.length-1]
@@ -240,7 +231,7 @@ Namespace('Matching').Draw = do ->
 
 	rectPointerUp = (id) ->
 		# The focused word is in the opposite column.
-		if dragId > -1 && dragEndId > -1 && dragId%2 != dragEndId%2 
+		if dragId > -1 && dragEndId > -1 && dragId%2 != dragEndId%2
 			# The focused word is already matched.
 			if words[dragEndId].matched > -1
 				unMatchingAnimation(dragEndId)
@@ -253,7 +244,8 @@ Namespace('Matching').Draw = do ->
 
 	unMatchWords = (id) ->
 		# Remove the matched class from the pair of words.
-		words[id].DOMelement.add(words[words[id].matched].DOMelement).removeClass('matched')
+		words[id].DOMelement.className = "word selected"
+		words[words[id].matched].DOMelement.className = "word"
 
 		# Reverse the matching animation.
 		unMatchingAnimation(id)
@@ -266,7 +258,8 @@ Namespace('Matching').Draw = do ->
 
 	matchWords = (id1, id2) ->
 		# Add a matched status to both words.
-		words[id1].DOMelement.add(words[id2].DOMelement).addClass('matched')
+		words[id1].DOMelement.className = 'word matched'
+		words[id2].DOMelement.className = 'word matched'
 
 		# Store the keys of each word's partner.
 		words[id1].matched = id2
@@ -277,11 +270,11 @@ Namespace('Matching').Draw = do ->
 
 	unSelectWord = () -> # Accepts variable number of arguments.
 		for i in [0..arguments.length-1]
-			words[arguments[i]].DOMelement.removeClass('selected-word')
+			words[arguments[i]].DOMelement.className = 'word'
 			words[arguments[i]].selected = false
 
 	selectWord = (id) ->
-		words[id].DOMelement.addClass('selected-word')
+		words[id].DOMelement.className = 'word selected'
 		words[id].selected = true
 
 	matchingAnimation = (id) ->
@@ -411,12 +404,14 @@ Namespace('Matching').Draw = do ->
 			progressBar.transition().attr('width', progressBarWidth -= (160/_totalQuestions)).duration(600).ease('bounce')
 
 	assessRemainingQuestions = (questions) ->
-		if questions is 'increased' and _remainingQuestions is 0 then $('#submit-button').addClass('unselectable')
+		if questions is 'increased' and _remainingQuestions is 0
+			document.getElementById('submit-button').className = 'unselectable'
 
 		if questions is 'increased' then _remainingQuestions++
 		if questions is 'decreased' then _remainingQuestions--
 
-		if _remainingQuestions == 0 then $('#submit-button').removeClass('unselectable')
+		if _remainingQuestions == 0
+			document.getElementById('submit-button').className = 'unselectable'
 
 	# Public properties:
 	paper: paper
