@@ -49,10 +49,9 @@ html, body {
 	   -moz-transition: 0.2s;
 	    -ms-transition: 0.2s;
 	        transition: 0.2s;
-}
-
-.unselectable:hover {
-	background-color: #34495E!important;
+	&:hover {
+		background-color: #34495E!important;
+	}
 }
 
 .gameboard {
@@ -72,14 +71,13 @@ html, body {
 	   -moz-transform-origin: 0 550px;
 	    -ms-transform-origin: 0 550px;
 	        transform-origin: 0 550px;
-	
+	-webkit-backface-visibility: hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
 	&.hidden {
 		-webkit-transform: rotateX(-90deg) translateY(-550px) translateZ(550px);
 		   -moz-transform: rotateX(-90deg) translateY(-550px) translateZ(550px);
 		    -ms-transform: rotateX(-90deg) translateY(-550px) translateZ(550px);
 		        transform: rotateX(-90deg) translateY(-550px) translateZ(550px);
 	}
-
 	ul {
 		list-style: none;
 	}
@@ -89,122 +87,112 @@ html, body {
 		width: 220px;
 		margin: 0 30px;
 		padding: 0;
-	}
-	.column1 {
-		left: 0;
-	}
-	.column2 {
-		right: 0;
-	}
-	.word {
-		z-index: 0;
-		text-align: center;
-		font-size: 25px;
-		width: 245px;
-		height: 30.5px;
-		margin: 20px 0;
-		padding: 10px;
-		border-radius: 10px;
-		-webkit-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-		   -moz-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-		    -ms-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-			    transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-		.left  {left: 0; }
-		.right {right: 0;}
-		.word-text {
-			z-index: -3;
-			position: absolute;
-			background-color: #1ABC9C;
-			margin-top: -10px;
-			padding: 10px 0;
+		.word {
+			z-index: 0; 
+			text-align: center;
+			font-size: 25px;
+			width: 245px;
+			height: 30.5px;
+			margin: 20px 0;
+			padding: 10px;
 			border-radius: 10px;
-			border-bottom: 3px solid #15987E;
-			width: 220px;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			-webkit-transition: 0.2s;
-			   -moz-transition: 0.2s;
-			    -ms-transition: 0.2s;
-			        transition: 0.2s;
-		}
-		.popup {
-			z-index: -1;
-			position: absolute;
-			left: -10px;
-			height: 0;
-			margin: 0;
-			width: 240px;
-			border-radius: 10px;
-			-webkit-backface-visibility: hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
-			-webkit-transition: height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			   -moz-transition: height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			    -ms-transition: height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			        transition: height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-		}
-		.popup-text {
-			display: none;
-			z-index: -2;
-			margin: -10px 0 0 -10px;
-			opacity: 0;
-			padding: 0;
-			height: 0;
-			width: 200px;
-			color: #222;
-			background-color: #FFF;
-			font-size: 14px;
-			white-space: normal;
-			border-radius: 10px;
-			border-bottom: 3px solid #DDD;
-			overflow: auto;
-			-webkit-backface-visibility: hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
-			-webkit-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			   -moz-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			    -ms-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			        transition: padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-			&.shown {
-				height: 100px;
-				padding: 10px;
-				margin: -50px 0 0 -10px;
-				opacity: 0.9;
+			-webkit-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+			   -moz-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+			    -ms-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+				    transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+			.left  {
+				left: 0;
+			}
+			.right {
+				right: 0;
+			}
+			.word-text {
+				z-index: -3;
+				position: absolute;
+				background-color: #1ABC9C;
+				margin-top: -10px;
+				padding: 10px 0;
+				border-radius: 10px;
+				border-bottom: 3px solid #15987E;
+				width: 220px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				-webkit-transition: 0.2s;
+				   -moz-transition: 0.2s;
+				    -ms-transition: 0.2s;
+				        transition: 0.2s;
+			}
+			.popup-text {
+				display: none;
+				z-index: -2;
+				margin: -10px 0 0 -10px;
+				opacity: 0;
+				padding: 0;
+				height: 0;
+				width: 200px;
+				color: #222;
+				background-color: #FFF;
+				font-size: 14px;
+				white-space: normal;
+				border-radius: 10px;
+				border-bottom: 3px solid #DDD;
+				overflow: auto;
+				-webkit-backface-visibility: hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
 				-webkit-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				   -moz-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				    -ms-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				        transition: padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+				&.shown {
+					height: 100px;
+					padding: 10px;
+					margin: -50px 0 0 -10px;
+					opacity: 0.9;
+					-webkit-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+					   -moz-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+					    -ms-transition: padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+					        transition: padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+				}
+			}
+			&.selected {
+				.word-text {
+					background-color: #27AE60!important;
+					border-bottom-color: #1F8D4E!important;
+				}
+			}
+			&.matched {
+				.word-text {
+					color: #D1D1D1;
+					background-color: #5B656D;
+					border-bottom-color: #444B51;
+				}
+				&:hover {
+					.word-text {
+						background-color: #627D92;
+						border-bottom-color: #4F6576;
+					}
+				}
+			}
+			&:hover {
+				.word-text {
+					background-color: #2ECC71;
+					border-bottom-color: #25A55B;
+				}
+				-webkit-transition: 0.2s;
+				   -moz-transition: 0.2s;
+				    -ms-transition: 0.2s;
+				        transition: 0.2s;
 			}
 		}
-	}
-	.word.right {
-		margin-left: -45px;
-	}
-	.word.selected-word {
-		.word-text {
-			background-color: #27AE60!important;
-			border-bottom-color: #1F8D4E!important;
+		&.column1 {
+			left: 0;
 		}
-	}
-	.word.matched {
-		.word-text {
-			color: #D1D1D1;
-			background-color: #5B656D;
-			border-bottom-color: #444B51;
+		&.column2 {
+			right: 0;
+			.word {
+				margin-left: -45px;
+			}
 		}
-	}
-	.word.matched:hover {
-		.word-text {
-			background-color: #627D92;
-			border-bottom-color: #4F6576;
-		}
-	}
-	.word:hover {
-		.word-text {
-			background-color: #2ECC71;
-			border-bottom-color: #25A55B;
-		}
-		-webkit-transition: 0.2s;
-		   -moz-transition: 0.2s;
-		    -ms-transition: 0.2s;
-		        transition: 0.2s;
 	}
 	.matching-container {
 		position: relative;
@@ -283,13 +271,13 @@ html, body {
 		   -moz-transition: 0.2s;
 		    -ms-transition: 0.2s;
 		        transition: 0.2s;
-	}
-	#submit-button:hover {
-		background-color: rgb(55,61,66);
-		-webkit-transition: 0.2s;
-		   -moz-transition: 0.2s;
-		    -ms-transition: 0.2s;
-		        transition: 0.2s;
+		&:hover {
+			background-color: rgb(55,61,66);
+			-webkit-transition: 0.2s;
+			   -moz-transition: 0.2s;
+			    -ms-transition: 0.2s;
+			        transition: 0.2s;
+		}
 	}
 }
 

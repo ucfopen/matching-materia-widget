@@ -12,7 +12,7 @@ qset:
             type: QA
             questions:
               - 
-                text: cambiar asfd asdf asdf asdf asdf asdf asdf asdf asdf asdf asdfasdf asdf asdf asdf asdf
+                text: cambiar
             answers:
               - 
                 value: 100
