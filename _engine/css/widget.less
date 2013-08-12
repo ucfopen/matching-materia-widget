@@ -87,6 +87,27 @@ html, body {
 		width: 220px;
 		margin: 0 30px;
 		padding: 0;
+		&.column1 {
+			left: 0;
+			.word {
+				.word-text {
+					left: 0;
+				}
+			}
+		}
+		&.column2 {
+			right: 0;
+			.word {
+				right: 0;
+				margin-left: -45px;
+				.word-text {
+					right: 0;
+				}
+				.popup-text {
+					margin-left: 35px !important;
+				}
+			}
+		}
 		.word {
 			z-index: 0; 
 			text-align: center;
@@ -100,12 +121,6 @@ html, body {
 			   -moz-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			    -ms-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 				    transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-			.left  {
-				left: 0;
-			}
-			.right {
-				right: 0;
-			}
 			.word-text {
 				z-index: -3;
 				position: absolute;
@@ -184,15 +199,6 @@ html, body {
 				        transition: 0.2s;
 			}
 		}
-		&.column1 {
-			left: 0;
-		}
-		&.column2 {
-			right: 0;
-			.word {
-				margin-left: -45px;
-			}
-		}
 	}
 	.matching-container {
 		position: relative;
@@ -239,10 +245,6 @@ html, body {
 	margin: 0 0 0 -100px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
-	-webkit-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	   -moz-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	    -ms-transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	        transition: all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 	#questions-answered {
 		position: absolute;
 		background-color: #2f3944;
