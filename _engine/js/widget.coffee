@@ -37,6 +37,7 @@ Namespace('Matching').Engine = do ->
 	# Called by Materia.Engine when widget Engine should start the user experience.
 	start = (instance, qset, version = '1') ->
 		_qset = qset
+		console.log _qset
 		_cacheVariables()
 		_storeWords()
 		_shuffleWords()
@@ -136,15 +137,15 @@ Namespace('Matching').Engine = do ->
 			for j in [0..questionsPerBoard-1]
 				# Populate the left column.
 				$('#board'+i+' .column1').append(_$columnElement.clone().attr('id', 'w'+wordId))
-				$('#board'+i+' .column1 #w'+wordId+' .word-text').html(_questions[i][_shuffledQuestions[i][j]]).addClass('left')
+				$('#board'+i+' .column1 #w'+wordId+' .word-text').html(_questions[i][_shuffledQuestions[i][j]])
 				$('#board'+i+' .column1 #w'+wordId+' .popup-text').attr('id', 'popup'+wordId).html(_questions[i][_shuffledQuestions[i][j]])
 				Matching.Draw.setWordObject(Matching.Draw.paper[i], wordId, 1, i, j)
 
 				wordId++
 
 				# Populate the right column.
-				$('#board'+i+' .column2').append(_$columnElement.clone().attr('id', 'w'+wordId).addClass('right'))
-				$('#board'+i+' .column2 #w'+wordId+' .word-text').html(_answers[i][_shuffledAnswers[i][j]]).addClass('right')
+				$('#board'+i+' .column2').append(_$columnElement.clone().attr('id', 'w'+wordId))
+				$('#board'+i+' .column2 #w'+wordId+' .word-text').html(_answers[i][_shuffledAnswers[i][j]])
 				$('#board'+i+' .column2 #w'+wordId+' .popup-text').attr('id', 'popup'+wordId).html(_answers[i][_shuffledAnswers[i][j]])
 				Matching.Draw.setWordObject(Matching.Draw.paper[i], wordId, 2, i, j)
 
