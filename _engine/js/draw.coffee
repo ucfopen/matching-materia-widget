@@ -59,9 +59,9 @@ Namespace('Matching').Draw = do ->
 
 	setEventListeners = ->
 		# Disable right click and page scrolling on tablets.
-		document.oncontextmenu = -> false
-		document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
-		document.addEventListener 'touchmove', (e) -> e.preventDefault()
+		# document.oncontextmenu = -> false
+		# document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
+		# document.addEventListener 'touchmove', (e) -> e.preventDefault()
 
 		document.addEventListener downEventType, (e) ->
 			target  = e.target
@@ -411,7 +411,7 @@ Namespace('Matching').Draw = do ->
 		if questions is 'decreased' then _remainingQuestions--
 
 		if _remainingQuestions == 0
-			document.getElementById('submit-button').className = 'unselectable'
+			document.getElementById('submit-button').className = ''
 
 	# Public properties:
 	paper: paper
