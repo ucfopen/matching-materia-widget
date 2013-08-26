@@ -37,7 +37,6 @@ Namespace('Matching').Engine = do ->
 	# Called by Materia.Engine when widget Engine should start the user experience.
 	start = (instance, qset, version = '1') ->
 		_qset = qset
-		console.log _qset
 		_cacheVariables()
 		_storeWords()
 		_shuffleWords()
@@ -92,6 +91,8 @@ Namespace('Matching').Engine = do ->
 
 				k++
 
+				if not _qset.items[0].items[k]? then break
+
 	# Shuffle any array.
 	_shuffle = (a) ->
 		for i in [a.length-1..1]
@@ -114,7 +115,6 @@ Namespace('Matching').Engine = do ->
 		# Set event listeners for toggling pages.
 		if _numGameboards > 1 
 			_nextButton.className = 'button shown'
-			# _$nextButton.removeClass('unselectable').addClass('shown')
 
 		wordId = 0
 		questionsPerBoard = 5
@@ -126,27 +126,32 @@ Namespace('Matching').Engine = do ->
 				questionsPerBoard = if (_totalQuestions-(i*5))<3 then (_totalQuestions-(i*5))+2 else (_totalQuestions-(i*5))
 
 			# Clone a new gameboard.
-			_$mainScreen.append(_$board.clone().attr('id', 'board'+i))
+			_$mainScreen.append(_$board.clone().prop('id', 'board'+i))
 			if i > 0 then document.getElementById('board'+i).className = 'gameboard hidden'
-			# $('#board'+i).addClass('hidden')
 
 			# Find the current board's drawing canvas and store it.
 			document.getElementById('board'+i).children[2].id = 'container'+i
 			Matching.Draw.paper.push(d3.select('body').select('#container'+i).select('svg'))
 
 			for j in [0..questionsPerBoard-1]
-				# Populate the left column.
-				$('#board'+i+' .column1').append(_$columnElement.clone().attr('id', 'w'+wordId))
-				$('#board'+i+' .column1 #w'+wordId+' .word-text').html(_questions[i][_shuffledQuestions[i][j]])
-				$('#board'+i+' .column1 #w'+wordId+' .popup-text').attr('id', 'popup'+wordId).html(_questions[i][_shuffledQuestions[i][j]])
+				if not _questions[i][_shuffledQuestions[i][j]]? then break
+
+				# Populate the left column with questions.
+				$('#board'+i+' .column1').append(_$columnElement.clone().prop('id', 'w'+wordId))
+				document.getElementById('w'+wordId).children[0].innerHTML = _questions[i][_shuffledQuestions[i][j]]
+				document.getElementById('w'+wordId).children[1].innerHTML = _questions[i][_shuffledQuestions[i][j]]
+				# $('#board'+i+' .column1 #w'+wordId+' .word-text').html(_questions[i][_shuffledQuestions[i][j]])
+				# $('#board'+i+' .column1 #w'+wordId+' .popup-text').prop('id', 'popup'+wordId).html(_questions[i][_shuffledQuestions[i][j]])
 				Matching.Draw.setWordObject(Matching.Draw.paper[i], wordId, 1, i, j)
 
 				wordId++
 
-				# Populate the right column.
-				$('#board'+i+' .column2').append(_$columnElement.clone().attr('id', 'w'+wordId))
-				$('#board'+i+' .column2 #w'+wordId+' .word-text').html(_answers[i][_shuffledAnswers[i][j]])
-				$('#board'+i+' .column2 #w'+wordId+' .popup-text').attr('id', 'popup'+wordId).html(_answers[i][_shuffledAnswers[i][j]])
+				# Populate the right column with answers.
+				$('#board'+i+' .column2').append(_$columnElement.clone().prop('id', 'w'+wordId))
+				document.getElementById('w'+wordId).children[0].innerHTML = _answers[i][_shuffledAnswers[i][j]]
+				document.getElementById('w'+wordId).children[1].innerHTML = _answers[i][_shuffledAnswers[i][j]]
+				# $('#board'+i+' .column2 #w'+wordId+' .word-text').html(_answers[i][_shuffledAnswers[i][j]])
+				# $('#board'+i+' .column2 #w'+wordId+' .popup-text').prop('id', 'popup'+wordId).html(_answers[i][_shuffledAnswers[i][j]])
 				Matching.Draw.setWordObject(Matching.Draw.paper[i], wordId, 2, i, j)
 
 				wordId++
@@ -165,20 +170,16 @@ Namespace('Matching').Engine = do ->
 			# Dont allow the user to go to a nonexistant gameboard!
 			if _currentGameboard > 0
 				document.getElementById('board'+_currentGameboard).className = 'gameboard hidden'
-				# $('#board'+_currentGameboard).addClass('hidden')
 
 				_currentGameboard--
 				if _currentGameboard is 0
 					_prevButton.className = 'button unselectable'
-					# _$prevButton.addClass('unselectable').removeClass('shown')
 				if _currentGameboard is _numGameboards - 2
 					_nextButton.className = 'button shown'
-					# _$nextButton.removeClass('unselectable').addClass('shown')
 
 				# Unhide the board we're bringing in.
 				setTimeout ->
 					document.getElementById('board'+_currentGameboard).className = 'gameboard'
-					# $('#board'+_currentGameboard).removeClass('hidden')
 				, 300
 
 				_pageNumStyle.webkitTransform = 'rotate('+(0+(360*_currentGameboard-1))+'deg)'
@@ -199,19 +200,15 @@ Namespace('Matching').Engine = do ->
 			
 			if _currentGameboard < _numGameboards - 1
 				document.getElementById('board'+_currentGameboard).className = 'gameboard hidden'
-				# $('#board'+_currentGameboard).addClass('hidden')
 
 				_currentGameboard++
 				if _currentGameboard is 1
 					_prevButton.className = 'button shown'
-					# _$prevButton.removeClass('unselectable').addClass('shown')
 				if _currentGameboard is _numGameboards - 1
 					_nextButton.className = 'button unselectable'
-					# _$nextButton.addClass('unselectable').removeClass('shown')
 
 				setTimeout ->
 					document.getElementById('board'+_currentGameboard).className = 'gameboard'
-					# $('#board'+_currentGameboard).removeClass('hidden')
 				, 300
 
 				_pageNumStyle.webkitTransform = 'rotate('+(360*_currentGameboard)+'deg)'
