@@ -59,9 +59,9 @@ Namespace('Matching').Draw = do ->
 
 	setEventListeners = ->
 		# Disable right click and page scrolling on tablets.
-		# document.oncontextmenu = -> false
-		# document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
-		# document.addEventListener 'touchmove', (e) -> e.preventDefault()
+		document.oncontextmenu = -> false
+		document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
+		document.addEventListener 'touchmove', (e) -> e.preventDefault()
 
 		document.addEventListener downEventType, (e) ->
 			target  = e.target
