@@ -104,7 +104,11 @@
 			theQSet.addChild(questionInputList.generateQGroup());
 			theQSet.addOption("caseSensitive", false);
 			super.validateQIDs(theQSet);
-			ExternalInterface.call("__materia_flash_save", instanceTitle, theQSet.convertToObject(), questionSetVersion);
+
+			var qset:Object = theQSet.convertToObject()
+			scrubErrorsFromQSet(qset);
+
+			ExternalInterface.call("__materia_flash_save", instanceTitle, qset, questionSetVersion);
 		}
 	}
 
