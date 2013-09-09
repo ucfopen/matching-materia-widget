@@ -7,7 +7,11 @@
 		<link rel="stylesheet/less" type="text/css" href="css/widget.less">
 		<script type="text/javascript" src="/js/materia.require.js"></script>
 		<script type="text/javascript">
-			require(['enginecore', 'score', 'less', 'js/d3.v3.min', 'cs!js/draw', 'cs!js/widget'], function(util) {
+			require([
+				'enginecore', 'score', 'less',             // Materia Dependencies.
+				'js/d3.v3.min', 'js/hammer.min.js',        // Specific widget libraries.
+				'cs!js/data', 'cs!js/widget', 'cs!js/draw' // Widget files.
+			], function(util) {
 				Materia.Engine.start(Matching.Engine);
 			});
 		</script>
@@ -37,7 +41,6 @@
 <script type="text/template" id="column-element"><li class="word">
 	<span class="word-text"></span>
 	<div class="popup-text"></div>
-	<span></span>
 </li></script>
 
 <section id="submit">
