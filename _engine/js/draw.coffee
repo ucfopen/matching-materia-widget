@@ -178,11 +178,11 @@ Namespace('Matching').Draw = do ->
 				if Matching.Data.words[id].gameboard == Matching.Data.words[i].gameboard && Matching.Data.words[i].selected == true && i != id
 					Matching.Data.unSelectWord(i)
 					if Matching.Data.words[i].node.className != 'word matched'
-						_contractCircle(i)
+						_fadeCircle(i)
 					break
 
 			Matching.Data.selectWord(id)
-			_swellCircle(id)
+			_showCircle(id)
 
 	# Handles a pointer up event on a word.
 	_handleUpEvent = (id) ->
@@ -294,7 +294,7 @@ Namespace('Matching').Draw = do ->
 					.style('opacity', 0)
 					.duration(500)
 
-	_swellCircle = (id) ->
+	_showCircle = (id) ->
 		if Matching.Data.words[id].matched > -1
 			Matching.Data.words[id].hollowCircle
 				.transition()
@@ -312,7 +312,8 @@ Namespace('Matching').Draw = do ->
 					.style('stroke', darkGreen)
 					.duration(200)
 
-	_contractCircle = (id) ->
+
+	_fadeCircle = (id) ->
 		Matching.Data.words[id].innerCircle
 			.transition()
 				.style('opacity', 0)
@@ -323,6 +324,7 @@ Namespace('Matching').Draw = do ->
 				.style('stroke', lightGreen)
 				.duration(200)
 
+	# Animates the popup in.
 	animatePopupIn = (id) ->
 		popup = document.getElementById(id).children[1]
 
@@ -331,6 +333,7 @@ Namespace('Matching').Draw = do ->
 			popup.className = 'popup-text shown'
 		, 5
 
+	# Animates the popup into oblivion.
 	animatePopupOut = (id) ->
 		popup = document.getElementById(id).children[1]
 
@@ -339,6 +342,7 @@ Namespace('Matching').Draw = do ->
 			popup.style.display = 'none'
 		, 300
 
+	# Draws the progress bar when the page is loaded.
 	drawProgressBar = () ->
 		Matching.Data.svgNodes.push d3.select('body').select('#questions-answered').select('svg')
 
@@ -352,12 +356,15 @@ Namespace('Matching').Draw = do ->
 			.style('stroke', '#BDC3C7')
 			.style('fill', '#BDC3C7')
 
+	# Animates the progress bar up or down depending on a single string parameter.
 	updateProgressBar = (direction) ->
 		if direction is 'up'
 			_progressBar.transition().attr('width', _progressBarWidth += (160/_totalItems)).duration(600).ease('bounce')
 		else if direction is 'down'
 			_progressBar.transition().attr('width', _progressBarWidth -= (160/_totalItems)).duration(600).ease('bounce')
 
+	# Is called every time a pairing is made. 
+	# Decides whether or not the submit button should be selectable.
 	updateRemaining = (questions) ->
 		if questions is 'up' and _remainingItems is 0
 			document.getElementById('submit-button').className = 'unselectable'
@@ -369,14 +376,12 @@ Namespace('Matching').Draw = do ->
 			document.getElementById('submit-button').className = 'glowing'
 
 	# Public
-	setEventListeners : setEventListeners
-	reorderSVG        : reorderSVG
-	animatePopupIn    : animatePopupIn
-	animatePopupOut   : animatePopupOut
-	unMatchAnimation  : unMatchAnimation
-	drawProgressBar   : drawProgressBar
-	updateProgressBar : updateProgressBar
-	updateRemaining   : updateRemaining
+	setEventListeners : setEventListeners  # Used by Matching.Engine
+	reorderSVG        : reorderSVG         # Used by Matching.Engine
+	unMatchAnimation  : unMatchAnimation   # Used by Matching.Data
+	drawProgressBar   : drawProgressBar    # Used by Matching.Engine
+	updateProgressBar : updateProgressBar  # Used by Matching.Data
+	updateRemaining   : updateRemaining    # Used by Matching.Data
 
 
 
