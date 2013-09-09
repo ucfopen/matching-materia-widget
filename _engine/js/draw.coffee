@@ -1,41 +1,12 @@
 Namespace('Matching').Draw = do ->
-	regexNonDigit = /[^0-9\.]+/g
 
-	# Arrays to store circles and lines.
-	words                = []
-	paper                = []
-
-	progressBar          = null
-	progressBarWidth     = 0
-
-	# Variables for dragging.
-	downX                = null
-	downY                = null
-	deltaX               = null
-	deltaY               = null
-	pointerX             = null
-	pointerY             = null
-	pointerdown          = false
-	inRectangle          = false
-	animating            = false
-	first                = false
-	dragId               = -1
-	dragEndId            = null
-
-	# Color variables.
-	hue                  = Math.random()
-	randColor            = null
-	grey                 = '#5b656d'
-	darkGreen            = '#27AE60'
-	lightGreen           = '#1ABC9C'
-
-	_totalQuestions      = null
-	_remainingQuestions  = null
-
-	# Event handling.
+	# Environmental conditions.
 	_ms     = window.navigator.msPointerEnabled
 	_mobile = navigator.userAgent.match /(iPhone|iPod|iPad|Android|BlackBerry)/
 
+	inPopup = false
+
+	# Event types will adapt to different input types.
 	downEventType = switch
 		when _ms     then "MSPointerDown"
 		when _mobile then "touchstart"
@@ -57,139 +28,275 @@ Namespace('Matching').Draw = do ->
 		when _mobile then "touchend"
 		else              "mouseleave"
 
-	setEventListeners = ->
-		# Disable right click and page scrolling on tablets.
-		document.oncontextmenu = -> false
-		document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
-		document.addEventListener 'touchmove', (e) -> e.preventDefault()
+	regexNonDigit = /[^0-9\.]+/g
 
-		document.addEventListener downEventType, (e) ->
-			target  = e.target
-			$target = $(target)
+	# Colors.
+	darkGreen  = '#27AE60'
+	darkBlue   = '#283845'
+	lightGreen = '#1ABC9C'
+	grey       = '#5b656d'
 
-			if $target.hasClass('word') or $target.hasClass('popup-text')
-				if not animating
-					inRectangle = true
-					pointerdown = true
-					downX = e.pageX
-					downY = e.pageY
-					dragId = target.id.replace regexNonDigit, ''
-					rectPointerDown(dragId)
-			else if target.id == 'prev-button'
-				Matching.Engine.handlePrevButton()
-			else if target.id == 'next-button'
-				Matching.Engine.handleNextButton()
-			else if target.id == 'submit-button'
-				Matching.Engine.handleSubmitButton()
+	_progressBar        = null
+	_progressBarWidth   = 0
+	_remainingItems     = null
+	_totalItems         = null
 
-		document.addEventListener moveEventType, (e) ->
-			if pointerdown
-				pointerX = e.pageX
-				pointerY = e.pageY
+	pointerX = null
+	pointerY = null
+	downId   = null
+	upId     = null
 
-				deltaX = Math.abs(downX-pointerX)
-				deltaY = Math.abs(downY-pointerY)
+	setEventListeners = () ->
+		document.addEventListener downEventType, (event) ->
+			target = event.target
+			switch target.tagName
+				when "LI"
+					downId = target.id.replace regexNonDigit, ''
+					_handleDownEvent(downId)
+				when "DIV"
+					downId = target.parentNode.id.replace regexNonDigit, ''
+					_handleDownEvent(downId)
+			switch target.id
+				when 'prev-button' then Matching.Engine.handlePrevButton()
+				when 'next-button' then Matching.Engine.handleNextButton()
+				when 'submit-button' then Matching.Engine.handleSubmitButton()
 
-				if deltaX > 2 or deltaY > 2 then startDrag()
+		# Replaces the "Up" event type.
+		Hammer(document).on 'release', (event) ->
+			target = event.target
+			switch target.tagName
+				when "LI"
+					upId = target.id.replace regexNonDigit, ''
+					_handleUpEvent(upId)
+				when "DIV"
+					upId = target.parentNode.id.replace regexNonDigit, ''
+					_handleUpEvent(upId)
 
-		document.addEventListener upEventType, (e) ->
-			animating = true
+		#### TODO: Only limited dragging exists. Implement better dragging. ####
+		# Will pickup drag events from most inputs including touch and mouse.
+		Hammer(document).on 'drag', (event) ->
+			if event.gesture.startEvent.target.tagName is 'LI'
+				pointerX = event.gesture.center.pageX
+				pointerY = event.gesture.center.pageY
+
+				if Matching.Data.words[downId].matched < 0 && not Matching.Data.gates.inColumn
+					Matching.Data.words[downId].preinnerCircle
+						.style('opacity', 1)
+						.attr('cx', pointerX).attr('cy', pointerY)
+					Matching.Data.words[downId].preline
+						.style('opacity', 1)
+						.attr('x2', pointerX).attr('y2', pointerY)
+
+		if _mobile
+			# Prevents scrolling.
+			document.addEventListener 'touchmove', (e) -> e.preventDefault()
+
+			Hammer(document).on 'touch', (event) ->
+				#### TODO: code to replace mouseenter, mouseleave for mobile devices. ####
+
+		else
+			Disables right click.
+			document.oncontextmenu = -> false
+			document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
+
+			document.addEventListener 'mouseover', (event) ->
+				target = event.target
+				switch target.tagName
+					when "DIV" then inPopup = true
+					when "LI"  then _handleEnterEvent(target)
+					when "svg" then if Matching.Data.gates.prelineDrawn then _fadePreline()
+					when "UL"  then Matching.Data.gates.inColumn = true
+
+			document.addEventListener 'mouseout', (event) ->
+				target = event.target
+				switch target.tagName
+					when "DIV" then inPopup = false; _handleLeaveEvent(target.parentNode)
+					when "LI"  then setTimeout ->
+						if not inPopup then  _handleLeaveEvent(target)
+					, 5
+					when "UL"  then Matching.Data.gates.inColumn = true
+
+	reorderSVG = () ->
+		d3.selection.prototype.moveToFront = () ->
+			return this.each -> this.parentNode.appendChild(this)
+
+		# Makes all inner circles the top nodes so that they overlap any lines.
+		d3.select('body').selectAll('.inner-circle').each ->
+			this.parentNode.appendChild(this)
+
+	_handleEnterEvent = (target) ->
+		Matching.Data.gates.inWord = true
+
+		_id = target.id.replace regexNonDigit, ''
+		Matching.Data.words[_id].hollowCircle.transition()
+			.attr('r', 13).duration(400).ease('elastic')
+
+		if Matching.Data.oppositeSelected(_id) isnt false
+			_drawPreline(Matching.Data.words[downId], Matching.Data.words[_id])
+		if Matching.Data.words[_id].longWord then animatePopupIn(target.id)
+
+	_handleLeaveEvent = (target) ->
+		Matching.Data.gates.inWord = false
+
+		_id = target.id.replace regexNonDigit, ''
+		Matching.Data.words[_id].hollowCircle.transition()
+			.attr('r', 10).duration(400).ease('elastic')
+
+			if Matching.Data.words[_id].longWord then animatePopupOut(target.id)
+
+	_handleDownEvent = (id) ->
+		if not Matching.Data.gates.animating
+			# A word within the same column is already selected.
+			_start = if id%2 is 0 then 0 else 1
+			for i in [_start..Matching.Data.words.length-1] by 2
+				if Matching.Data.words[id].gameboard == Matching.Data.words[i].gameboard && Matching.Data.words[i].selected == true && i != id
+					Matching.Data.unSelectWord(i)
+					if Matching.Data.words[i].node.className != 'word matched'
+						_contractCircle(i)
+					break
+
+			Matching.Data.selectWord(id)
+			_swellCircle(id)
+
+	_handleUpEvent = (id) ->
+		if not Matching.Data.gates.animating
+			Matching.Data.gates.animating = true
 			setTimeout ->
-				animating = false
-			, 400
+				Matching.Data.gates.animating = false
+			, 300
 
-			if _mobile
-				e.preventDefault()
-				e.stopPropagation()
-				target = document.elementFromPoint(pointerX, pointerY)
-			else
-				target = e.target
-			$target = $(target)
+			_start = if id%2 is 0 then 1 else 0
+			_oppositeId = Matching.Data.oppositeSelected(id)
+			if _oppositeId isnt false                        # A word within the opposite column is selected.
+				Matching.Data.matchWords(id, _oppositeId)    # Register a new pairing.
+				setTimeout ->
+					Matching.Data.stripMatchAnimation(id, _oppositeId)
+				, 500
+				_matchAnimation(id)                          # Animate the new pairing.
 
-			if $target.hasClass('word') or $target.hasClass('popup-text')
-				dragEndId = target.id.replace regexNonDigit, ''
-				rectPointerUp(dragEndId)
+	_drawPreline = (source, socket) ->
+		source.preinnerCircle
+			.attr('cx', socket.innerCircle.attr('cx'))
+			.attr('cy', socket.innerCircle.attr('cy'))
+			.transition()
+				.style('opacity', 0.8)
+				.duration(300)
 
-			downX       = null
-			downY       = null
-			first       = true
-			pointerdown = false
+		source.preline
+			.attr('x2', socket.innerCircle.attr('cx'))
+			.attr('y2', socket.innerCircle.attr('cy'))
+			.transition()
+				.style('opacity', 0.4)
+				.duration(300)
 
-			# The drag id represents the id of the selected word.
-			# The end drag id represents the word that will be matched with the selected word.
-			if dragId > -1 and not inRectangle then returnCircle()
-			else if dragId > -1 and (dragEndId%2) == (dragId%2) then returnCircle()
-			dragId = -1
-			dragEndId = -1
+		Matching.Data.gates.prelineDrawn = true
 
-		$(document)
-		.on enterEventType, '.word', (e) ->
-			_id = e.target.id.replace regexNonDigit, ''
-			if words[_id].longWord then animatePopupIn(this.id)
-			inRectangle = true
-			words[_id].hollowCircle.transition()
-				.attr('r', 13).duration(400).ease('elastic')
+	_fadePreline = () ->
+		Matching.Data.words[downId].preinnerCircle
+			.transition()
+				.style('opacity', 0)
+				.duration(300)
+		Matching.Data.words[downId].preline
+			.transition()
+				.style('opacity', 0)
+				.duration(300)
 
-		.on leaveEventType, '.word', (e) -> 
-			_id = e.target.id.replace regexNonDigit, ''
-			if words[_id].longWord then animatePopupOut(this.id)
-			inRectangle = false
-			words[_id].hollowCircle.transition()
-				.attr('r', 10).duration(400).ease('elastic')
-				
+	_matchAnimation = (id) ->
+		# Fade out the pre-line and circle
+		Matching.Data.words[Matching.Data.words[id].matched].preline.transition()
+			.style('opacity', 0).duration(300)
+		Matching.Data.words[Matching.Data.words[id].matched].preinnerCircle.transition()
+			.style('opacity', 0).duration(300)
 
-		randColor = hsvToRgb(hue, 0.5, 0.95)
+		# Fade the hollow circles to the matched color.
+		Matching.Data.words[Matching.Data.words[id].matched].hollowCircle.transition()
+			.style('stroke', grey).duration(200)
+		Matching.Data.words[id].hollowCircle.transition()
+			.style('stroke', grey).duration(200)
 
-	setWordObject = (paper, id, column, gameboard, i) ->
-		x = if column is 1 then 270 else 480
-		tempObj = document.getElementById('w'+id)
+		# Fade in the inner circles.
+		Matching.Data.words[id].innerCircle
+			.style('stroke', Matching.Data.game.randomColor).style('fill', Matching.Data.game.randomColor)
+		Matching.Data.words[id].innerCircle
+			.transition()
+				.style('opacity', 1)
+				.duration(300)
+		Matching.Data.words[Matching.Data.words[id].matched].innerCircle
+			.style('stroke', Matching.Data.game.randomColor).style('fill', Matching.Data.game.randomColor)
+		Matching.Data.words[Matching.Data.words[id].matched].innerCircle
+			.transition()
+				.style('opacity', 1)
+				.duration(300)
 
-		paper.append('g').attr('class', 'g'+id)
+		# Fade in the connecting line.
+		if id%2 is 0 then Matching.Data.words[id].line
+			.attr('x2', Matching.Data.words[Matching.Data.words[id].matched].innerCircle.attr('cx'))
+			.attr('y2', Matching.Data.words[Matching.Data.words[id].matched].innerCircle.attr('cy'))
+			.transition()
+				.style('opacity', 1)
+				.duration(500)
+		else Matching.Data.words[Matching.Data.words[id].matched].line
+			.attr('x2', Matching.Data.words[id].innerCircle.attr('cx'))
+			.attr('y2', Matching.Data.words[id].innerCircle.attr('cy'))
+			.transition()
+				.style('opacity', 1)
+				.duration(500)
 
-		words[id] =
-			id           : id
-			column       : column
-			gameboard    : gameboard
-			selected     : false
-			matched      : -1
-			line         : paper.select('.g'+id).append('line')
-								.attr('x1', x).attr('y1', (i+1)*70.3+65).attr('x2', x).attr('y2', (i+1)*70.3+65)
-			hollowCircle : paper.select('.g'+id).append('circle')
-								.attr('class', 'hollow-circle')
-								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 10)
-			holderCircle : paper.select('.g'+id).append('circle')
-								.attr('class', 'holder-circle c'+id)
-								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 0)
-			innerCircle  : paper.select('.g'+id).append('circle')
-								.attr('class', 'inner-circle c'+id)
-								.attr('cx', x).attr('cy', (i+1)*70.3+65).attr('r', 0)
-			circleGroup  : paper.select('.g'+id).selectAll('.c'+id)
-			word         : tempObj.children[0].innerHTML
-			longWord     : tempObj.children[0].innerHTML.length>18
-			DOMelement   : tempObj
+		Matching.Data.colorReset()
 
-	getWords = ->
-		return words
+	unMatchAnimation = (id) ->
+		Matching.Data.words[id].innerCircle
+			.transition()
+				.style('opacity', 0)
+				.duration(500)
 
-	startDrag = ->
-		if words[dragId].matched < 0
-			words[dragId].innerCircle.attr('cx', pointerX).attr('cy', pointerY)
-			words[dragId].line.attr('x2', pointerX).attr('y2', pointerY)
+		Matching.Data.words[id].hollowCircle
+			.transition()
+				.style('stroke', lightGreen)
+				.duration(500)
 
-	# Brings a dragged circle back to its original position if not matched.
-	returnCircle = ->
-		words[dragId].innerCircle.transition()
-			.attr('cx', words[dragId].holderCircle.attr('cx'))
-			.attr('cy', words[dragId].holderCircle.attr('cy'))
-			.duration(500).ease('elastic')
-		words[dragId].line.transition()
-			.attr('x2', words[dragId].holderCircle.attr('cx'))
-			.attr('y2', words[dragId].holderCircle.attr('cy'))
-			.duration(500).ease('elastic')
+		if id%2 is 1
+			Matching.Data.words[Matching.Data.words[id].matched].line
+				.transition()
+					.style('opacity', 0)
+					.duration(500)
+		else 
+			Matching.Data.words[id].line
+				.transition()
+					.style('opacity', 0)
+					.duration(500)
 
-	# Brings into view a popup for long strings.
+	_swellCircle = (id) ->
+		if Matching.Data.words[id].matched > -1
+			Matching.Data.words[id].hollowCircle
+				.transition()
+					.style('stroke', darkBlue)
+					.duration(200)
+		else
+			Matching.Data.words[id].innerCircle
+				.style('fill', darkGreen).style('stroke', darkGreen)
+				.transition()
+					.style('opacity', 1)
+					.duration(200)
+
+			Matching.Data.words[id].hollowCircle
+				.transition()
+					.style('stroke', darkGreen)
+					.duration(200)
+
+	_contractCircle = (id) ->
+		Matching.Data.words[id].innerCircle
+			.transition()
+				.style('opacity', 0)
+				.duration(200)
+
+		Matching.Data.words[id].hollowCircle
+			.transition()
+				.style('stroke', lightGreen)
+				.duration(200)
+
 	animatePopupIn = (id) ->
-		popup = document.getElementById(id).children[2]
+		popup = document.getElementById(id).children[1]
 
 		popup.style.display = 'block'
 		setTimeout ->
@@ -197,199 +304,19 @@ Namespace('Matching').Draw = do ->
 		, 5
 
 	animatePopupOut = (id) ->
-		popup = document.getElementById(id).children[2]
+		popup = document.getElementById(id).children[1]
 
 		popup.className = 'popup-text'
 		setTimeout ->
 			popup.style.display = 'none'
 		, 300
 
-	rectPointerDown = (id) ->
-		# A word within the same column is already selected.
-		for i in [0..words.length-1]
-			if words[id].gameboard == words[i].gameboard && words[id].column == words[i].column && words[i].selected == true && i != id
-				unSelectWord(i)
-				contractCircle(i)
-				break
-		# The focused word is matched.
-		if words[id].matched > -1
-			unMatchingAnimation(id)
-			unMatchWords(id)
-			selectWord(id)
+	drawProgressBar = () ->
+		Matching.Data.svgNodes.push d3.select('body').select('#questions-answered').select('svg')
 
-		# A word within the opposite column is selected.
-		for i in [0..words.length-1]
-			if words[id].gameboard == words[i].gameboard && words[id].column != words[i].column && words[i].selected == true
-				unSelectWord(id, i)
-				matchWords(id, i)
-				matchingAnimation(id)
-				break
-
-		if words[id].matched == -1
-			selectWord(id)
-			swellCircle(id)
-
-	rectPointerUp = (id) ->
-		# The focused word is in the opposite column.
-		if dragId > -1 && dragEndId > -1 && dragId%2 != dragEndId%2
-			# The focused word is already matched.
-			if words[dragEndId].matched > -1
-				unMatchingAnimation(dragEndId)
-				unMatchWords(dragEndId)
-			# The focused word isn't matched.
-			if words[dragEndId].matched == -1
-				unSelectWord(dragId, dragEndId)
-				matchWords(dragId, dragEndId)
-				matchingAnimation(dragEndId)
-
-	unMatchWords = (id) ->
-		# Remove the matched class from the pair of words.
-		words[id].DOMelement.className = "word selected"
-		words[words[id].matched].DOMelement.className = "word"
-
-		# Reverse the matching animation.
-		unMatchingAnimation(id)
-		updateProgressBar('down')
-		assessRemainingQuestions('increased')
-
-		# Remove word pairing.
-		words[words[id].matched].matched = -1
-		words[id].matched = -1
-
-	matchWords = (id1, id2) ->
-		# Add a matched status to both words.
-		words[id1].DOMelement.className = 'word matched'
-		words[id2].DOMelement.className = 'word matched'
-
-		# Store the keys of each word's partner.
-		words[id1].matched = id2
-		words[id2].matched = id1
-
-		updateProgressBar('up')
-		assessRemainingQuestions('decreased')
-
-	unSelectWord = () -> # Accepts variable number of arguments.
-		for i in [0..arguments.length-1]
-			words[arguments[i]].DOMelement.className = 'word'
-			words[arguments[i]].selected = false
-
-	selectWord = (id) ->
-		words[id].DOMelement.className = 'word selected'
-		words[id].selected = true
-
-	matchingAnimation = (id) ->
-		# Transition circles to a matched color.
-		words[words[id].matched].hollowCircle.transition().style('stroke', grey).duration(200)
-		words[words[id].matched].holderCircle.transition().style('stroke', randColor).style('fill', randColor).duration(200)
-
-		words[id].hollowCircle.transition().style('stroke', grey).duration(200)
-		words[id].holderCircle.transition().style('stroke', randColor).style('fill', randColor).duration(200)
-
-		# Move the first selected word's circle to the socket of the second selected word.
-		words[words[id].matched].innerCircle.transition()
-			.style('stroke', randColor).style('fill', randColor)
-			.attr('r', 5)
-			.attr('cx', words[id].holderCircle.attr('cx'))
-			.attr('cy', words[id].holderCircle.attr('cy'))
-			.duration(500).ease('bounce')
-
-		words[id].holderCircle.transition()
-			.attr('r', 0)
-			.duration(20)
-		words[id].innerCircle.transition()
-			.attr('r', 0)
-			.duration(20)
-
-		# Animate the line with the circle.
-		words[words[id].matched].line.transition()
-			.style('stroke', grey)
-			.attr('x2', words[id].holderCircle.attr('cx'))
-			.attr('y2', words[id].holderCircle.attr('cy'))
-			.duration(500).ease('bounce')
-
-		# Reset the inner circle matched color.
-		randColorReset()
-
-	unMatchingAnimation = (id) ->
-		words[words[id].matched].circleGroup.transition()
-			.style('stroke', darkGreen).style('fill', darkGreen)
-			.attr('r', 0)
-			.duration(200)
-		words[words[id].matched].hollowCircle.transition()
-			.style('stroke', lightGreen)
-			.duration(200)
-
-		# The word that we clicked has a circle that's not in its home. Let's bring it home.
-		if words[id].innerCircle.attr('cx') != words[id].holderCircle.attr('cx')
-			words[id].innerCircle
-				.transition()
-					.style('stroke', darkGreen).style('fill', darkGreen)
-					.attr('cx', words[id].holderCircle.attr('cx'))
-					.attr('cy', words[id].holderCircle.attr('cy'))
-					.duration(500).ease('elastic')
-				.transition()
-					.attr('r', 0)
-					.duration(200).ease('none')
-
-			words[id].line.transition()
-				.style('stroke', darkGreen).style('fill', darkGreen)
-				.attr('x2', words[id].holderCircle.attr('cx'))
-				.attr('y2', words[id].holderCircle.attr('cy'))
-				.duration(500).ease('elastic')
-		else
-			words[words[id].matched].innerCircle
-				.transition()
-					.style('stroke', darkGreen).style('fill', darkGreen)
-					.attr('cx', words[words[id].matched].holderCircle.attr('cx'))
-					.attr('cy', words[words[id].matched].holderCircle.attr('cy'))
-					.ease('elastic')
-					.duration(500)
-				.transition()
-					.attr('r', 0)
-					.duration(200).ease('none')
-
-			words[words[id].matched].line.transition()
-				.style('stroke', darkGreen).style('fill', darkGreen)
-				.attr('x2', words[words[id].matched].holderCircle.attr('cx'))
-				.attr('y2', words[words[id].matched].holderCircle.attr('cy'))
-				.duration(500).ease('elastic')
-
-	swellCircle = (id) ->
-		words[id].circleGroup.style('stroke', darkGreen).style('fill', darkGreen).transition().attr('r', '5').attr('stroke-width', 2).duration(200)
-		words[id].hollowCircle.transition().style('stroke', darkGreen).duration(200)
-
-	contractCircle = (id) ->
-		words[id].circleGroup.transition().attr('r', '0').duration(200)
-		words[id].hollowCircle.transition().style('stroke', lightGreen).duration(200)
-
-	# Converts an HSV color to RGB. Equation for conversion can be found at:
-	# http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
-	hsvToRgb = (h, s, v) ->
-		h_i = parseInt(h*6)
-		f = h*6 - h_i
-		p = v * (1 - s)
-		q = v * (1 - f*s)
-		t = v * (1 - (1 - f) * s)
-		switch h_i
-			when 0 then r = v; g = t; b = p
-			when 1 then r = q; g = v; b = p
-			when 2 then r = p; g = v; b = t
-			when 3 then r = p; g = q; b = v
-			when 4 then r = t; g = p; b = v
-			when 5 then r = v; g = p; b = q
-		'rgb('+parseInt(r*256)+','+parseInt(g*256)+','+parseInt(b*256)+')'
-
-	# Increments circle colors so that repeats are not found on the same page.
-	randColorReset = ->
-		hue += 0.15
-		if hue > 1 then hue = 0.01
-		randColor = hsvToRgb(hue, 0.5, 0.95)
-
-	# Progress Bar Methods
-	drawProgressBar = ->
-		_totalQuestions = Matching.Engine.getTotalQuestions()
-		_remainingQuestions = _totalQuestions
-		progressBar = paper[paper.length-1].append('rect')
+		_totalItems     = Matching.Data.game.totalItems
+		_remainingItems = Matching.Data.game.totalItems
+		_progressBar    = Matching.Data.svgNodes[Matching.Data.svgNodes.length-1].append('rect')
 			.attr('x', 0).attr('y', 0)
 			.attr('width', 0).attr('height', 10)
 			.attr('rx', 5).attr('ry', 5)
@@ -399,27 +326,29 @@ Namespace('Matching').Draw = do ->
 
 	updateProgressBar = (direction) ->
 		if direction is 'up'
-			progressBar.transition().attr('width', progressBarWidth += (160/_totalQuestions)).duration(600).ease('bounce')
+			_progressBar.transition().attr('width', _progressBarWidth += (160/_totalItems)).duration(600).ease('bounce')
 		else if direction is 'down'
-			progressBar.transition().attr('width', progressBarWidth -= (160/_totalQuestions)).duration(600).ease('bounce')
+			_progressBar.transition().attr('width', _progressBarWidth -= (160/_totalItems)).duration(600).ease('bounce')
 
-	assessRemainingQuestions = (questions) ->
-		if questions is 'increased' and _remainingQuestions is 0
+	updateRemaining = (questions) ->
+		if questions is 'up' and _remainingItems is 0
 			document.getElementById('submit-button').className = 'unselectable'
 
-		if questions is 'increased' then _remainingQuestions++
-		if questions is 'decreased' then _remainingQuestions--
+		if questions is 'up'   then _remainingItems++
+		if questions is 'down' then _remainingItems--
 
-		if _remainingQuestions == 0
-			document.getElementById('submit-button').className = ''
+		if _remainingItems is 0
+			document.getElementById('submit-button').className = 'glowing'
 
-	# Public properties:
-	paper: paper
-
-	# Public methods:
+	# Public
 	setEventListeners : setEventListeners
-	getWords          : getWords
-	animatePopupOut   : animatePopupOut
+	reorderSVG        : reorderSVG
 	animatePopupIn    : animatePopupIn
-	setWordObject     : setWordObject
+	animatePopupOut   : animatePopupOut
+	unMatchAnimation  : unMatchAnimation
 	drawProgressBar   : drawProgressBar
+	updateProgressBar : updateProgressBar
+	updateRemaining   : updateRemaining
+
+
+
