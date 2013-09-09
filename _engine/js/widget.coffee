@@ -29,6 +29,7 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.nodes.pageWheel   = document.getElementById('page-num').style
 
 	_setGameInstanceData = () ->
+		# Widget instance data.
 		Matching.Data.game.totalItems        = Matching.Data.game.qset.items[0].items.length
 		Matching.Data.game.remainingItems    = Matching.Data.game.totalItems
 		Matching.Data.game.numGameboards     = Math.ceil(Matching.Data.game.totalItems/5)
@@ -39,6 +40,7 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.game.hue               = Math.random()
 		Matching.Data.game.randomColor       = Matching.Data.HSVtoRGB(Matching.Data.game.hue, 0.5, 0.95)
 
+		# Control flow gates.
 		Matching.Data.gates.animating    = false
 		Matching.Data.gates.inWord       = false
 		Matching.Data.gates.inColumn     = false
@@ -60,8 +62,9 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.nodes.boards = document.getElementsByClassName('gameboard')
 
 		# Hide all gameboards except the first.
-		Matching.Data.nodes.boards[i].className = 'gameboard hidden' for i in [1..Matching.Data.game.numGameboards-1]
-		if Matching.Data.game.numGameboards > 1 then Matching.Data.nodes.next.className = 'button shown'
+		if Matching.Data.game.numGameboards > 1 
+			Matching.Data.nodes.boards[i].className = 'gameboard hidden' for i in [1..Matching.Data.game.numGameboards-1]
+			Matching.Data.nodes.next.className = 'button shown'
 
 	_shuffleIndices = () ->
 		_numGB = Matching.Data.game.numGameboards
@@ -203,7 +206,7 @@ Namespace('Matching').Engine = do ->
 	_submitAnswers = ->
 		words = Matching.Data.words
 		# We need to look through all matchable questions.
-		for i in [0..words.length-1]
+		for i in [0..words.length-1] by 2
 			do ->
 				for j in [0..Matching.Data.game.qset.items[0].items.length-1]
 					if Matching.Data.game.qset.items[0].items[j].questions[0].text == words[i].word
