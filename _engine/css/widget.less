@@ -68,7 +68,7 @@ html, body {
 	    -ms-transform-origin : 0 550px;
 	     -o-transform-origin : 0 550px;
 	        transform-origin : 0 550px;
-	-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
+	-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
 	&.hidden {
 		-webkit-transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		   -moz-transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
@@ -152,7 +152,7 @@ html, body {
 				border-radius    : 10px;
 				border-bottom    : 3px solid #DDD;
 				overflow         : auto;
-				-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
+				-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
 				-webkit-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				   -moz-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				    -ms-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
@@ -492,7 +492,26 @@ and (-webkit-min-device-pixel-ratio: 2){
 	50%  {box-shadow: 0 0 20px #FFF}
 	100% {box-shadow: 0 0 5px #FFF}
 }
-
+@-moz-keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
+@-ms-keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
+@-o-keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
+@keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
 
 
 
