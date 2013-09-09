@@ -15,6 +15,7 @@ Namespace('Matching').Engine = do ->
 		_drawBoardContent()         # Injects the gameboard content.
 		_fillBoardContent()         # Fills the content with text.
 
+		Matching.Draw.drawProgressBar(Matching.Data.svgNodes)
 		Matching.Draw.setEventListeners()
 		Matching.Draw.reorderSVG()
 
@@ -63,7 +64,7 @@ Namespace('Matching').Engine = do ->
 
 		# Hide all gameboards except the first.
 		if Matching.Data.game.numGameboards > 1 
-			Matching.Data.nodes.boards[i].className = 'gameboard hidden' for i in [1..Matching.Data.game.numGameboards-1]
+			Matching.Data.nodes.boards[i].className = 'gameboard hidden no-transition' for i in [1..Matching.Data.game.numGameboards-1]
 			Matching.Data.nodes.next.className = 'button shown'
 
 	_shuffleIndices = () ->
@@ -107,13 +108,11 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.nodes.questions = document.getElementsByClassName('question') 
 		Matching.Data.nodes.answers   = document.getElementsByClassName('answer')
 
-		Matching.Draw.drawProgressBar(Matching.Data.svgNodes)
-
 	_fillBoardContent = () ->
 		_questionId       = 0 # ID's used for matching and drawing.
 		_answerId         = 1 # ID's used for matching and drawing.
-		_currentGameboard = 0
-		_itemsAdded       = 0
+		_currentGameboard = 0 # The current gameboard.
+		_itemsAdded       = 0 # The number of items added on the current board.
 
 		for i in [0..Matching.Data.game.totalItems-1]
 			# Populate the question and question popup with text.
@@ -162,7 +161,6 @@ Namespace('Matching').Engine = do ->
 				Matching.Data.nodes.pageWheel.webkitTransform = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 				Matching.Data.nodes.pageWheel.mozTransform    = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 				Matching.Data.nodes.pageWheel.msTransform     = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
-				Matching.Data.nodes.pageWheel.oTransform      = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 				Matching.Data.nodes.pageWheel.transform       = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 
 				setTimeout ->
@@ -190,7 +188,6 @@ Namespace('Matching').Engine = do ->
 				Matching.Data.nodes.pageWheel.webkitTransform = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 				Matching.Data.nodes.pageWheel.mozTransform    = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 				Matching.Data.nodes.pageWheel.msTransform     = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
-				Matching.Data.nodes.pageWheel.oTransform      = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 				Matching.Data.nodes.pageWheel.transform       = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 
 				setTimeout ->
@@ -201,20 +198,20 @@ Namespace('Matching').Engine = do ->
 		_submitAnswers()
 		Materia.Engine.end()
 
-	# TODO: rewrite this silly thing.
 	# Submit matched words for scoring.
 	_submitAnswers = ->
-		words = Matching.Data.words
-		# We need to look through all matchable questions.
-		for i in [0..words.length-1] by 2
+		_words     = Matching.Data.words
+		_qsetItems = Matching.Data.game.qset.items[0].items
+		for i in [0.._words.length-1] by 2                                # Loop through all word pairs.
 			do ->
-				for j in [0..Matching.Data.game.qset.items[0].items.length-1]
-					if Matching.Data.game.qset.items[0].items[j].questions[0].text == words[i].word
+				for j in [0.._qsetItems.length-1]                         # Loop through the qset word pairs.
+					if _qsetItems[j].questions[0].text == _words[i].word  # Find matching questions.
 						Materia.Score.submitQuestionForScoring(
-							Matching.Data.game.qset.items[0].items[j].id, 
-							words[words[i].matched].word
+							_qsetItems[j].id,                             # Send the ID of the question and...
+							_words[_words[i].matched].word                # ... the word that the user matched with it.
 						)
-						break
+						break                                             # Once we've submitted our answer, 
+                                                                          # continuing through the inner loop is useless.
 
 	# Public.
 	start              : start
