@@ -95,7 +95,7 @@ Namespace('Matching').Draw = do ->
 				#### TODO: code to replace mouseenter, mouseleave for mobile devices. ####
 
 		else
-			Disables right click.
+			# Disables right click.
 			document.oncontextmenu = -> false
 			document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
 
