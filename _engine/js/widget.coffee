@@ -6,6 +6,10 @@ Namespace('Matching').Engine = do ->
 	animating  = false
 
 	start = (instance, qset, version = '1') ->
+		if not _browserSupportsSvg()
+			$('.error-notice-container').show()
+			return
+
 		Matching.Data.game.qset = qset
 
 		_cacheVariables()           # Stores references to commonly used nodes.
@@ -18,6 +22,9 @@ Namespace('Matching').Engine = do ->
 		Matching.Draw.drawProgressBar(Matching.Data.svgNodes)
 		Matching.Draw.setEventListeners()
 		Matching.Draw.reorderSVG()
+
+	_browserSupportsSvg = ->
+		document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.1")
 
 	_cacheVariables = () ->
 		$main   = $('#main')                      # A wrapper for the entire widget.
