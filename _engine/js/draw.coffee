@@ -85,18 +85,18 @@ Namespace('Matching').Draw = do ->
 
 		#### TODO: Only limited dragging exists. Implement better dragging. ####
 		# Will pickup drag events from most inputs including touch and mouse.
-		Hammer(document).on 'drag', (event) ->
-			if event.gesture.startEvent.target.tagName is 'LI'
-				pointerX = event.gesture.center.pageX
-				pointerY = event.gesture.center.pageY
+		# Hammer(document).on 'drag', (event) ->
+		# 	if event.gesture.startEvent.target.tagName is 'LI'
+		# 		pointerX = event.gesture.center.pageX
+		# 		pointerY = event.gesture.center.pageY
 
-				if Matching.Data.words[downId].matched < 0 && not Matching.Data.gates.inColumn
-					Matching.Data.words[downId].preinnerCircle
-						.style('opacity', 1)
-						.attr('cx', pointerX).attr('cy', pointerY)
-					Matching.Data.words[downId].preline
-						.style('opacity', 1)
-						.attr('x2', pointerX).attr('y2', pointerY)
+		# 		if Matching.Data.words[downId].matched < 0 && not Matching.Data.gates.inColumn
+		# 			Matching.Data.words[downId].preinnerCircle
+		# 				.style('opacity', 1)
+		# 				.attr('cx', pointerX).attr('cy', pointerY)
+		# 			Matching.Data.words[downId].preline
+		# 				.style('opacity', 1)
+		# 				.attr('x2', pointerX).attr('y2', pointerY)
 
 		if _mobile
 			# Prevents scrolling.
