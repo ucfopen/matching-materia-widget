@@ -414,6 +414,38 @@ html, body {
 	        transition : none !important;
 }
 
+.error-notice-container {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: #2f3944;
+	display: none;
+
+	.error-notice {
+		background: #fceead url('../img/error-icon.png') center 26px no-repeat;
+		width: 625px;
+		height: 295px;
+		margin: 140px auto 0 auto;
+		text-align: center;
+
+		h1 {
+			color: #f78348;
+			font-size: 13pt;
+			padding-top: 130px;
+			font-weight: normal;
+		}
+
+		h2 {
+			font-size: 16pt;
+			color: #282828;
+			padding-top: 16px;
+			font-weight: normal;
+		}
+	}
+}
+
 @media only screen 
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) {
