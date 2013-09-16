@@ -64,6 +64,7 @@ Namespace('Matching').Engine = do ->
 	_drawBoards = (title) ->
 		# Set the game title and insert all gameboards.
 		document.getElementById('title').innerHTML = title
+		if title.length > 38 then $('#title').css('font-size','1.2em')
 		$main.append($tBoard.clone()) for i in [0..Matching.Data.game.numGameboards-1]
 
 		# Cache all gameboards after they've been inserted.
@@ -122,13 +123,18 @@ Namespace('Matching').Engine = do ->
 		_itemsAdded       = 0 # The number of items added on the current board.
 
 		for i in [0..Matching.Data.game.totalItems-1]
+
+			_question = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
+			_answer = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
 			# Populate the question and question popup with text.
-			Matching.Data.nodes.questions[i].children[0].innerHTML = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
-			Matching.Data.nodes.questions[i].children[1].innerHTML = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
+			Matching.Data.nodes.questions[i].children[0].innerHTML = _question
+			Matching.Data.nodes.questions[i].children[1].innerHTML = _question
+			if _question.length > 17 then $(Matching.Data.nodes.questions[i].children[0]).css('font-size', 17)
 
 			# Populate the answer and answer popup with text.
-			Matching.Data.nodes.answers[i].children[0].innerHTML   = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
-			Matching.Data.nodes.answers[i].children[1].innerHTML   = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
+			Matching.Data.nodes.answers[i].children[0].innerHTML   = _answer
+			Matching.Data.nodes.answers[i].children[1].innerHTML   = _answer
+			if _answer.length > 17 then $(Matching.Data.nodes.answers[i].children[0]).css('font-size', 17)
 
 			Matching.Data.nodes.questions[i].id = 'w'+_questionId # Node ID for question.
 			Matching.Data.nodes.answers[i].id   = 'w'+_answerId   # Node ID for answer.
