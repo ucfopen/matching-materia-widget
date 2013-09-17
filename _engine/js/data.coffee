@@ -36,7 +36,7 @@ Namespace('Matching').Data =
 		this.words[id].selected  = false
 		this.words[id].matched   = -1
 		this.words[id].word      = node.children[0].innerHTML
-		this.words[id].longWord  = node.children[0].innerHTML.length>25
+		this.words[id].longWord  = node.children[0].innerHTML.length>40
 		this.words[id].node      = node
 
 	selectWord : (id) ->

@@ -113,7 +113,7 @@ Namespace('Matching').Engine = do ->
 				_$rightColumn.append($tWord.clone().addClass('answer'))  # Append a word template clone.
 
 		# These temporary classes will be used by D3 when setting up the "canvas".
-		Matching.Data.nodes.questions = document.getElementsByClassName('question') 
+		Matching.Data.nodes.questions = document.getElementsByClassName('question')
 		Matching.Data.nodes.answers   = document.getElementsByClassName('answer')
 
 	_fillBoardContent = () ->
@@ -129,12 +129,13 @@ Namespace('Matching').Engine = do ->
 			# Populate the question and question popup with text.
 			Matching.Data.nodes.questions[i].children[0].innerHTML = _question
 			Matching.Data.nodes.questions[i].children[1].innerHTML = _question
-			if _question.length > 17 then $(Matching.Data.nodes.questions[i].children[0]).css('font-size', 17)
-
+			if _question.length > 17 then $(Matching.Data.nodes.questions[i].children[0]).addClass 'smaller'
+			#if $(Matching.Data.nodes.questions[i].children[0]).height() > 53 then $(Matching.Data.nodes.questions[i].children[0]).addClass 'wrapped'
 			# Populate the answer and answer popup with text.
 			Matching.Data.nodes.answers[i].children[0].innerHTML   = _answer
 			Matching.Data.nodes.answers[i].children[1].innerHTML   = _answer
-			if _answer.length > 17 then $(Matching.Data.nodes.answers[i].children[0]).css('font-size', 17)
+			if _answer.length > 17 then $(Matching.Data.nodes.answers[i].children[0]).css('font-size',17)
+			#if $(Matching.Data.nodes.answers[i].children[0]).height() > 53 then $(Matching.Data.nodes.answers[i].children[0]).addClass('wrapped')
 
 			Matching.Data.nodes.questions[i].id = 'w'+_questionId # Node ID for question.
 			Matching.Data.nodes.answers[i].id   = 'w'+_answerId   # Node ID for answer.

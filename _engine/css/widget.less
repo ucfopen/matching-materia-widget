@@ -101,7 +101,7 @@ html, body {
 			}
 		}
 		.word {
-			z-index       : 0; 
+			z-index       : 0;
 			text-align    : center;
 			font-size     : 25px;
 			width         : 245px;
@@ -122,14 +122,20 @@ html, body {
 				border-radius    : 10px;
 				border-bottom    : 3px solid #15987E;
 				width            : 220px;
-				overflow         : hidden;
-				text-overflow    : ellipsis;
-				white-space      : nowrap;
+				white-space      : normal;
+				word-wrap        : break-word;
 				-webkit-transition : 0.2s;
 				   -moz-transition : 0.2s;
 				    -ms-transition : 0.2s;
 				        transition : 0.2s;
+				&.smaller {
+					height: 43px;
+					width:200px;
+					padding: 5px 10px;
+					font-size:17px;
+				}
 			}
+
 			.popup-text {
 				display          : none;
 				z-index          : -2;
