@@ -57,6 +57,12 @@ class Score_Modules_Matching extends Score_Module
 				$t1 = strtoupper($t1);
 				$t2 = strtoupper($t2);
 			}
+
+			// trim whitespace
+			$t1 = trim($t1);
+			$t2 = trim($t2);
+			
+			// check answer
 			if ($t1 == $t2)
 			{
 				return 100;
