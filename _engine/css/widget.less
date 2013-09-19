@@ -8,6 +8,17 @@
 	font-weight : normal;
 	font-style  : normal;
 }
+@font-face {
+	font-family: 'ArrowGlyph';
+	src: url('../font/arrow-glyph.eot');
+	src: url('../font/arrow-glyph.eot?#iefix') format('embedded-opentype'),
+		 url('../font/arrow-glyph.woff') format('woff'),
+		 url('../font/arrow-glyph.ttf') format('truetype'),
+		 url('../font/arrow-glyph.svg#ArrowGlyph') format('svg');
+	font-weight : normal;
+	font-style  : normal;
+}
+
 ::-webkit-scrollbar { 
     display : none; 
 }
@@ -118,24 +129,51 @@ html, body {
 				position         : absolute;
 				background-color : #1ABC9C;
 				margin-top       : -10px;
-				padding          : 10px 0;
+				padding          : 5px;
 				border-radius    : 10px;
 				border-bottom    : 3px solid #15987E;
-				width            : 220px;
-				white-space      : normal;
-				word-wrap        : break-word;
+				height           : 43px;
+				width            : 210px;
 				-webkit-transition : 0.2s;
 				   -moz-transition : 0.2s;
 				    -ms-transition : 0.2s;
 				        transition : 0.2s;
-				&.smaller {
-					height: 43px;
-					width:200px;
-					padding: 5px 10px;
-					font-size:17px;
+				.text-wrapper {
+					display          : inline-block;
+					vertical-align   : middle;
+					max-height       : 43px;
+					width            : 200px;
+					white-space      : normal;
+					word-wrap        : break-word;
+					text-overflow    : ellipsis;
+					overflow         : hidden;
+					margin           : auto 0px;
+					&.smaller {
+						font-size    :17px;
+					}
+				}
+				.text-wrapper-dummy {
+					position         : absolute;
+					display          : block;
+					visibility       : hidden;
+					height           : auto;
+					width            : auto;
+					white-space      : nowrap;
+				}
+				.expand {
+					display          : none;
+					position         : absolute;
+					width            : 12px;
+					height           : 11px;
+					color            : #FFFFFF;
+					background       : #00a086;
+					right            : -5px;
+					top              : -5px;
+					font-size        : 8px;
+					padding          : 3px 2px 2px 2px;
+					border-radius    : 3px;
 				}
 			}
-
 			.popup-text {
 				display          : none;
 				z-index          : -2;
@@ -148,6 +186,7 @@ html, body {
 				background-color : #FFF;
 				font-size        : 14px;
 				white-space      : normal;
+				word-wrap        : break-word;
 				border-radius    : 10px;
 				border-bottom    : 3px solid #DDD;
 				overflow         : auto;
@@ -513,6 +552,11 @@ and (-webkit-min-device-pixel-ratio: 2){
 	0%   {box-shadow: 0 0 5px #FFF}
 	50%  {box-shadow: 0 0 20px #FFF}
 	100% {box-shadow: 0 0 5px #FFF}
+}
+[data-icon]:before {
+	font-family: 'ArrowGlyph', sans-serif;
+	content: attr(data-icon);
+	speak: none;
 }
 
 

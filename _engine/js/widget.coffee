@@ -127,15 +127,38 @@ Namespace('Matching').Engine = do ->
 			_question = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
 			_answer = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
 			# Populate the question and question popup with text.
-			Matching.Data.nodes.questions[i].children[0].innerHTML = _question
+			Matching.Data.nodes.questions[i].children[0].children[0].innerHTML = _question
 			Matching.Data.nodes.questions[i].children[1].innerHTML = _question
-			if _question.length > 17 then $(Matching.Data.nodes.questions[i].children[0]).addClass 'smaller'
-			#if $(Matching.Data.nodes.questions[i].children[0]).height() > 53 then $(Matching.Data.nodes.questions[i].children[0]).addClass 'wrapped'
+			# Populate the dummy wrapper
+			Matching.Data.nodes.questions[i].children[0].children[1].innerHTML = _question
+
 			# Populate the answer and answer popup with text.
-			Matching.Data.nodes.answers[i].children[0].innerHTML   = _answer
+			Matching.Data.nodes.answers[i].children[0].children[0].innerHTML   = _answer
 			Matching.Data.nodes.answers[i].children[1].innerHTML   = _answer
-			if _answer.length > 17 then $(Matching.Data.nodes.answers[i].children[0]).css('font-size',17)
-			#if $(Matching.Data.nodes.answers[i].children[0]).height() > 53 then $(Matching.Data.nodes.answers[i].children[0]).addClass('wrapped')
+			Matching.Data.nodes.answers[i].children[0].children[1].innerHTML = _answer
+
+			_handleTextScaling = (textElement) ->
+				# Static settings for word width/height
+				max_width = 200
+				max_height = 43
+
+				# Set up target/dummy pair for question
+				_target = $(textElement.children[0])
+				_dummy = $(textElement.children[1]).css('font-size', _target.css('font-size'))
+
+				# Recursively nudge font size down
+				while _dummy.width() > max_width
+					_size = parseInt(_dummy.css('font-size')) - 1
+					_dummy.css 'font-size', (_size)
+					if _size <= 17 then break
+
+				# Assign new font size and check for overflow
+				_target.css 'font-size', _size
+				if _dummy.width() > max_width * 2 then $(textElement.children[2]).show()
+
+			# Run text scaling method for both the question and answer
+			_handleTextScaling Matching.Data.nodes.answers[i].children[0]
+			_handleTextScaling Matching.Data.nodes.questions[i].children[0]
 
 			Matching.Data.nodes.questions[i].id = 'w'+_questionId # Node ID for question.
 			Matching.Data.nodes.answers[i].id   = 'w'+_answerId   # Node ID for answer.
