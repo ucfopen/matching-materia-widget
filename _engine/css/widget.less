@@ -8,6 +8,17 @@
 	font-weight : normal;
 	font-style  : normal;
 }
+@font-face {
+	font-family: 'ArrowGlyph';
+	src: url('../font/arrow-glyph.eot');
+	src: url('../font/arrow-glyph.eot?#iefix') format('embedded-opentype'),
+		 url('../font/arrow-glyph.woff') format('woff'),
+		 url('../font/arrow-glyph.ttf') format('truetype'),
+		 url('../font/arrow-glyph.svg#ArrowGlyph') format('svg');
+	font-weight : normal;
+	font-style  : normal;
+}
+
 ::-webkit-scrollbar { 
     display : none; 
 }
@@ -25,7 +36,6 @@ html, body {
 	-webkit-user-select : none;
 	   -moz-user-select : none;
 	    -ms-user-select : none;
-	     -o-user-select : none;
 	        user-select : none;
 	-webkit-touch-callout : none;
 }
@@ -42,7 +52,6 @@ html, body {
 	-webkit-transition : 0.2s;
 	   -moz-transition : 0.2s;
 	    -ms-transition : 0.2s;
-	     -o-transition : 0.2s;
 	        transition : 0.2s;
 	&:hover {
 		background-color : #34495E!important;
@@ -56,19 +65,16 @@ html, body {
 	-webkit-transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 	   -moz-transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 	    -ms-transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	     -o-transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 	        transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 	-webkit-transform-style : preserve-3d;
 	   -moz-transform-style : preserve-3d;
 	    -ms-transform-style : preserve-3d;
-	     -o-transform-style : preserve-3d;
 	        transform-style : preserve-3d;
 	-webkit-transform-origin : 0 550px;
 	   -moz-transform-origin : 0 550px;
 	    -ms-transform-origin : 0 550px;
-	     -o-transform-origin : 0 550px;
 	        transform-origin : 0 550px;
-	-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
+	-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
 	&.hidden {
 		-webkit-transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		   -moz-transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
@@ -106,7 +112,7 @@ html, body {
 			}
 		}
 		.word {
-			z-index       : 0; 
+			z-index       : 0;
 			text-align    : center;
 			font-size     : 25px;
 			width         : 245px;
@@ -117,25 +123,56 @@ html, body {
 			-webkit-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			   -moz-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			    -ms-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-			     -o-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 				    transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			.word-text {
 				z-index          : -3;
 				position         : absolute;
 				background-color : #1ABC9C;
 				margin-top       : -10px;
-				padding          : 10px 0;
+				padding          : 5px;
 				border-radius    : 10px;
 				border-bottom    : 3px solid #15987E;
-				width            : 220px;
-				overflow         : hidden;
-				text-overflow    : ellipsis;
-				white-space      : nowrap;
+				height           : 43px;
+				width            : 210px;
 				-webkit-transition : 0.2s;
 				   -moz-transition : 0.2s;
 				    -ms-transition : 0.2s;
-				     -o-transition : 0.2s;
 				        transition : 0.2s;
+				.text-wrapper {
+					display          : inline-block;
+					vertical-align   : middle;
+					max-height       : 43px;
+					width            : 200px;
+					white-space      : normal;
+					word-wrap        : break-word;
+					text-overflow    : ellipsis;
+					overflow         : hidden;
+					margin           : auto 0px;
+					&.smaller {
+						font-size    :17px;
+					}
+				}
+				.text-wrapper-dummy {
+					position         : absolute;
+					display          : block;
+					visibility       : hidden;
+					height           : auto;
+					width            : auto;
+					white-space      : nowrap;
+				}
+				.expand {
+					display          : none;
+					position         : absolute;
+					width            : 12px;
+					height           : 11px;
+					color            : #FFFFFF;
+					background       : #00a086;
+					right            : -5px;
+					top              : -5px;
+					font-size        : 8px;
+					padding          : 3px 2px 2px 2px;
+					border-radius    : 3px;
+				}
 			}
 			.popup-text {
 				display          : none;
@@ -149,14 +186,14 @@ html, body {
 				background-color : #FFF;
 				font-size        : 14px;
 				white-space      : normal;
+				word-wrap        : break-word;
 				border-radius    : 10px;
 				border-bottom    : 3px solid #DDD;
 				overflow         : auto;
-				-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? All jokes aside, this prevents flickering. */
+				-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
 				-webkit-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				   -moz-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				    -ms-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-				     -o-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				        transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				&.shown {
 					height  : 100px;
@@ -166,7 +203,6 @@ html, body {
 					-webkit-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 					   -moz-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 					    -ms-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-					     -o-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 					        transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				}
 			}
@@ -210,10 +246,6 @@ html, body {
 					-ms-animation-duration        : 600ms;
 					-ms-animation-iteration-count : 1;
 
-					-o-animation-name            : m-anim;
-					-o-animation-duration        : 600ms;
-					-o-animation-iteration-count : 1;
-
 					animation-name            : m-anim;
 					animation-duration        : 600ms;
 					animation-iteration-count : 1;
@@ -227,7 +259,6 @@ html, body {
 				-webkit-transition : 0.2s;
 				   -moz-transition : 0.2s;
 				    -ms-transition : 0.2s;
-				     -o-transition : 0.2s;
 				        transition : 0.2s;
 			}
 		}
@@ -306,14 +337,12 @@ html, body {
 		-webkit-transition : 0.2s;
 		   -moz-transition : 0.2s;
 		    -ms-transition : 0.2s;
-		     -o-transition : 0.2s;
 		        transition : 0.2s;
 		&:hover {
 			background-color : rgb(55,61,66);
 			-webkit-transition : 0.2s;
 			   -moz-transition : 0.2s;
 			    -ms-transition : 0.2s;
-			     -o-transition : 0.2s;
 			        transition : 0.2s;
 		}
 		&.glowing {
@@ -328,10 +357,6 @@ html, body {
 			-ms-animation-name            : glowing;
 			-ms-animation-duration        : 1.5s;
 			-ms-animation-iteration-count : infinite;
-
-			-o-animation-name            : glowing;
-			-o-animation-duration        : 1.5s;
-			-o-animation-iteration-count : infinite;
 
 			animation-name            : glowing;
 			animation-duration        : 1.5s;
@@ -363,7 +388,6 @@ html, body {
 		-webkit-transition : 0.2s;
 		   -moz-transition : 0.2s;
 			-ms-transition : 0.2s;
-			 -o-transition : 0.2s;
 		        transition : 0.2s;
 		&:hover {
 			background-color    : #7DB1FF;
@@ -371,7 +395,6 @@ html, body {
 			-webkit-transition : 0.2s;
 			   -moz-transition : 0.2s;
 			    -ms-transition : 0.2s;
-			     -o-transition : 0.2s;
 			        transition : 0.2s;
 		}
 		&#prev-button {
@@ -379,7 +402,6 @@ html, body {
 			-webkit-transition: left 500ms, background-color 100ms, -webkit-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			   -moz-transition: left 500ms, background-color 100ms,    -moz-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			    -ms-transition: left 500ms, background-color 100ms,     -ms-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-			     -o-transition: left 500ms, background-color 100ms,      -o-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			        transition: left 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			-webkit-transform-style     : preserve-3d;
 			-webkit-transform           : translate3d(0,0,0);
@@ -388,7 +410,6 @@ html, body {
 				-webkit-transform : translate(-200px);
 				   -moz-transform : translate(-200px);
 				    -ms-transform : translate(-200px);
-				     -o-transform : translate(-200px);
 				        transform : translate(-200px);
 			}
 		}
@@ -398,7 +419,6 @@ html, body {
 			-webkit-transition: right 500ms, background-color 100ms, -webkit-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			   -moz-transition: right 500ms, background-color 100ms,    -moz-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			    -ms-transition: right 500ms, background-color 100ms,     -ms-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-			     -o-transition: right 500ms, background-color 100ms,      -o-transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			        transition: right 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			-webkit-transform-style     : preserve-3d;
 			-webkit-transform           : translate3d(0,0,0);
@@ -407,7 +427,6 @@ html, body {
 				-webkit-transform : translate(200px);
 				   -moz-transform : translate(200px);
 				    -ms-transform : translate(200px);
-				     -o-transform : translate(200px);
 				        transform : translate(200px);
 			}
 		}
@@ -426,7 +445,6 @@ html, body {
 		-webkit-transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 		   -moz-transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 		    -ms-transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-		     -o-transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 		        transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 		-webkit-transform-style     : preserve-3d;
 		-webkit-transform           : translate3d(0,0,0);
@@ -439,6 +457,38 @@ html, body {
 	   -moz-transition : none !important;
 	    -ms-transition : none !important;
 	        transition : none !important;
+}
+
+.error-notice-container {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: #2f3944;
+	display: none;
+
+	.error-notice {
+		background: #fceead url('../img/error-icon.png') center 26px no-repeat;
+		width: 625px;
+		height: 295px;
+		margin: 140px auto 0 auto;
+		text-align: center;
+
+		h1 {
+			color: #f78348;
+			font-size: 13pt;
+			padding-top: 130px;
+			font-weight: normal;
+		}
+
+		h2 {
+			font-size: 16pt;
+			color: #282828;
+			padding-top: 16px;
+			font-weight: normal;
+		}
+	}
 }
 
 @media only screen 
@@ -478,10 +528,6 @@ and (-webkit-min-device-pixel-ratio: 2){
 	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
 	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
 }
-@-o-keyframes m-anim {
-	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
-	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
-}
 @keyframes m-anim {
 	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
 	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
@@ -492,7 +538,26 @@ and (-webkit-min-device-pixel-ratio: 2){
 	50%  {box-shadow: 0 0 20px #FFF}
 	100% {box-shadow: 0 0 5px #FFF}
 }
-
+@-moz-keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
+@-ms-keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
+@keyframes glowing {
+	0%   {box-shadow: 0 0 5px #FFF}
+	50%  {box-shadow: 0 0 20px #FFF}
+	100% {box-shadow: 0 0 5px #FFF}
+}
+[data-icon]:before {
+	font-family: 'ArrowGlyph', sans-serif;
+	content: attr(data-icon);
+	speak: none;
+}
 
 
 

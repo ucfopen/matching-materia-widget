@@ -6,6 +6,10 @@ Namespace('Matching').Engine = do ->
 	animating  = false
 
 	start = (instance, qset, version = '1') ->
+		if not _browserSupportsSvg()
+			$('.error-notice-container').show()
+			return
+
 		Matching.Data.game.qset = qset
 
 		_cacheVariables()           # Stores references to commonly used nodes.
@@ -15,8 +19,12 @@ Namespace('Matching').Engine = do ->
 		_drawBoardContent()         # Injects the gameboard content.
 		_fillBoardContent()         # Fills the content with text.
 
+		Matching.Draw.drawProgressBar(Matching.Data.svgNodes)
 		Matching.Draw.setEventListeners()
 		Matching.Draw.reorderSVG()
+
+	_browserSupportsSvg = ->
+		document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.1")
 
 	_cacheVariables = () ->
 		$main   = $('#main')                      # A wrapper for the entire widget.
@@ -29,6 +37,7 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.nodes.pageWheel   = document.getElementById('page-num').style
 
 	_setGameInstanceData = () ->
+		# Widget instance data.
 		Matching.Data.game.totalItems        = Matching.Data.game.qset.items[0].items.length
 		Matching.Data.game.remainingItems    = Matching.Data.game.totalItems
 		Matching.Data.game.numGameboards     = Math.ceil(Matching.Data.game.totalItems/5)
@@ -39,6 +48,7 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.game.hue               = Math.random()
 		Matching.Data.game.randomColor       = Matching.Data.HSVtoRGB(Matching.Data.game.hue, 0.5, 0.95)
 
+		# Control flow gates.
 		Matching.Data.gates.animating    = false
 		Matching.Data.gates.inWord       = false
 		Matching.Data.gates.inColumn     = false
@@ -54,14 +64,16 @@ Namespace('Matching').Engine = do ->
 	_drawBoards = (title) ->
 		# Set the game title and insert all gameboards.
 		document.getElementById('title').innerHTML = title
+		if title.length > 38 then $('#title').css('font-size','1.2em')
 		$main.append($tBoard.clone()) for i in [0..Matching.Data.game.numGameboards-1]
 
 		# Cache all gameboards after they've been inserted.
 		Matching.Data.nodes.boards = document.getElementsByClassName('gameboard')
 
 		# Hide all gameboards except the first.
-		Matching.Data.nodes.boards[i].className = 'gameboard hidden' for i in [1..Matching.Data.game.numGameboards-1]
-		if Matching.Data.game.numGameboards > 1 then Matching.Data.nodes.next.className = 'button shown'
+		if Matching.Data.game.numGameboards > 1 
+			Matching.Data.nodes.boards[i].className = 'gameboard hidden no-transition' for i in [1..Matching.Data.game.numGameboards-1]
+			Matching.Data.nodes.next.className = 'button shown'
 
 	_shuffleIndices = () ->
 		_numGB = Matching.Data.game.numGameboards
@@ -101,25 +113,52 @@ Namespace('Matching').Engine = do ->
 				_$rightColumn.append($tWord.clone().addClass('answer'))  # Append a word template clone.
 
 		# These temporary classes will be used by D3 when setting up the "canvas".
-		Matching.Data.nodes.questions = document.getElementsByClassName('question') 
+		Matching.Data.nodes.questions = document.getElementsByClassName('question')
 		Matching.Data.nodes.answers   = document.getElementsByClassName('answer')
-
-		Matching.Draw.drawProgressBar(Matching.Data.svgNodes)
 
 	_fillBoardContent = () ->
 		_questionId       = 0 # ID's used for matching and drawing.
 		_answerId         = 1 # ID's used for matching and drawing.
-		_currentGameboard = 0
-		_itemsAdded       = 0
+		_currentGameboard = 0 # The current gameboard.
+		_itemsAdded       = 0 # The number of items added on the current board.
 
 		for i in [0..Matching.Data.game.totalItems-1]
+
+			_question = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
+			_answer = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
 			# Populate the question and question popup with text.
-			Matching.Data.nodes.questions[i].children[0].innerHTML = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
-			Matching.Data.nodes.questions[i].children[1].innerHTML = Matching.Data.game.qset.items[0].items[Matching.Data.game.qIndices[i]].questions[0].text
+			Matching.Data.nodes.questions[i].children[0].children[0].innerHTML = _question
+			Matching.Data.nodes.questions[i].children[1].innerHTML = _question
+			# Populate the dummy wrapper
+			Matching.Data.nodes.questions[i].children[0].children[1].innerHTML = _question
 
 			# Populate the answer and answer popup with text.
-			Matching.Data.nodes.answers[i].children[0].innerHTML   = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
-			Matching.Data.nodes.answers[i].children[1].innerHTML   = Matching.Data.game.qset.items[0].items[Matching.Data.game.ansIndices[i]].answers[0].text
+			Matching.Data.nodes.answers[i].children[0].children[0].innerHTML   = _answer
+			Matching.Data.nodes.answers[i].children[1].innerHTML   = _answer
+			Matching.Data.nodes.answers[i].children[0].children[1].innerHTML = _answer
+
+			_handleTextScaling = (textElement) ->
+				# Static settings for word width/height
+				max_width = 200
+				max_height = 43
+
+				# Set up target/dummy pair for question
+				_target = $(textElement.children[0])
+				_dummy = $(textElement.children[1]).css('font-size', _target.css('font-size'))
+
+				# Recursively nudge font size down
+				while _dummy.width() > max_width
+					_size = parseInt(_dummy.css('font-size')) - 1
+					_dummy.css 'font-size', (_size)
+					if _size <= 17 then break
+
+				# Assign new font size and check for overflow
+				_target.css 'font-size', _size
+				if _dummy.width() > max_width * 2 then $(textElement.children[2]).show()
+
+			# Run text scaling method for both the question and answer
+			_handleTextScaling Matching.Data.nodes.answers[i].children[0]
+			_handleTextScaling Matching.Data.nodes.questions[i].children[0]
 
 			Matching.Data.nodes.questions[i].id = 'w'+_questionId # Node ID for question.
 			Matching.Data.nodes.answers[i].id   = 'w'+_answerId   # Node ID for answer.
@@ -159,7 +198,6 @@ Namespace('Matching').Engine = do ->
 				Matching.Data.nodes.pageWheel.webkitTransform = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 				Matching.Data.nodes.pageWheel.mozTransform    = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 				Matching.Data.nodes.pageWheel.msTransform     = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
-				Matching.Data.nodes.pageWheel.oTransform      = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 				Matching.Data.nodes.pageWheel.transform       = 'rotate('+(0+(360*Matching.Data.game.currentGameboard-1))+'deg)'
 
 				setTimeout ->
@@ -187,7 +225,6 @@ Namespace('Matching').Engine = do ->
 				Matching.Data.nodes.pageWheel.webkitTransform = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 				Matching.Data.nodes.pageWheel.mozTransform    = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 				Matching.Data.nodes.pageWheel.msTransform     = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
-				Matching.Data.nodes.pageWheel.oTransform      = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 				Matching.Data.nodes.pageWheel.transform       = 'rotate('+(360*Matching.Data.game.currentGameboard)+'deg)'
 
 				setTimeout ->
@@ -198,20 +235,20 @@ Namespace('Matching').Engine = do ->
 		_submitAnswers()
 		Materia.Engine.end()
 
-	# TODO: rewrite this silly thing.
 	# Submit matched words for scoring.
 	_submitAnswers = ->
-		words = Matching.Data.words
-		# We need to look through all matchable questions.
-		for i in [0..words.length-1]
+		_words     = Matching.Data.words
+		_qsetItems = Matching.Data.game.qset.items[0].items
+		for i in [0.._words.length-1] by 2                                # Loop through all word pairs.
 			do ->
-				for j in [0..Matching.Data.game.qset.items[0].items.length-1]
-					if Matching.Data.game.qset.items[0].items[j].questions[0].text == words[i].word
+				for j in [0.._qsetItems.length-1]                         # Loop through the qset word pairs.
+					if _qsetItems[j].questions[0].text == _words[i].word  # Find matching questions.
 						Materia.Score.submitQuestionForScoring(
-							Matching.Data.game.qset.items[0].items[j].id, 
-							words[words[i].matched].word
+							_qsetItems[j].id,                             # Send the ID of the question and...
+							_words[_words[i].matched].word                # ... the word that the user matched with it.
 						)
-						break
+						break                                             # Once we've submitted our answer, 
+                                                                          # continuing through the inner loop is useless.
 
 	# Public.
 	start              : start

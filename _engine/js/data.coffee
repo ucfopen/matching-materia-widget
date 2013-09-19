@@ -35,8 +35,8 @@ Namespace('Matching').Data =
 		this.words[id].gameboard = gameboard
 		this.words[id].selected  = false
 		this.words[id].matched   = -1
-		this.words[id].word      = node.children[0].innerHTML
-		this.words[id].longWord  = node.children[0].innerHTML.length>18
+		this.words[id].word      = node.children[0].children[0].innerHTML
+		this.words[id].longWord  = node.children[0].children[2].style.display != ''
 		this.words[id].node      = node
 
 	selectWord : (id) ->

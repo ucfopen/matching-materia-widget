@@ -46,46 +46,57 @@ Namespace('Matching').Draw = do ->
 	downId   = null
 	upId     = null
 
+
+	# Attaches event listeners to the document.
 	setEventListeners = () ->
 		document.addEventListener downEventType, (event) ->
 			target = event.target
-			switch target.tagName
-				when "LI"
+			downId = null
+
+			if target.tagName isnt 'svg'
+				# A word or its children has been selected.
+				if target.className.split(' ')[0] is "word"
 					downId = target.id.replace regexNonDigit, ''
-					_handleDownEvent(downId)
-				when "DIV"
+				else if target.parentNode.className.split(' ')[0] is "word"
 					downId = target.parentNode.id.replace regexNonDigit, ''
-					_handleDownEvent(downId)
+
+				if downId? then _handleDownEvent(downId)
+
+			# Misc buttons.
 			switch target.id
-				when 'prev-button' then Matching.Engine.handlePrevButton()
-				when 'next-button' then Matching.Engine.handleNextButton()
+				when 'prev-button'   then Matching.Engine.handlePrevButton()
+				when 'next-button'   then Matching.Engine.handleNextButton()
 				when 'submit-button' then Matching.Engine.handleSubmitButton()
+		false
 
 		# Replaces the "Up" event type.
 		Hammer(document).on 'release', (event) ->
 			target = event.target
-			switch target.tagName
-				when "LI"
-					upId = target.id.replace regexNonDigit, ''
-					_handleUpEvent(upId)
-				when "DIV"
-					upId = target.parentNode.id.replace regexNonDigit, ''
-					_handleUpEvent(upId)
+			downId = null
+
+			if target.tagName isnt 'svg'
+				# A word or its children has been selected.
+				if target.className.split(' ')[0] is "word"
+					downId = target.id.replace regexNonDigit, ''
+				else if target.parentNode.className.split(' ')[0] is "word"
+					downId = target.parentNode.id.replace regexNonDigit, ''
+
+				if downId? then _handleUpEvent(downId)
 
 		#### TODO: Only limited dragging exists. Implement better dragging. ####
 		# Will pickup drag events from most inputs including touch and mouse.
-		Hammer(document).on 'drag', (event) ->
-			if event.gesture.startEvent.target.tagName is 'LI'
-				pointerX = event.gesture.center.pageX
-				pointerY = event.gesture.center.pageY
+		# Hammer(document).on 'drag', (event) ->
+		# 	if event.gesture.startEvent.target.tagName is 'LI'
+		# 		pointerX = event.gesture.center.pageX
+		# 		pointerY = event.gesture.center.pageY
 
-				if Matching.Data.words[downId].matched < 0 && not Matching.Data.gates.inColumn
-					Matching.Data.words[downId].preinnerCircle
-						.style('opacity', 1)
-						.attr('cx', pointerX).attr('cy', pointerY)
-					Matching.Data.words[downId].preline
-						.style('opacity', 1)
-						.attr('x2', pointerX).attr('y2', pointerY)
+		# 		if Matching.Data.words[downId].matched < 0 && not Matching.Data.gates.inColumn
+		# 			Matching.Data.words[downId].preinnerCircle
+		# 				.style('opacity', 1)
+		# 				.attr('cx', pointerX).attr('cy', pointerY)
+		# 			Matching.Data.words[downId].preline
+		# 				.style('opacity', 1)
+		# 				.attr('x2', pointerX).attr('y2', pointerY)
 
 		if _mobile
 			# Prevents scrolling.
@@ -96,34 +107,46 @@ Namespace('Matching').Draw = do ->
 
 		else
 			# Disables right click.
-			document.oncontextmenu = -> false
-			document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
+			# document.oncontextmenu = -> false
+			# document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
 
 			document.addEventListener 'mouseover', (event) ->
-				target = event.target
-				switch target.tagName
-					when "DIV" then inPopup = true
-					when "LI"  then _handleEnterEvent(target)
-					when "svg" then if Matching.Data.gates.prelineDrawn then _fadePreline()
-					when "UL"  then Matching.Data.gates.inColumn = true
+				target     = event.target
+
+				if target.tagName is 'svg'
+					if Matching.Data.gates.prelineDrawn then _fadePreline()
+				else
+					firstClass = target.className.split(' ')[0]
+					switch firstClass
+						when 'popup-text' then inPopup = true
+						when 'word' then _handleEnterEvent(target)
+						when 'container' then if Matching.Data.gates.prelineDrawn then _fadePreline()
+						when 'column' then Matching.Data.gates.inColumn = true
 
 			document.addEventListener 'mouseout', (event) ->
 				target = event.target
-				switch target.tagName
-					when "DIV" then inPopup = false; _handleLeaveEvent(target.parentNode)
-					when "LI"  then setTimeout ->
-						if not inPopup then  _handleLeaveEvent(target)
-					, 5
-					when "UL"  then Matching.Data.gates.inColumn = true
+
+				if target.tagName isnt 'svg'
+					firstClass = target.className.split(' ')[0]
+					switch firstClass
+						when 'popup-text'
+							inPopup = false
+							_handleLeaveEvent(target.parentNode)
+						when 'word' then setTimeout ->
+							if not inPopup then _handleLeaveEvent(target)
+						, 10
+						when 'column' then Matching.Data.gates.inColumn = true
 
 	reorderSVG = () ->
-		d3.selection.prototype.moveToFront = () ->
-			return this.each -> this.parentNode.appendChild(this)
+		# Give our D3 selections a move-to-front method.
+		# d3.selection.prototype.moveToFront = () ->
+		# 	return this.each -> this.parentNode.appendChild(this)
 
 		# Makes all inner circles the top nodes so that they overlap any lines.
 		d3.select('body').selectAll('.inner-circle').each ->
 			this.parentNode.appendChild(this)
 
+	# Handles a pointer entering a word.
 	_handleEnterEvent = (target) ->
 		Matching.Data.gates.inWord = true
 
@@ -135,6 +158,7 @@ Namespace('Matching').Draw = do ->
 			_drawPreline(Matching.Data.words[downId], Matching.Data.words[_id])
 		if Matching.Data.words[_id].longWord then animatePopupIn(target.id)
 
+	# Handles a pointer leaving a word.
 	_handleLeaveEvent = (target) ->
 		Matching.Data.gates.inWord = false
 
@@ -144,6 +168,7 @@ Namespace('Matching').Draw = do ->
 
 			if Matching.Data.words[_id].longWord then animatePopupOut(target.id)
 
+	# Handles a pointer down event on a word.
 	_handleDownEvent = (id) ->
 		if not Matching.Data.gates.animating
 			# A word within the same column is already selected.
@@ -152,12 +177,13 @@ Namespace('Matching').Draw = do ->
 				if Matching.Data.words[id].gameboard == Matching.Data.words[i].gameboard && Matching.Data.words[i].selected == true && i != id
 					Matching.Data.unSelectWord(i)
 					if Matching.Data.words[i].node.className != 'word matched'
-						_contractCircle(i)
+						_fadeCircle(i)
 					break
 
 			Matching.Data.selectWord(id)
-			_swellCircle(id)
+			_showCircle(id)
 
+	# Handles a pointer up event on a word.
 	_handleUpEvent = (id) ->
 		if not Matching.Data.gates.animating
 			Matching.Data.gates.animating = true
@@ -174,6 +200,7 @@ Namespace('Matching').Draw = do ->
 				, 500
 				_matchAnimation(id)                          # Animate the new pairing.
 
+	# Draws a line from one column to another.
 	_drawPreline = (source, socket) ->
 		source.preinnerCircle
 			.attr('cx', socket.innerCircle.attr('cx'))
@@ -266,7 +293,7 @@ Namespace('Matching').Draw = do ->
 					.style('opacity', 0)
 					.duration(500)
 
-	_swellCircle = (id) ->
+	_showCircle = (id) ->
 		if Matching.Data.words[id].matched > -1
 			Matching.Data.words[id].hollowCircle
 				.transition()
@@ -284,7 +311,8 @@ Namespace('Matching').Draw = do ->
 					.style('stroke', darkGreen)
 					.duration(200)
 
-	_contractCircle = (id) ->
+
+	_fadeCircle = (id) ->
 		Matching.Data.words[id].innerCircle
 			.transition()
 				.style('opacity', 0)
@@ -295,6 +323,7 @@ Namespace('Matching').Draw = do ->
 				.style('stroke', lightGreen)
 				.duration(200)
 
+	# Animates the popup in.
 	animatePopupIn = (id) ->
 		popup = document.getElementById(id).children[1]
 
@@ -303,6 +332,7 @@ Namespace('Matching').Draw = do ->
 			popup.className = 'popup-text shown'
 		, 5
 
+	# Animates the popup into oblivion.
 	animatePopupOut = (id) ->
 		popup = document.getElementById(id).children[1]
 
@@ -311,6 +341,7 @@ Namespace('Matching').Draw = do ->
 			popup.style.display = 'none'
 		, 300
 
+	# Draws the progress bar when the page is loaded.
 	drawProgressBar = () ->
 		Matching.Data.svgNodes.push d3.select('body').select('#questions-answered').select('svg')
 
@@ -324,12 +355,15 @@ Namespace('Matching').Draw = do ->
 			.style('stroke', '#BDC3C7')
 			.style('fill', '#BDC3C7')
 
+	# Animates the progress bar up or down depending on a single string parameter.
 	updateProgressBar = (direction) ->
 		if direction is 'up'
 			_progressBar.transition().attr('width', _progressBarWidth += (160/_totalItems)).duration(600).ease('bounce')
 		else if direction is 'down'
 			_progressBar.transition().attr('width', _progressBarWidth -= (160/_totalItems)).duration(600).ease('bounce')
 
+	# Is called every time a pairing is made. 
+	# Decides whether or not the submit button should be selectable.
 	updateRemaining = (questions) ->
 		if questions is 'up' and _remainingItems is 0
 			document.getElementById('submit-button').className = 'unselectable'
@@ -341,14 +375,12 @@ Namespace('Matching').Draw = do ->
 			document.getElementById('submit-button').className = 'glowing'
 
 	# Public
-	setEventListeners : setEventListeners
-	reorderSVG        : reorderSVG
-	animatePopupIn    : animatePopupIn
-	animatePopupOut   : animatePopupOut
-	unMatchAnimation  : unMatchAnimation
-	drawProgressBar   : drawProgressBar
-	updateProgressBar : updateProgressBar
-	updateRemaining   : updateRemaining
+	setEventListeners : setEventListeners  # Used by Matching.Engine
+	reorderSVG        : reorderSVG         # Used by Matching.Engine
+	unMatchAnimation  : unMatchAnimation   # Used by Matching.Data
+	drawProgressBar   : drawProgressBar    # Used by Matching.Engine
+	updateProgressBar : updateProgressBar  # Used by Matching.Data
+	updateRemaining   : updateRemaining    # Used by Matching.Data
 
 
 
