@@ -3,7 +3,6 @@ Namespace('Matching').Draw = do ->
 	# Environmental conditions.
 	_ms     = window.navigator.msPointerEnabled
 	_mobile = navigator.userAgent.match /(iPhone|iPod|iPad|Android|BlackBerry)/
-
 	inPopup = false
 
 	# Event types will adapt to different input types.
@@ -52,15 +51,11 @@ Namespace('Matching').Draw = do ->
 		document.addEventListener downEventType, (event) ->
 			target = event.target
 			downId = null
-
-			if target.tagName isnt 'svg'
-				# A word or its children has been selected.
-				if target.className.split(' ')[0] is "word"
-					downId = target.id.replace regexNonDigit, ''
-				else if target.parentNode.className.split(' ')[0] is "word"
-					downId = target.parentNode.id.replace regexNonDigit, ''
-
-				if downId? then _handleDownEvent(downId)
+			
+			word = $(target).closest('.word').get(0);
+			if word? 
+				downId = word.id.replace(regexNonDigit, '')
+				_handleDownEvent downId
 
 			# Misc buttons.
 			switch target.id
@@ -70,18 +65,16 @@ Namespace('Matching').Draw = do ->
 		false
 
 		# Replaces the "Up" event type.
-		Hammer(document).on 'release', (event) ->
+		document.addEventListener upEventType, (event) ->
+		# Hammer(document).on 'release', (event) ->
 			target = event.target
 			downId = null
 
-			if target.tagName isnt 'svg'
-				# A word or its children has been selected.
-				if target.className.split(' ')[0] is "word"
-					downId = target.id.replace regexNonDigit, ''
-				else if target.parentNode.className.split(' ')[0] is "word"
-					downId = target.parentNode.id.replace regexNonDigit, ''
+			word = $(target).closest('.word').get(0);
+			if word? 
+				downId = word.id.replace(regexNonDigit, '')
+				_handleUpEvent downId
 
-				if downId? then _handleUpEvent(downId)
 
 		#### TODO: Only limited dragging exists. Implement better dragging. ####
 		# Will pickup drag events from most inputs including touch and mouse.
@@ -102,18 +95,11 @@ Namespace('Matching').Draw = do ->
 			# Prevents scrolling.
 			document.addEventListener 'touchmove', (e) -> e.preventDefault()
 
-			Hammer(document).on 'touch', (event) ->
-				#### TODO: code to replace mouseenter, mouseleave for mobile devices. ####
-
 		else
-			# Disables right click.
-			# document.oncontextmenu = -> false
-			# document.addEventListener 'mousedown', (e) -> if e.button is 2 then false else true
-
 			document.addEventListener 'mouseover', (event) ->
 				target     = event.target
 
-				if target.tagName is 'svg'
+				if target instanceof SVGElement
 					if Matching.Data.gates.prelineDrawn then _fadePreline()
 				else
 					firstClass = target.className.split(' ')[0]
@@ -126,7 +112,7 @@ Namespace('Matching').Draw = do ->
 			document.addEventListener 'mouseout', (event) ->
 				target = event.target
 
-				if target.tagName isnt 'svg'
+				if !target instanceof SVGElement
 					firstClass = target.className.split(' ')[0]
 					switch firstClass
 						when 'popup-text'
@@ -154,7 +140,7 @@ Namespace('Matching').Draw = do ->
 		Matching.Data.words[_id].hollowCircle.transition()
 			.attr('r', 13).duration(400).ease('elastic')
 
-		if Matching.Data.oppositeSelected(_id) isnt false
+		if Matching.Data.oppositeSelected(_id) isnt false and downId?
 			_drawPreline(Matching.Data.words[downId], Matching.Data.words[_id])
 		if Matching.Data.words[_id].longWord then animatePopupIn(target.id)
 
@@ -195,9 +181,9 @@ Namespace('Matching').Draw = do ->
 			_oppositeId = Matching.Data.oppositeSelected(id)
 			if _oppositeId isnt false                        # A word within the opposite column is selected.
 				Matching.Data.matchWords(id, _oppositeId)    # Register a new pairing.
-				setTimeout ->
-					Matching.Data.stripMatchAnimation(id, _oppositeId)
-				, 500
+				# setTimeout ->
+				# 	Matching.Data.stripMatchAnimation(id, _oppositeId)
+				# , 500
 				_matchAnimation(id)                          # Animate the new pairing.
 
 	# Draws a line from one column to another.
@@ -219,14 +205,15 @@ Namespace('Matching').Draw = do ->
 		Matching.Data.gates.prelineDrawn = true
 
 	_fadePreline = () ->
-		Matching.Data.words[downId].preinnerCircle
-			.transition()
-				.style('opacity', 0)
-				.duration(300)
-		Matching.Data.words[downId].preline
-			.transition()
-				.style('opacity', 0)
-				.duration(300)
+		if downId?
+			Matching.Data.words[downId].preinnerCircle
+				.transition()
+					.style('opacity', 0)
+					.duration(300)
+			Matching.Data.words[downId].preline
+				.transition()
+					.style('opacity', 0)
+					.duration(300)
 
 	_matchAnimation = (id) ->
 		# Fade out the pre-line and circle
@@ -381,6 +368,3 @@ Namespace('Matching').Draw = do ->
 	drawProgressBar   : drawProgressBar    # Used by Matching.Engine
 	updateProgressBar : updateProgressBar  # Used by Matching.Data
 	updateRemaining   : updateRemaining    # Used by Matching.Data
-
-
-

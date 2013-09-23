@@ -37,29 +37,31 @@ Namespace('Matching').Engine = do ->
 		Matching.Data.nodes.pageWheel   = document.getElementById('page-num').style
 
 	_setGameInstanceData = () ->
+		data = Matching.Data
+		game = data.game
 		# Widget instance data.
-		Matching.Data.game.totalItems        = Matching.Data.game.qset.items[0].items.length
-		Matching.Data.game.remainingItems    = Matching.Data.game.totalItems
-		Matching.Data.game.numGameboards     = Math.ceil(Matching.Data.game.totalItems/5)
-		Matching.Data.game.currentGameboard  = 0
-		Matching.Data.game.questionsOnBoard  = []
-		Matching.Data.game.qIndices          = []
-		Matching.Data.game.ansIndices        = []
-		Matching.Data.game.hue               = Math.random()
-		Matching.Data.game.randomColor       = Matching.Data.HSVtoRGB(Matching.Data.game.hue, 0.5, 0.95)
+		game.totalItems        = game.qset.items[0].items.length
+		game.remainingItems    = game.totalItems
+		game.numGameboards     = Math.ceil(game.totalItems/5)
+		game.currentGameboard  = 0
+		game.questionsOnBoard  = []
+		game.qIndices          = []
+		game.ansIndices        = []
+		game.hue               = Math.random()
+		game.randomColor       = Matching.Data.HSVtoRGB(game.hue, 0.5, 0.95)
 
 		# Control flow gates.
-		Matching.Data.gates.animating    = false
-		Matching.Data.gates.inWord       = false
-		Matching.Data.gates.inColumn     = false
-		Matching.Data.gates.prelineDrawn = false
+		data.gates.animating    = false
+		data.gates.inWord       = false
+		data.gates.inColumn     = false
+		data.gates.prelineDrawn = false
 
-		Matching.Data.nodes.questions = null
-		Matching.Data.nodes.answers   = null
+		data.nodes.questions = null
+		data.nodes.answers   = null
 
-		for i in [0..Matching.Data.game.totalItems-1]
-			Matching.Data.game.qIndices.push(i)
-			Matching.Data.game.ansIndices.push(i)
+		for i in [0..game.totalItems-1]
+			game.qIndices.push(i)
+			game.ansIndices.push(i)
 
 	_drawBoards = (title) ->
 		# Set the game title and insert all gameboards.
