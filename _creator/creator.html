@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>test Creator</title>
+		<meta charset='utf-8' />
+		<style type='text/css'></style>
+		<script type='text/javascript' src='/js/materia.require.js'></script>
+		<link rel='stylesheet' type='text/css' href='css/creator.css'>
+		<script type='text/javascript'>
+			require(['jquery', 'creatorcore', 'js/creator'], function(util) {
+				require(['js/jquery-ui-1.10.3.custom.min'], function(util) {
+					Materia.CreatorCore.start(Matching.Creator);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id='modal'></div>
+		<header>
+			<div>
+				<label>Widget Title:</label>
+				<div>
+					<input type='text' id='title'/>
+				</div>
+			</div>
+		</header>
+		<section id='main_area'>
+			<div id='titles'>
+				<h1>Left Side</h1>
+				<h1>Right Side</h1>
+			</div>
+			<div id='question_container'></div>
+			<div id='add_question_button'>
+				Click Here To Add Another Question 
+			</div>
+		</section>
+		<section class = 'import_area' id='import_area'>
+			<h1>Imported Questions</h1>
+			<div id='import_question_area'>
+				<span class='add'></span>
+			</div>
+			<button id='import_hide'>Hide</button>
+		</section>
+
+		<!-- templates -->
+		<div class='template question'>
+			<textarea class='question_text'></textarea>
+			<textarea class='answer_text'></textarea>
+			<button class='delete'></button>
+		</div>
+		<!-- /templates -->
+	</body>
+</html>
