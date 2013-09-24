@@ -53,15 +53,11 @@ Namespace('Matching').Creator = do ->
 			$('.template.answer').remove()
 			_aTemplate.removeClass('template')
 
-		$('#add_question_button').click ->
+		$('#add_new_question_button').click ->
 			_addQuestion()
 
-		$('#import_hide').click -> $('#import_area').hide()
-
 		if _qset?
-			console.log _qset
 			questions = _qset.items[0].items
-			console.log questions
 			_addQuestion question for question in questions
 
 	_buildSaveData = ->
@@ -77,7 +73,7 @@ Namespace('Matching').Creator = do ->
 
 		# update our values
 		_title = $('#title').val()
-		#_qset.options.randomize = $('#randomize').prop 'checked'
+
 		okToSave = true if _title? && _title!= ''
 
 		items = []
@@ -86,10 +82,7 @@ Namespace('Matching').Creator = do ->
 
 		qid = 0
 		for c in questions
-			console.log c
 			items.push(_process c)
-
-		console.log(items)
 
 		_qset.items = [{ items: items }]
 		okToSave
@@ -97,25 +90,31 @@ Namespace('Matching').Creator = do ->
 	# get each category's data from the appropriate page elements
 	_process = (c) ->
 		c = $(c)
+
 		question = {}
-		question.questions = [{text: c.find('.question_text').val()}]
-		question.answers = [{text: c.find('.answer_text').val(), value: "100", id: ''}]
-		question.type = "QA"
+		questionObj = {
+			text: c.find('.question_text').val()
+		}
+		answerObj = {
+			text: c.find('.answer_text').val(),
+			value: '100',
+			id: ''
+		}
+
+		question.questions = [questionObj]
+		question.answers = [answerObj]
+		question.type = 'QA'
 		question.id = ''
 		question.assets = []
-
 
 		question
 
 	_addQuestion = (question=null) ->
-		console.log question
 		# create a new question element and default its pertinent data
 		newQ = _qTemplate.clone()
 
 		newQ.find('.delete').click () ->
 			$(this).parent().remove()
-		newQ.click () ->
-			_changeQuestion this unless $(this).hasClass('dim') or $(this).closest('#import_question_area').length > 0 or $(this).hasClass('dragging')
 		if question?
 			newQ.find('.question_text').text question.questions[0].text
 			newQ.find('.answer_text').text question.answers[0].text
@@ -124,12 +123,6 @@ Namespace('Matching').Creator = do ->
 		else
 			$(newQ).click()
 		$('#question_container').append newQ
-
-	# open the question edit window, populate it with info based on the clicked question's data
-	_changeQuestion = (q) ->
-		$('.selected').removeClass 'selected'
-		$(q).addClass 'selected'
-		$('.question:not(.selected)').addClass 'dim'
 
 	_trace = ->
 		if console? && console.log?
