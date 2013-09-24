@@ -58,12 +58,10 @@ section {
 	}
 }
 
-#add_category_button {
-	background-color: #283545;
-	border: 1px solid #f0f0f0;
-	height: 110px;
-	line-height: 110px;
-	text-align: center;
+#add_new_question_button {
+	line-height: 50px;
+	display: inline-block;
+	cursor: pointer;
 }
 
 button {
@@ -88,10 +86,11 @@ button {
 	&.add {
 		background-image: url('../_assets/plus.png');
 		height: 42px;
-		margin: 0;
-		padding: 0;
 		width: 42px;
-		margin: 9px;
+		margin-right: 5px;
+		padding: 0;
+		vertical-align: -15px;
+
 		&:hover {
 			background-image: url('../_assets/plus-h.png');
 		}
@@ -119,18 +118,12 @@ button {
 	&.active {
 		background-color: #16222a;
 	}
-	&.drop_target {
-		-webkit-box-shadow: 0px 0px 1px 2px rgba(178, 255, 255, .75);
-		-moz-box-shadow: 0px 0px 1px 2px rgba(178, 255, 255, .75);
-		box-shadow: 0px 0px 1px 2px rgba(178, 255, 255, .75);
-	}
 
 	textarea {
 		width: 43%;
 		margin: -10px;
 		margin-left: 5px;
 		margin-right: 15px;
-		padding: 0px;
 		font-size: 20px;
 		height: 25px;
 		border: none;
@@ -149,7 +142,6 @@ button {
 	}
 }
 
-
 .template {
 	display: none;
 }
@@ -157,40 +149,5 @@ button {
 h1 {
 	color: #fff;
 	font-size: 16px;
-}
-
-.import_area {
-	background: #333;
-	-moz-border-radius:    5px;
-	-webkit-border-radius: 5px;
-	border-radius:         5px;
-	border: 1px solid #b7babc;
-	display: none;
-	margin: 10px;
-	padding: 0 10px 10px;
-
-	&>div {
-		border: 1px solid #b7babc;
-		height: 125px;
-		margin: 0;
-		overflow-x: auto;
-		white-space: nowrap;
-	}
-
-	.add {
-		display: none;
-	}
-
-	&>button {
-		background-color: #ddd;
-		background: -webkit-linear-gradient(top, #c4c7cc, #717580);
-		background: -moz-linear-gradient(top, #c4c7cc, #717580);
-		background: -ms-linear-gradient(top, #c4c7cc, #717580);
-		background: -o-linear-gradient(top, #c4c7cc, #717580);
-		background-repeat: repeat-x;
-		border-radius:         3px;
-		-moz-border-radius:    3px;
-		-webkit-border-radius: 3px;
-	}
 }
 
