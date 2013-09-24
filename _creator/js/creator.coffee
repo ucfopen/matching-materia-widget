@@ -23,8 +23,7 @@ Namespace('Matching').Creator = do ->
 	onSaveComplete = (title, widget, qset, version) -> true
 
 	onQuestionImportComplete = (questions) ->
-		$('#import_area').show()
-		_addQuestion $('#import_question_area')[0], question for question in questions
+		_addQuestion question for question in questions
 
 	# Matching does not support media
 	onMediaImportComplete = (media) -> null
