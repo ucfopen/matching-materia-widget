@@ -16,17 +16,41 @@ Namespace('Matching').Data =
 
 		# Only the left column words will possess lines for matching.
 		if id%2 is 0
-			word.line = container.append('line').attr('class', 'line')
-				.attr('x1', _x).attr('y1', yLoc).attr('x2', _x).attr('y2', yLoc)
+			word.line = container.append('line').attr
+				class : 'line'
+				x1: _x
+				y1: yLoc
+				x2: _x
+				y2: yLoc
 
-		word.preline = container.append('line').attr('class', 'pre-line')
-			.attr('x1', _x).attr('y1', yLoc).attr('x2', _x).attr('y2', yLoc)
-		word.preinnerCircle = container.append('circle').attr('class', 'pre-inner-circle c'+id)
-			.attr('cx', _x).attr('cy', yLoc).attr('r', 5)
-		word.hollowCircle = container.append('circle').attr('class', 'hollow-circle')
-			.attr('cx', _x).attr('cy', yLoc).attr('r', 10)
-		word.innerCircle = container.append('circle').attr('class', 'inner-circle c'+id)
-			.attr('cx', _x).attr('cy', yLoc).attr('r', 5)
+		# Low opacity green line for previewing new connections
+		word.preline = container.append('line').attr
+			class: 'pre-line'
+			x1: _x
+			y1: yLoc
+			x2: _x
+			y2: yLoc
+
+		# inner circle for preview
+		word.preinnerCircle = container.append('circle').attr
+			class: "pre-inner-circle c#{id}"
+			cx: _x
+			cy: yLoc
+			r: 5
+
+		# outer circle
+		word.hollowCircle = container.append('circle').attr
+			class: 'hollow-circle'
+			cx: _x
+			cy: yLoc
+			r: 10
+
+		# inner circle when connected
+		word.innerCircle = container.append('circle').attr
+			class: "inner-circle c#{id}"
+			cx: _x
+			cy: yLoc
+			r: 5
 
 		word.gameboard = gameboard
 		word.selected  = false

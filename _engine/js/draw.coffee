@@ -195,6 +195,7 @@ Namespace('Matching').Draw = do ->
 				.style('opacity', 0.8)
 				.duration(300)
 
+		# @TODO: This may be getting called when opacity is already .4
 		source.preline
 			.attr('x2', socket.innerCircle.attr('cx'))
 			.attr('y2', socket.innerCircle.attr('cy'))
