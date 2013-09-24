@@ -3,8 +3,6 @@ Namespace('Matching').Engine = do ->
 	$tBoard    = null
 	$tWord     = null
 
-	animating  = false
-
 	start = (instance, qset, version = '1') ->
 		if not _browserSupportsSvg()
 			$('.error-notice-container').show()
