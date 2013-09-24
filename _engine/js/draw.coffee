@@ -35,69 +35,41 @@ Namespace('Matching').Draw = do ->
 	lightGreen = '#1ABC9C'
 	grey       = '#5b656d'
 
-	_progressBar        = null
-	_progressBarWidth   = 0
-	_remainingItems     = null
-	_totalItems         = null
+	_progressBar      = null
+	_progressBarWidth = 0
+	_remainingItems   = null
+	_totalItems       = null
 
 	pointerX = null
 	pointerY = null
 	downId   = null
 	upId     = null
 
-
 	# Attaches event listeners to the document.
 	setEventListeners = () ->
-		document.addEventListener downEventType, (event) ->
-			target = event.target
-			downId = null
-			
-			word = $(target).closest('.word').get(0);
-			if word? 
-				downId = word.id.replace(regexNonDigit, '')
-				_handleDownEvent downId
+		$doc = $(document)
 
-			# Misc buttons.
-			switch target.id
+		# Events for buttons.
+		$doc.on downEventType, '.button', (event) ->
+			switch event.target.id
 				when 'prev-button'   then Matching.Engine.handlePrevButton()
 				when 'next-button'   then Matching.Engine.handleNextButton()
 				when 'submit-button' then Matching.Engine.handleSubmitButton()
-		false
 
-		# Replaces the "Up" event type.
-		document.addEventListener upEventType, (event) ->
-		# Hammer(document).on 'release', (event) ->
-			target = event.target
-			downId = null
+		# Down event for words.
+		$doc.on downEventType, '.word', (event) ->
+			_handleDownWord(event.target.id.replace regexNonDigit, '')
 
-			word = $(target).closest('.word').get(0);
-			if word? 
-				downId = word.id.replace(regexNonDigit, '')
-				_handleUpEvent downId
-
-
-		#### TODO: Only limited dragging exists. Implement better dragging. ####
-		# Will pickup drag events from most inputs including touch and mouse.
-		# Hammer(document).on 'drag', (event) ->
-		# 	if event.gesture.startEvent.target.tagName is 'LI'
-		# 		pointerX = event.gesture.center.pageX
-		# 		pointerY = event.gesture.center.pageY
-
-		# 		if Matching.Data.words[downId].matched < 0 && not Matching.Data.gates.inColumn
-		# 			Matching.Data.words[downId].preinnerCircle
-		# 				.style('opacity', 1)
-		# 				.attr('cx', pointerX).attr('cy', pointerY)
-		# 			Matching.Data.words[downId].preline
-		# 				.style('opacity', 1)
-		# 				.attr('x2', pointerX).attr('y2', pointerY)
+		# Up event for words.
+		$doc.on upEventType, '.word', (event) ->
+			_handleUpWord(event.target.id.replace regexNonDigit, '')
 
 		if _mobile
 			# Prevents scrolling.
-			document.addEventListener 'touchmove', (e) -> e.preventDefault()
-
+			document.addEventListener 'touchmove', (event) -> event.preventDefault()
 		else
 			document.addEventListener 'mouseover', (event) ->
-				target     = event.target
+				target = event.target
 
 				if target instanceof SVGElement
 					if Matching.Data.gates.prelineDrawn then _fadePreline()
@@ -105,35 +77,28 @@ Namespace('Matching').Draw = do ->
 					firstClass = target.className.split(' ')[0]
 					switch firstClass
 						when 'popup-text' then inPopup = true
-						when 'word' then _handleEnterEvent(target)
-						when 'container' then if Matching.Data.gates.prelineDrawn then _fadePreline()
-						when 'column' then Matching.Data.gates.inColumn = true
+						when 'word'       then _handleEnterWord(target)
+						when 'container'  then if Matching.Data.gates.prelineDrawn then _fadePreline()
 
 			document.addEventListener 'mouseout', (event) ->
 				target = event.target
 
-				if !target instanceof SVGElement
+				# Don't remove the conditional's parentheses or it will be compiled incorrectly! 
+				if !(target instanceof SVGElement)
 					firstClass = target.className.split(' ')[0]
 					switch firstClass
 						when 'popup-text'
 							inPopup = false
-							_handleLeaveEvent(target.parentNode)
-						when 'word' then setTimeout ->
-							if not inPopup then _handleLeaveEvent(target)
-						, 10
-						when 'column' then Matching.Data.gates.inColumn = true
+							_handleLeaveWord(target.parentNode)
+						when 'word'   then _handleLeaveWord(target);
 
 	reorderSVG = () ->
-		# Give our D3 selections a move-to-front method.
-		# d3.selection.prototype.moveToFront = () ->
-		# 	return this.each -> this.parentNode.appendChild(this)
-
-		# Makes all inner circles the top nodes so that they overlap any lines.
+		# Reinserts all inner circles as the top nodes so that they overlap any other svg elements.
 		d3.select('body').selectAll('.inner-circle').each ->
 			this.parentNode.appendChild(this)
 
 	# Handles a pointer entering a word.
-	_handleEnterEvent = (target) ->
+	_handleEnterWord = (target) ->
 		Matching.Data.gates.inWord = true
 
 		_id = target.id.replace regexNonDigit, ''
@@ -145,17 +110,17 @@ Namespace('Matching').Draw = do ->
 		if Matching.Data.words[_id].longWord then animatePopupIn(target.id)
 
 	# Handles a pointer leaving a word.
-	_handleLeaveEvent = (target) ->
+	_handleLeaveWord = (target) ->
 		Matching.Data.gates.inWord = false
 
 		_id = target.id.replace regexNonDigit, ''
 		Matching.Data.words[_id].hollowCircle.transition()
 			.attr('r', 10).duration(400).ease('elastic')
 
-			if Matching.Data.words[_id].longWord then animatePopupOut(target.id)
+		if Matching.Data.words[_id].longWord then animatePopupOut(target.id)
 
 	# Handles a pointer down event on a word.
-	_handleDownEvent = (id) ->
+	_handleDownWord = (id) ->
 		if not Matching.Data.gates.animating
 			# A word within the same column is already selected.
 			_start = if id%2 is 0 then 0 else 1
@@ -170,7 +135,7 @@ Namespace('Matching').Draw = do ->
 			_showCircle(id)
 
 	# Handles a pointer up event on a word.
-	_handleUpEvent = (id) ->
+	_handleUpWord = (id) ->
 		if not Matching.Data.gates.animating
 			Matching.Data.gates.animating = true
 			setTimeout ->
@@ -189,16 +154,18 @@ Namespace('Matching').Draw = do ->
 	# Draws a line from one column to another.
 	_drawPreline = (source, socket) ->
 		source.preinnerCircle
-			.attr('cx', socket.innerCircle.attr('cx'))
-			.attr('cy', socket.innerCircle.attr('cy'))
+			.attr
+				cx : socket.innerCircle.attr('cx')
+				cy : socket.innerCircle.attr('cy')
 			.transition()
 				.style('opacity', 0.8)
 				.duration(300)
 
 		# @TODO: This may be getting called when opacity is already .4
 		source.preline
-			.attr('x2', socket.innerCircle.attr('cx'))
-			.attr('y2', socket.innerCircle.attr('cy'))
+			.attr
+				x2 : socket.innerCircle.attr('cx')
+				y2 : socket.innerCircle.attr('cy')
 			.transition()
 				.style('opacity', 0.4)
 				.duration(300)
@@ -217,42 +184,55 @@ Namespace('Matching').Draw = do ->
 					.duration(300)
 
 	_matchAnimation = (id) ->
+		_word        = Matching.Data.words[id]
+		_matchedWord = Matching.Data.words[_word.matched]
+
 		# Fade out the pre-line and circle
-		Matching.Data.words[Matching.Data.words[id].matched].preline.transition()
-			.style('opacity', 0).duration(300)
-		Matching.Data.words[Matching.Data.words[id].matched].preinnerCircle.transition()
-			.style('opacity', 0).duration(300)
+		_matchedWord.preline.transition()
+			.style('opacity', 0)
+			.duration(300)
+		_matchedWord.preinnerCircle.transition()
+			.style('opacity', 0)
+			.duration(300)
 
 		# Fade the hollow circles to the matched color.
-		Matching.Data.words[Matching.Data.words[id].matched].hollowCircle.transition()
-			.style('stroke', grey).duration(200)
-		Matching.Data.words[id].hollowCircle.transition()
-			.style('stroke', grey).duration(200)
+		_matchedWord.hollowCircle.transition()
+			.style('stroke', grey)
+			.duration(200)
+		_word.hollowCircle.transition()
+			.style('stroke', grey)
+			.duration(200)
 
 		# Fade in the inner circles.
-		Matching.Data.words[id].innerCircle
-			.style('stroke', Matching.Data.game.randomColor).style('fill', Matching.Data.game.randomColor)
-		Matching.Data.words[id].innerCircle
+		_word.innerCircle
+			.style
+				stroke : Matching.Data.game.randomColor
+				fill   : Matching.Data.game.randomColor
+		_word.innerCircle
 			.transition()
 				.style('opacity', 1)
 				.duration(300)
-		Matching.Data.words[Matching.Data.words[id].matched].innerCircle
-			.style('stroke', Matching.Data.game.randomColor).style('fill', Matching.Data.game.randomColor)
-		Matching.Data.words[Matching.Data.words[id].matched].innerCircle
+		_matchedWord.innerCircle
+			.style
+				stroke : Matching.Data.game.randomColor
+				fill   : Matching.Data.game.randomColor
+		_matchedWord.innerCircle
 			.transition()
 				.style('opacity', 1)
 				.duration(300)
 
 		# Fade in the connecting line.
-		if id%2 is 0 then Matching.Data.words[id].line
-			.attr('x2', Matching.Data.words[Matching.Data.words[id].matched].innerCircle.attr('cx'))
-			.attr('y2', Matching.Data.words[Matching.Data.words[id].matched].innerCircle.attr('cy'))
+		if id%2 is 0 then _word.line
+			.attr
+				x2 : _matchedWord.innerCircle.attr('cx')
+				y2 : _matchedWord.innerCircle.attr('cy')
 			.transition()
 				.style('opacity', 1)
 				.duration(500)
-		else Matching.Data.words[Matching.Data.words[id].matched].line
-			.attr('x2', Matching.Data.words[id].innerCircle.attr('cx'))
-			.attr('y2', Matching.Data.words[id].innerCircle.attr('cy'))
+		else _matchedWord.line
+			.attr
+				x2 : _word.innerCircle.attr('cx')
+				y2 : _word.innerCircle.attr('cy')
 			.transition()
 				.style('opacity', 1)
 				.duration(500)
@@ -260,26 +240,26 @@ Namespace('Matching').Draw = do ->
 		Matching.Data.colorReset()
 
 	unMatchAnimation = (id) ->
-		Matching.Data.words[id].innerCircle
+		_word        = Matching.Data.words[id]
+		_matchedWord = Matching.Data.words[_word.matched]
+		_word.innerCircle
 			.transition()
 				.style('opacity', 0)
 				.duration(500)
 
-		Matching.Data.words[id].hollowCircle
+		_word.hollowCircle
 			.transition()
 				.style('stroke', lightGreen)
 				.duration(500)
 
-		if id%2 is 1
-			Matching.Data.words[Matching.Data.words[id].matched].line
-				.transition()
-					.style('opacity', 0)
-					.duration(500)
-		else 
-			Matching.Data.words[id].line
-				.transition()
-					.style('opacity', 0)
-					.duration(500)
+		if id%2 is 1 then _matchedWord.line
+			.transition()
+				.style('opacity', 0)
+				.duration(500)
+		else _word.line
+			.transition()
+				.style('opacity', 0)
+				.duration(500)
 
 	_showCircle = (id) ->
 		if Matching.Data.words[id].matched > -1
@@ -289,7 +269,9 @@ Namespace('Matching').Draw = do ->
 					.duration(200)
 		else
 			Matching.Data.words[id].innerCircle
-				.style('fill', darkGreen).style('stroke', darkGreen)
+				.style
+					fill   : darkGreen
+					stroke : darkGreen
 				.transition()
 					.style('opacity', 1)
 					.duration(200)
@@ -298,7 +280,6 @@ Namespace('Matching').Draw = do ->
 				.transition()
 					.style('stroke', darkGreen)
 					.duration(200)
-
 
 	_fadeCircle = (id) ->
 		Matching.Data.words[id].innerCircle
@@ -336,12 +317,17 @@ Namespace('Matching').Draw = do ->
 		_totalItems     = Matching.Data.game.totalItems
 		_remainingItems = Matching.Data.game.totalItems
 		_progressBar    = Matching.Data.svgNodes[Matching.Data.svgNodes.length-1].append('rect')
-			.attr('x', 0).attr('y', 0)
-			.attr('width', 0).attr('height', 10)
-			.attr('rx', 5).attr('ry', 5)
-			.style('stroke-width', 1)
-			.style('stroke', '#BDC3C7')
-			.style('fill', '#BDC3C7')
+			.attr
+				x      : 0
+				y      : 0
+				width  : 0
+				height : 10
+				rx     : 5
+				ry     : 5
+			.style
+				'stroke-width' : 1
+				stroke         : '#BDC3C7'
+				fill           : '#BDC3C7'
 
 	# Animates the progress bar up or down depending on a single string parameter.
 	updateProgressBar = (direction) ->
@@ -354,13 +340,13 @@ Namespace('Matching').Draw = do ->
 	# Decides whether or not the submit button should be selectable.
 	updateRemaining = (questions) ->
 		if questions is 'up' and _remainingItems is 0
-			document.getElementById('submit-button').className = 'unselectable'
+			document.getElementById('submit-button').className = 'unselectable button'
 
 		if questions is 'up'   then _remainingItems++
 		if questions is 'down' then _remainingItems--
 
 		if _remainingItems is 0
-			document.getElementById('submit-button').className = 'glowing'
+			document.getElementById('submit-button').className = 'glowing button'
 
 	# Public
 	setEventListeners : setEventListeners  # Used by Matching.Engine
