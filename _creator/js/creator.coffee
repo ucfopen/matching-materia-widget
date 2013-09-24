@@ -3,19 +3,13 @@ Namespace('Matching').Creator = do ->
 	_qset    = null # Keep tack of the current qset
 	_title   = null # hold on to this instance's title
 	_version = null # holds the qset version, allows you to change your widget to support old versions of your own code
+	
 	# variables to contain templates for various page elements
 	_qTemplate = null
 	_qWindowTemplate = null
 	_aTemplate = null
 
-	# reference for question answer lists
-	_letters = ['A','B','C','D','E','F','G','H','I','J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-
-	# strings containing tutorial texts, boolean for tutorial mode
-	_help = false
-
 	initNewWidget = (widget, baseUrl) ->
-		_help = true
 		_buildDisplay 'New Matching Widget', widget
 
 	initExistingWidget = (title, widget, qset, version, baseUrl) -> _buildDisplay title, widget, qset, version
@@ -49,8 +43,6 @@ Namespace('Matching').Creator = do ->
 			distance: 5,
 			helper: 'clone',
 		}
-		#$('#question_container').droppable()
-		#$('#question_container').droppable 'enable'
 
 		# fill the template objects
 		unless _qTemplate
@@ -62,19 +54,10 @@ Namespace('Matching').Creator = do ->
 			$('.template.answer').remove()
 			_aTemplate.removeClass('template')
 
-		# remove tutorial steps if creating a new widget
-		#if $('.step1').length > 0
-		#		$('.step1').remove()
-		#			tutorial2 = $('<div class=\'tutorial step2\'>'+_helper2+'</div>')
-		#			$('body').append tutorial2
 		$('#add_question_button').click ->
 			_addQuestion()
 
 		$('#import_hide').click -> $('#import_area').hide()
-
-		#if _help
-		#tutorial1 = $('<div class=\'tutorial step1\'>'+_helper1+'</div>')
-		#$('body').append tutorial1
 
 		if _qset?
 			console.log _qset
@@ -99,7 +82,6 @@ Namespace('Matching').Creator = do ->
 		okToSave = true if _title? && _title!= ''
 
 		items = []
-		#_qset.options.randomize = $('#randomize').prop 'checked'
 
 		questions = $('.question')
 
@@ -107,9 +89,7 @@ Namespace('Matching').Creator = do ->
 		for c in questions
 			console.log c
 			items.push(_process c)
-			#items.push {
-		#		answers: [{ text: }]
-		#	}
+
 		console.log(items)
 
 		_qset.items = [{ items: items }]
@@ -120,7 +100,11 @@ Namespace('Matching').Creator = do ->
 		c = $(c)
 		question = {}
 		question.questions = [{text: c.find('.question_text').val()}]
-		question.answers = [{text: c.find('.answer_text').val()}]
+		question.answers = [{text: c.find('.answer_text').val(), value: "100", id: ''}]
+		question.type = "QA"
+		question.id = ''
+		question.assets = []
+
 
 		question
 
