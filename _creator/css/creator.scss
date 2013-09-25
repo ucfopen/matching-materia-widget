@@ -89,7 +89,7 @@ button {
 		width: 42px;
 		margin-right: 5px;
 		padding: 0;
-		vertical-align: -15px;
+		float: left;
 
 		&:hover {
 			background-image: url('../_assets/plus-h.png');
@@ -132,6 +132,8 @@ button {
 		color: #fff;
 		background: #1ABC9C;
 		border-bottom: 3px solid #15987E;
+		font-family: "Lato", "Arial", sans-serif;
+		overflow: auto;
 	}
 }
 
