@@ -17,27 +17,22 @@
 	</head>
 	<body ng-cloak ng-controller="matchingController">
 		<div id='modal'></div>
-		<header id="widget-header">
+		<center>
+		<header class="widget-header">
 			<div>
-				<label>Widget Title:<input type='text' id='title' placeholder="New Matching Widget" ng-model="widget.title" value="{{widget.title}}"/></label>
+				<input type='text' id='title' placeholder="Enter widget title here." ng-model="widget.title" value="{{widget.title}}"/>
 			</div>
 		</header>
-		<center>
-		<header class="game-header">
-			<label for="title"><div>
-				<p>{{(widget.title === '')? 'New Matching Widget' : widget.title}}</p>
-			</div></label>
-		</header>
 		<section class='main-area'>
-			<div id='titles'>
+			<div class='titles'>
 				<h1>Left Side</h1>
 				<h1>Right Side</h1>
 			</div>
 			<div id='question-container'>
 				<div class='question' ng-repeat="pair in widget.wordPairs">
 					<span class="num">{{$index+1}}</span>
-					<textarea class='question-text' ng-model="pair.question"></textarea>
-					<textarea class='answer-text' ng-model="pair.answer"></textarea>
+					<textarea class='question-text' ng-model="pair.question" placeholder="Enter first word here."></textarea>
+					<textarea class='answer-text' ng-model="pair.answer" placeholder="Enter second word here."></textarea>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
 			</div>
