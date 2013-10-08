@@ -31,6 +31,8 @@ Namespace('Matching').Creator = do ->
 	initNewWidget = (widget, baseUrl) -> 
 		_scope = angular.element($('body')).scope()
 
+		if not Modernizr.input.placeholder then _polyfill()
+
 	# Apply existing data to the angular scope and angular will update the document accordingly.
 	initExistingWidget = (title, widget, qset, version, baseUrl) ->
 		_items = qset.items[0].items
@@ -39,6 +41,8 @@ Namespace('Matching').Creator = do ->
 			_scope.widget.title     = title
 			_scope.widget.wordPairs = []
 			_scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text ) for i in [0.._items.length-1]
+
+		if not Modernizr.input.placeholder then _polyfill()
 
 	onSaveClicked = (mode = 'save') ->
 		if _buildSaveData() then Materia.CreatorCore.save _title, _qset
@@ -85,6 +89,26 @@ Namespace('Matching').Creator = do ->
 		qsetItem.assets    = []
 
 		qsetItem
+
+	_polyfill = () ->
+		console.log 'polyfill'
+		$('[placeholder]')
+		.focus ->
+			input = $(this)
+			if input.val() is input.attr 'placeholder'
+				input.val ''
+				input.removeClass 'placeholder'
+		.blur ->
+			input = $(this)
+			if input.val() is '' or input.val() is input.attr 'placeholder'
+				input.addClass 'placeholder'
+				input.val input.attr 'placeholder'
+		.blur()
+
+		$('[placeholder]').parents('form').submit ->
+			$(this).find('[placeholder]').each ->
+				input = $(this)
+				if input.val() is input.attr 'placeholder' then input.val ''
 
 	_trace = -> if console? && console.log? then console.log.apply console, arguments
 
