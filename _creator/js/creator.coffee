@@ -13,7 +13,7 @@ Updated : 10/13
 MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
 
 # Set the controller for the scope of the document body.
-MatchingCreator.controller 'matchingController', ($scope) ->
+MatchingCreator.controller 'matchingCreatorCtrl', ($scope) ->
 
 	# Stores data to be gathered on save.
 	$scope.widget =
