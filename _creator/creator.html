@@ -4,44 +4,48 @@
 		<title>test Creator</title>
 		<meta charset='utf-8' />
 		<style type='text/css'></style>
+		<script src="js/modernizr.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/angular-animate.min.js"></script>
 		<script type='text/javascript' src='/js/materia.require.js'></script>
 		<link rel='stylesheet' type='text/css' href='css/creator.css'>
 		<script type='text/javascript'>
-			require(['jquery', 'creatorcore', 'js/creator'], function(util) {
-				require(['js/jquery-ui-1.10.3.custom.min'], function(util) {
+			require(['creatorcore', 'js/creator'], function(util) {
 					Materia.CreatorCore.start(Matching.Creator);
-				});
 			});
 		</script>
 	</head>
-	<body>
+	<body ng-cloak ng-controller="matchingController">
 		<div id='modal'></div>
-		<header>
+		<header id="widget-header">
 			<div>
-				<label>Widget Title:</label>
-				<div>
-					<input type='text' id='title'/>
-				</div>
+				<label>Widget Title:<input type='text' id='title' placeholder="New Matching Widget" ng-model="widget.title" value="{{widget.title}}"/></label>
 			</div>
 		</header>
-		<section id='main_area'>
+		<center>
+		<header class="game-header">
+			<label for="title"><div>
+				<p>{{(widget.title === '')? 'New Matching Widget' : widget.title}}</p>
+			</div></label>
+		</header>
+		<section class='main-area'>
 			<div id='titles'>
 				<h1>Left Side</h1>
 				<h1>Right Side</h1>
 			</div>
-			<div id='question_container'></div>
-			<div id='add_new_question_button'>
-				<button class='add'></button>
+			<div id='question-container'>
+				<div class='question' ng-repeat="pair in widget.wordPairs">
+					<span class="num">{{$index+1}}</span>
+					<textarea class='question-text' ng-model="pair.question"></textarea>
+					<textarea class='answer-text' ng-model="pair.answer"></textarea>
+					<span class='icon-close' ng-click="removeWordPair($index)"></span>
+				</div>
+			</div>
+			<div id='add-new' ng-click="addWordPair()">
+				<span class='icon-plus'></span>
 				Add new question
 			</div>
 		</section>
-
-		<!-- templates -->
-		<div class='template question'>
-			<textarea class='question_text'></textarea>
-			<textarea class='answer_text'></textarea>
-			<button class='delete'></button>
-		</div>
-		<!-- /templates -->
+		</center>
 	</body>
 </html>
