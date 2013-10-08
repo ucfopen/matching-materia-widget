@@ -1,137 +1,104 @@
+###
+
+Materia
+It's a thing
+
+Widget  : Matching, Creator
+Authors : Jonathan Warner, Micheal Parks
+Updated : 10/13
+
+###
+
+# Create an angular module to import the animation module and house our controller.
+MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
+
+# Set the controller for the scope of the document body.
+MatchingCreator.controller 'matchingController', ($scope) ->
+
+	# Stores data to be gathered on save.
+	$scope.widget =
+		title     : ""
+		wordPairs : [{question:null,answer:null}]
+
+	# Adds and removes a pair of textareas for users to input a word pair.
+	$scope.addWordPair = (q=null, a=null) -> $scope.widget.wordPairs.push {question:q,answer:a}
+	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
+
 Namespace('Matching').Creator = do ->
-	_widget  = null # holds widget data
-	_qset    = null # Keep tack of the current qset
-	_title   = null # hold on to this instance's title
-	_version = null # holds the qset version, allows you to change your widget to support old versions of your own code
-	
-	# variables to contain templates for various page elements
-	_qTemplate = null
-	_qWindowTemplate = null
-	_aTemplate = null
+	_title = _qset = _scope = null
 
-	initNewWidget = (widget, baseUrl) ->
-		_buildDisplay 'New Matching Widget', widget
+	# Define the angular scope within this namespace to gather data before saving.
+	initNewWidget = (widget, baseUrl) -> 
+		_scope = angular.element($('body')).scope()
 
-	initExistingWidget = (title, widget, qset, version, baseUrl) -> _buildDisplay title, widget, qset, version
+	# Apply existing data to the angular scope and angular will update the document accordingly.
+	initExistingWidget = (title, widget, qset, version, baseUrl) ->
+		_items = qset.items[0].items
+		_scope = angular.element($('body')).scope()
+		_scope.$apply ->
+			_scope.widget.title     = title
+			_scope.widget.wordPairs = []
+			_scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text ) for i in [0.._items.length-1]
 
 	onSaveClicked = (mode = 'save') ->
-		if _buildSaveData()
-			Materia.CreatorCore.save _title, _qset
-		else
-			Materia.CreatorCore.cancelSave 'Widget not ready to save.'
+		if _buildSaveData() then Materia.CreatorCore.save _title, _qset
+		else Materia.CreatorCore.cancelSave 'Widget not ready to save.'
 
 	onSaveComplete = (title, widget, qset, version) -> true
 
 	onQuestionImportComplete = (questions) ->
-		_addQuestion question for question in questions
+		_scope.$apply -> _scope.addWordPair(question.questions[0].text, question.answers[0].text) for question in questions
 
 	# Matching does not support media
 	onMediaImportComplete = (media) -> null
 
-	_buildDisplay = (title = 'Default test Title', widget, qset, version) ->
-		_version = version
-		_qset    = qset
-		_widget  = widget
-		_title   = title
-
-		$('#title').val _title
-
-		# enable the question area so that categories can be drag-sorted
-		$('#question_container').sortable {
-			containment: 'parent',
-			distance: 5,
-			helper: 'clone',
-		}
-
-		# fill the template objects
-		unless _qTemplate
-			_qTemplate = $('.template.question')
-			$('.template.question').remove()
-			_qTemplate.removeClass('template')
-		unless _aTemplate
-			_aTemplate = $('.template.answer')
-			$('.template.answer').remove()
-			_aTemplate.removeClass('template')
-
-		$('#add_new_question_button').click ->
-			_addQuestion()
-
-		if _qset?
-			questions = _qset.items[0].items
-			_addQuestion question for question in questions
-
 	_buildSaveData = ->
-		okToSave = false
-
-		# create new qset object if we don't already have one, set default values regardless
-		if !_qset?
-			_qset = {}
+		if !_qset? then _qset = {}
 		_qset.options = {}
-		_qset.assets = []
-		_qset.rand = false
-		_qset.name = ''
+		_qset.assets  = []
+		_qset.rand    = false
+		_qset.name    = ''
+		_title        = _scope.widget.title
+		_okToSave     = if _title? && _title != '' then true else false
 
-		# update our values
-		_title = $('#title').val()
+		_items      = []
+		_wordPairs  = _scope.widget.wordPairs
+		_items.push( _process _wordPairs[i] ) for i in [0.._wordPairs.length-1]
+		_qset.items = [{ items: _items }]
+		
+		_okToSave
 
-		okToSave = true if _title? && _title!= ''
+	# Get each pair's data from the controller and organize it into Qset form.
+	_process = (wordPair) ->
+		questionObj =
+			text  : wordPair.question
+		answerObj =
+			text  : wordPair.answer
+			value : '100',
+			id    : ''
 
-		items = []
+		qsetItem           = {}
+		qsetItem.questions = [questionObj]
+		qsetItem.answers   = [answerObj]
+		qsetItem.type      = 'QA'
+		qsetItem.id        = ''
+		qsetItem.assets    = []
 
-		questions = $('.question')
+		qsetItem
 
-		qid = 0
-		for c in questions
-			items.push(_process c)
+	_trace = -> if console? && console.log? then console.log.apply console, arguments
 
-		_qset.items = [{ items: items }]
-		okToSave
+	# Public
+	initNewWidget            : initNewWidget
+	initExistingWidget       : initExistingWidget
+	onSaveClicked            : onSaveClicked
+	onMediaImportComplete    : onMediaImportComplete
+	onQuestionImportComplete : onQuestionImportComplete
+	onSaveComplete           : onSaveComplete
 
-	# get each category's data from the appropriate page elements
-	_process = (c) ->
-		c = $(c)
+# Bootstrap the document and define it as the matching creator module.
+# This will allow angular to add directives to every "ng" HTML attribute.
+angular.bootstrap document, ["matchingCreator"]
 
-		question = {}
-		questionObj = {
-			text: c.find('.question_text').val()
-		}
-		answerObj = {
-			text: c.find('.answer_text').val(),
-			value: '100',
-			id: ''
-		}
 
-		question.questions = [questionObj]
-		question.answers = [answerObj]
-		question.type = 'QA'
-		question.id = ''
-		question.assets = []
 
-		question
-
-	_addQuestion = (question=null) ->
-		# create a new question element and default its pertinent data
-		newQ = _qTemplate.clone()
-
-		newQ.find('.delete').click () ->
-			$(this).parent().remove()
-		if question?
-			newQ.find('.question_text').text question.questions[0].text
-			newQ.find('.answer_text').text question.answers[0].text
-			$.data(newQ[0], 'question', [{text: question.questions[0].text}])
-			$.data(newQ[0], 'answer', [{text: question.answers[0].text}])
-		else
-			$(newQ).click()
-		$('#question_container').append newQ
-
-	_trace = ->
-		if console? && console.log?
-			console.log.apply console, arguments
-
-	#public
-	initNewWidget: initNewWidget
-	initExistingWidget: initExistingWidget
-	onSaveClicked:onSaveClicked
-	onMediaImportComplete:onMediaImportComplete
-	onQuestionImportComplete:onQuestionImportComplete
-	onSaveComplete:onSaveComplete
