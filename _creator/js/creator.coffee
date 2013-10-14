@@ -91,7 +91,6 @@ Namespace('Matching').Creator = do ->
 		qsetItem
 
 	_polyfill = () ->
-		console.log 'polyfill'
 		$('[placeholder]')
 		.focus ->
 			input = $(this)
