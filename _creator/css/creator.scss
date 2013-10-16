@@ -8,19 +8,18 @@
 	font-weight: normal;
 	font-style: normal;
 }
-.icon-plus, .icon-close {
-	font-family            : 'icomoon';
-	speak                  : none;
-	font-style             : normal;
-	font-weight            : normal;
-	font-variant           : normal;
-	text-transform         : none;
-	line-height            : 1;
-	-webkit-font-smoothing : antialiased;
-	font-size              : 15px;
-	color                  : #FFF;
+.icon-alert, .icon-plus, .icon-close {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
 }
-.icon-plus:before  { content : "\+";    }
+.icon-alert:before {content: "\e006";}
+.icon-plus:before {content: "\e007";}
 .icon-close:before { content : "\00d7"; }
 
 ::-webkit-input-placeholder { color: rgba(255,255,255,0.6 ); } /* WebKit browsers */
@@ -85,10 +84,10 @@ body {
 	   -moz-perspective : 800px;
 	    -ms-perspective : 800px;
 	        perspective : 800px;
-	-webkit-transform-origin : 50% 50%;
-	   -moz-transform-origin : 50% 50%;
-	    -ms-transform-origin : 50% 50%;
-	        transform-origin : 50% 50%;
+	-webkit-transform-origin : 50% 100%;
+	   -moz-transform-origin : 50% 100%;
+	    -ms-transform-origin : 50% 100%;
+	        transform-origin : 50% 100%;
 	.titles {
 		margin-left : 10px;
 		h1 {
@@ -105,7 +104,7 @@ body {
 		width          : 100%;
 		white-space    : nowrap;
 		height         : 55px;
-		margin         : 15px 0;
+		margin         : 15px 0 0 0;
   		-webkit-transform-style : preserve-3d;
   		   -moz-transform-style : preserve-3d;
   		    -ms-transform-style : preserve-3d;
@@ -116,8 +115,7 @@ body {
 			   -moz-transition : 1025ms cubic-bezier(0.190, 1.000, 0.220, 1.000) all;
 			    -ms-transition : 1025ms cubic-bezier(0.190, 1.000, 0.220, 1.000) all;
 			        transition : 1025ms cubic-bezier(0.190, 1.000, 0.220, 1.000) all;
-		} 
-
+		}
 		&.ng-leave.ng-leave-active,
 		&.ng-enter {
 			-webkit-transform : rotateX(-180deg) translatez(30px);
@@ -127,8 +125,7 @@ body {
 			opacity : 0;
 			height  : 0;
 			margin  : 0 0;
-		}        
-
+		}
 		&.ng-enter.ng-enter-active,
 		&.ng-leave {
 			-webkit-transform : rotateX(0deg) translatez(0);
@@ -137,7 +134,7 @@ body {
 			        transform : rotateX(0deg) translatez(0);
 			opacity : 1;
 			height  : 55px;
-			margin  : 15px 0;
+			margin  : 15px 0 0 0;
 		}
 		.num {
 			position : absolute;
@@ -165,12 +162,12 @@ body {
 		}
 	}
 	#add-new {
-		display          : inline-block; 
+		display          : inline-block;
 		left             : 50%;
 		bottom           : 0;
 		background-color : #3E606F;
 		padding          : 8px 18px;
-		margin           : 0 0 -50px 0;
+		margin           : 10px 0 -50px 0;
 		border-radius    : 5px;
 	}
 }
