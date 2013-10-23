@@ -13,7 +13,7 @@ Updated : 10/13
 MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
 
 # Set the controller for the scope of the document body.
-MatchingCreator.controller 'matchingCreatorCtrl', ($scope) ->
+MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	# Stores data to be gathered on save.
 	$scope.widget =
@@ -23,6 +23,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ($scope) ->
 	# Adds and removes a pair of textareas for users to input a word pair.
 	$scope.addWordPair = (q=null, a=null) -> $scope.widget.wordPairs.push {question:q,answer:a}
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
+]
 
 Namespace('Matching').Creator = do ->
 	_title = _qset = _scope = null
