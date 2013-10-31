@@ -9,7 +9,6 @@
 		<script type="text/javascript">
 			require([
 				'enginecore', 'score', 'less',             // Materia Dependencies.
-				'js/d3.v3.min',                            // Specific widget libraries.
 				'cs!js/data', 'cs!js/widget', 'cs!js/draw' // Widget files.
 			], function(util) {
 				Materia.Engine.start(Matching.Engine);
@@ -18,46 +17,56 @@
 	</head>
 	<body onmousedown="event.preventDefault?event.preventDefault():event.returnValue=false">
 
-<header id="header">
-	<center><h1 id="title"></h1></center>
-</header>
+		<header id="header">
+			<h1 id="title"></h1>
+		</header>
 
-<section id="main"></section>
+		<section id="main"></section>
 
-<section id="page-selector">
-	<span class="button unselectable" id="prev-button">Previous</span>
-	<span id="page-num">
-		Page <span id="page">1</span>
-	</span>
-	<span class="button unselectable" id="next-button">Next</span>
-</section>
+		<section id="page-selector">
+			<span class="button unselectable" id="prev-button">Previous</span>
+			<span id="page-num">
+				Page <span id="page">1</span>
+			</span>
+			<span class="button unselectable" id="next-button">Next</span>
+		</section>
 
-<script type="text/template" id="t-board"><section class="gameboard">
-		<ul class="column column1"></ul>
-		<ul class="column column2"></ul>
-		<section class="matching-container"><svg></svg></section>
-</section></script>
+		<section id="submit">
+			<div id="progress-bar"><svg xmlns="http://www.w3.org/2000/svg"></svg></div>
+			<div class="button unselectable" id="submit-button">Done</div>
+		</section>
 
-<script type="text/template" id="column-element"><li class="word">
-		<span class="word-text">
-			<span class="text-wrapper"></span>
-			<span class="text-wrapper-dummy"></span>
-			<span class="expand" data-icon="&#xe000;" aria-hidden="true"></span>
-		</span>
-		<div class="popup-text"></div>
-</li></script>
+		<div class="error-notice-container">
+			<div class="error-notice">
+				<h1>This widget uses features that your browser doesn't support</h1>
+				<h2>Upgrade your browser to use this widget</h2>
+			</div>
+		</div>
 
-<section id="submit">
-	<div id="questions-answered"><svg></svg></div>
-	<div class="button unselectable" id="submit-button">Done</div>
-</section>
+		<script type="text/template" id="t-board"><section class="gameboard">
+				<ul class="column column1"></ul>
+				<ul class="column column2"></ul>
+				<section class="matching-container">
+					<svg xmlns="http://www.w3.org/2000/svg">
+						<g class="hollows"></g>
+						<g class="lines"></g>
+						<g class="dots"></g>
+						<g class="predots"></g>
+						<g class="preline">
+							<line class="hidden"></line>
+						</g>
+					</svg>
+				</section>
+		</section></script>
 
-<div class="error-notice-container">
-	<div class="error-notice">
-		<h1>This widget uses features that your browser doesn't support</h1>
-		<h2>Upgrade your browser to use this widget</h2>
-	</div>
-</div>
+		<script type="text/template" id="column-element"><li class="word">
+				<span class="word-text">
+					<span class="text-wrapper"></span>
+					<span class="text-wrapper-dummy"></span>
+					<span class="expand" data-icon="&#xe000;" aria-hidden="true"></span>
+				</span>
+				<div class="popup-text"></div>
+		</li></script>
 
 	</body>
 </html>
