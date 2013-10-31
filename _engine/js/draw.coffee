@@ -67,6 +67,17 @@ Namespace('Matching').Draw = do ->
 		_scaleText $word.find('.word-text')
 		word.isLongWord = $word.find('expand').css('display') != ''
 
+	drawBoards = (template, numBoards) ->
+		# clone board templates
+		for i in [0...numBoards]
+			board = $(template)
+			_dom.main.append board
+			board.addClass 'hidden no-transition' if i > 0 # hide all but first board
+			_dom.boards.push board.get(0)                  # cache for lookup
+
+		# show next button if needed
+		_dom.next.className = 'button shown' if i > 1 
+
 	showGameBoard = (boardDelta) ->
 		_connectWord = null
 		_connectState = null
@@ -301,3 +312,4 @@ Namespace('Matching').Draw = do ->
 	wordOver:wordOver
 	wordOut:wordOut
 	wordUp:wordUp
+	drawBoards:drawBoards
