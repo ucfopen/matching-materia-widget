@@ -75,11 +75,19 @@ html, body {
 	    -ms-transform-origin : 0 550px;
 	        transform-origin : 0 550px;
 	-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
+
+	transition-delay: 300ms;
+	-webkit-transition-delay: 300ms;
+
 	&.hidden {
 		-webkit-transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		   -moz-transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		    -ms-transform : translate(-550px, 550px);
 		        transform : rotateX(-90deg) translateY(-550px) translateZ(550px);
+		transition-delay: 0ms;
+		-webkit-transition-delay: 0ms;
+
+
 	}
 	ul {
 		list-style : none;
@@ -116,8 +124,8 @@ html, body {
 			text-align    : center;
 			font-size     : 25px;
 			width         : 245px;
-			height        : 30.5px;
-			margin        : 20px 0;
+			height        : 36px;
+			margin        : 16px 0;
 			padding       : 10px;
 			border-radius : 10px;
 			-webkit-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -175,7 +183,7 @@ html, body {
 				}
 			}
 			.popup-text {
-				display          : none;
+				// display          : none;
 				z-index          : -2;
 				margin           : -10px 0 0 -10px;
 				opacity          : 0;
@@ -216,8 +224,8 @@ html, body {
 				&.selected {
 					.word-text {
 						color               : #DECEC8 ;
-						background-color    : #283845 ;
-						border-bottom-color : #202D38 ; 
+						background-color    : #27AE60 ;
+						border-bottom-color : #1F8D4E ; 
 					}
 				}
 				.word-text {
@@ -232,25 +240,7 @@ html, body {
 					}
 				}
 			}
-			&.m-anim {
-				.word-text {
-					-webkit-animation-name            : m-anim;
-					-webkit-animation-duration        : 600ms;
-					-webkit-animation-iteration-count : 1;
 
-					-moz-animation-name            : m-anim;
-					-moz-animation-duration        : 600ms;
-					-moz-animation-iteration-count : 1;
-
-					-ms-animation-name            : m-anim;
-					-ms-animation-duration        : 600ms;
-					-ms-animation-iteration-count : 1;
-
-					animation-name            : m-anim;
-					animation-duration        : 600ms;
-					animation-iteration-count : 1;
-				}
-			}
 			&:hover {
 				.word-text {
 					background-color    : #2ECC71;
@@ -273,7 +263,6 @@ html, body {
 			height : 100%;
 			width  : 100%;
 			line {
-				opacity      : 0;
 				stroke       : #27AE60;
 				stroke-width : 4;
 			}
@@ -282,23 +271,59 @@ html, body {
 				stroke-width : 2;
 				fill         : #27AE60;
 			}
-			.pre-line,
-			.pre-inner-circle,
-			.inner-circle
-			 {
-				opacity : 0;
+			.preline line,
+			.predots circle,
+			.dots circle,
+			{
+				opacity : 1;
+				&.hidden{
+					opacity:0;
+					-webkit-transition : 0.2s;
+					   -moz-transition : 0.2s;
+					    -ms-transition : 0.2s;
+					        transition : 0.2s;
+				}
 			}
-			.line {
+			.lines line {
 				stroke  : #5b656d;
+				&.phased-out{
+					opacity: 0.5;
+					-webkit-transition : 0.5s;
+					   -moz-transition : 0.5s;
+					    -ms-transition : 0.5s;
+					        transition : 0.5s;
+				}
+				&.hidden{
+					opacity: 0;
+					-webkit-transition : 0.5s;
+					   -moz-transition : 0.5s;
+					    -ms-transition : 0.5s;
+					        transition : 0.5s;
+				}
 			}
-			.hollow-circle {
+			.hollows circle {
 				stroke       : #1ABC9C;
 				stroke-width : 2;
 				fill         : none;
+				&.matched{
+					stroke: grey;
+					-webkit-transition : 0.2s;
+					   -moz-transition : 0.2s;
+					    -ms-transition : 0.2s;
+					        transition : 0.2s;
+				}
+				&.hidden{
+					opacity:.2;
+					-webkit-transition : 0.8s;
+					   -moz-transition : 0.8s;
+					    -ms-transition : 0.8s;
+					        transition : 0.8s;
+				}
 			}
 		}
 	}
 }
+
 #submit {
 	position                : absolute;
 	background-color        : #3498DB;
@@ -310,7 +335,7 @@ html, body {
 	margin                  : 0 0 0 -100px;
 	border-top-left-radius  : 10px;
 	border-top-right-radius : 10px;
-	#questions-answered {
+	#progress-bar {
 		position         : absolute;
 		background-color : #2f3944;
 		left             : 50%;
@@ -516,22 +541,6 @@ and (-webkit-min-device-pixel-ratio: 2){
 	}
 }
 
-@-webkit-keyframes m-anim {
-	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
-	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
-}
-@-moz-keyframes m-anim {
-	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
-	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
-}
-@-ms-keyframes m-anim {
-	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
-	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
-}
-@keyframes m-anim {
-	0%   {background-color : #FFFFFF; color : #000000; border-bottom-color : #EEEEEE;}
-	100% {background-color : #5B656D; color : #D1D1D1; border-bottom-color : #444B51;}
-}
 
 @-webkit-keyframes glowing {
 	0%   {box-shadow: 0 0 5px #FFF}
@@ -558,6 +567,3 @@ and (-webkit-min-device-pixel-ratio: 2){
 	content: attr(data-icon);
 	speak: none;
 }
-
-
-
