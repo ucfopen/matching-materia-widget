@@ -25,7 +25,7 @@ Namespace('Matching').Engine = do ->
 
 		# Setup the game
 		_draw.drawTitle(instance.name)
-		_drawBoards() 
+		_draw._drawBoards(_dom.boardTemplate.html() _data.getGame().numGameboards) 
 		_assignQuestionsToPages()
 		_drawWords()
 		_setEventListeners()
