@@ -25,7 +25,7 @@ Namespace('Matching').Engine = do ->
 
 		# Setup the game
 		_draw.drawTitle(instance.name)
-		_draw._drawBoards(_dom.boardTemplate.html() _data.getGame().numGameboards) 
+		_draw.drawBoards(_dom.boardTemplate, _data.getGame().numGameboards) 
 		_assignQuestionsToPages()
 		_drawWords()
 		_setEventListeners()
@@ -78,10 +78,8 @@ Namespace('Matching').Engine = do ->
 
 				firstClass = target.className.split(' ')[0]
 				switch firstClass
-					when 'popup-text'
-						_onWordOut(target.parentNode)
-					when 'word'
-						_onWordOut(target);
+					when 'popup-text' then _onWordOut(target.parentNode)
+					when 'word'       then _onWordOut(target);
 
 	_browserSupportsSvg = ->
 		document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.1")
