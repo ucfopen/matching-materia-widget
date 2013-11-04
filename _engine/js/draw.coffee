@@ -25,7 +25,8 @@ Namespace('Matching').Draw = do ->
 		_dom.pageWheel     = $('#page-num').get(0).style
 		_dom.progressBar   = $('<rect></rect>')
 
-		_dom.progressBar.attr
+		_dom.progressBar
+			.attr
 				x      : 0
 				y      : 0
 				width  : 0
@@ -54,9 +55,9 @@ Namespace('Matching').Draw = do ->
 		$word.find('.text-wrapper-dummy').html(text)
 
 		word.node           = $word.get(0)
-		word.preinnerCircle = _makeCircle(word.x, word.y, 5) # inner circle for preview
+		word.preinnerCircle = _makeCircle(word.x, word.y, 5)  # inner circle for preview
 		word.hollowCircle   = _makeCircle(word.x, word.y, 10) # outer circle
-		word.innerCircle    = _makeCircle(word.x, word.y, 5) # inner circle when connected
+		word.innerCircle    = _makeCircle(word.x, word.y, 5)  # inner circle when connected
 
 		$board = $(word.gameboard)
 		$board.find('.predots').append word.preinnerCircle
@@ -70,20 +71,20 @@ Namespace('Matching').Draw = do ->
 	drawBoards = (template, numBoards) ->
 		# clone board templates
 		for i in [0...numBoards]
-			board = $(template)
-			_dom.main.append board
-			board.addClass 'hidden no-transition' if i > 0 # hide all but first board
-			_dom.boards.push board.get(0)                  # cache for lookup
+			board = template
+			_dom.main.append board.clone()
+			_dom.boards.push document.getElementsByClassName('gameboard')[i] # cache for lookup
+			_dom.boards[i].className += ' hidden no-transition' if i > 0 # hide all but first board
 
 		# show next button if needed
 		_dom.next.className = 'button shown' if i > 1 
 
 	showGameBoard = (boardDelta) ->
-		_connectWord = null
+		_connectWord  = null
 		_connectState = null
-		game         = _data.getGame()
-		currentBoard = game.currentGameboard 
-		nextBoard    = currentBoard + boardDelta
+		game          = _data.getGame()
+		currentBoard  = game.currentGameboard
+		nextBoard     = currentBoard + boardDelta
 
 		if boardDelta? and _dom.boards[nextBoard]?
 			_dom.boards[currentBoard].className = 'gameboard hidden'
