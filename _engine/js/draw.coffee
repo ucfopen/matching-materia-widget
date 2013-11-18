@@ -1,5 +1,4 @@
 Namespace('Matching').Draw = do ->
-	_colors       = ['#79dcf3','#8479f3','#f179f3','#f37987','#f38079','#f3ee79','#8af379','#79f3d6']
 	_currentColor = 0
 	_data         = null
 	_maxWordWidth = 200
@@ -7,44 +6,30 @@ Namespace('Matching').Draw = do ->
 	_connectWord  = null
 	_connectState = null
 	_dom =
-		boards:[]
-		main:null
-		progressBar:null
+		boards      : []
+		main        : null
+		progressBar : null
 
 	init = (dataObject) ->
 		_data = dataObject
 
 		# Caches element references to speed lookup
-		_dom.main          = $('#main') # A wrapper for the entire widget.
-		_dom.boardTemplate = $($('#t-board').html()) # Gameboard template.
+		_dom.main          = $('#main')                  # A wrapper for the entire widget.
+		_dom.boardTemplate = $($('#t-board').html())     # Gameboard template.
 		_dom.wordTemplate  = $('#column-element').html() # Word template.
-		_dom.prev          = $('#prev-button').get 0
-		_dom.next          = $('#next-button').get 0
-		_dom.submit        = $('#submit-button').get 0
-		_dom.currentPage   = $('#page').get 0
-		_dom.pageWheel     = $('#page-num').get(0).style
-		_dom.progressBar   = $('<rect></rect>')
+		_dom.prev          = $('#prev-button')[0]
+		_dom.next          = $('#next-button')[0]
+		_dom.submit        = $('#submit-button')[0]
+		_dom.currentPage   = $('#page')[0]
+		_dom.pageWheel     = $('#page-num')[0].style
 
-		_dom.progressBar
-			.attr
-				x      : 0
-				y      : 0
-				width  : 0
-				height : 10
-				rx     : 5
-				ry     : 5
-			.css
-				'stroke-width' : 1
-				stroke : '#BDC3C7'
-				fill   : '#BDC3C7'
-
-		$('#progress-bar svg').append(_dom.progressBar)
+		$('#progress-bar svg').html(_makeRect(0))
 
 	getDom = -> _dom
 
-	drawTitle = (text) ->
-		# set title
-		$('#title').innerHTML = title
+	drawTitle = (title) ->
+		# Set title.
+		$('#title').html(title)
 		if title.length > 38 then $('#title').css 'font-size','1.2em'
 
 	drawWord = (word, $container, wordClass, text, id) ->
@@ -54,7 +39,7 @@ Namespace('Matching').Draw = do ->
 		$word.find('.popup-text').html(text)
 		$word.find('.text-wrapper-dummy').html(text)
 
-		word.node           = $word.get(0)
+		word.node           = $word[0]
 		word.preinnerCircle = _makeCircle(word.x, word.y, 5)  # inner circle for preview
 		word.hollowCircle   = _makeCircle(word.x, word.y, 10) # outer circle
 		word.innerCircle    = _makeCircle(word.x, word.y, 5)  # inner circle when connected
@@ -66,7 +51,7 @@ Namespace('Matching').Draw = do ->
 
 		$container.append($word)
 		_scaleText $word.find('.word-text')
-		word.isLongWord = $word.find('expand').css('display') != ''
+		word.isLongWord = $word.find('.expand').css('display') isnt 'none'
 
 	drawBoards = (template, numBoards) ->
 		# clone board templates
@@ -74,48 +59,36 @@ Namespace('Matching').Draw = do ->
 			board = template
 			_dom.main.append board.clone()
 			_dom.boards.push document.getElementsByClassName('gameboard')[i] # cache for lookup
-			_dom.boards[i].className += ' hidden no-transition' if i > 0 # hide all but first board
+			_dom.boards[i].className += ' hidden no-transition' if i > 0     # hide all but first board
 
 		# show next button if needed
-		_dom.next.className = 'button shown' if i > 1 
+		_dom.next.className = 'button shown' if i > 1
 
 	showGameBoard = (boardDelta) ->
 		_connectWord  = null
 		_connectState = null
-		game          = _data.getGame()
-		currentBoard  = game.currentGameboard
-		nextBoard     = currentBoard + boardDelta
+		_game         = _data.getGame()
+		_currentBoard = _game.currentGameboard
+		_nextBoard    = _currentBoard + boardDelta
 
-		if boardDelta? and _dom.boards[nextBoard]?
-			_dom.boards[currentBoard].className = 'gameboard hidden'
-			_dom.boards[nextBoard].className = 'gameboard'
-			game.currentGameboard = nextBoard
-			_updatePageButtons nextBoard
+		if boardDelta? and _dom.boards[_nextBoard]?
+			_dom.boards[_currentBoard].className = 'gameboard hidden'
+			_dom.boards[_nextBoard].className = 'gameboard'
+			_game.currentGameboard = _nextBoard
+			_updatePageButtons _nextBoard
 
 	# Draws a line from one column to another.
 	drawPreline = (word1, word2) ->
 		$preline = $(word1.gameboard).find('.preline line')
 
 		$preline.attr
-			x1:word1.x
-			y1:word1.y
-			x2:word2.x
-			y2:word2.y
+			x1 : word1.x
+			y1 : word1.y
+			x2 : word2.x
+			y2 : word2.y
 
 		$preline.attr 'class', ''
 		word1.preinnerCircle.attr 'class', ''
-
-	# Animates the progress bar up or down depending on a single string parameter.
-	updateProgressBar = ->
-		game = _data.getGame()
-		width = 100 - (game.remainingItems / game.totalItems)
-		_dom.progressBar.attr 'width', width * 200
-
-		if game.remainingItems == 0
-			_dom.submit.className = 'glowing button'
-		else
-			_dom.submit.className = 'unselectable button'
-
 
 	fadePreline = (board, selectedWord) ->
 		$preline = $('.preline line')
@@ -129,65 +102,69 @@ Namespace('Matching').Draw = do ->
 
 		color = _getRandomColor()
 
-		# This operation could involve 3 words, unmatch them all
+		# This operation could involve 3 words, unmatch them all.
 		_unMatchWord word
 		_unMatchWord word2
 
-		# update our word data
+		# Update our word data.
 		_data.matchWords(word.id, word2.id)
 
-		# Remove hidden lines from previious unmatching, gives them time to animate away
+		# Remove hidden lines from previious unmatching, gives them time to animate away.
 		$('.lines .hidden').remove()
-		# Connect with a line
+		# Connect with a line.
 		line = _makeLine('line', word.x, word.y, word2.x, word2.y)
 		$(word.gameboard).find('.lines').append line
 		word.line = word2.line = line
 
-		word.node.className = 'word matched m-anim'
-		word2.node.className = 'word matched m-anim'
+		word.node.className  = 'word matched'
+		word2.node.className = 'word matched'
 
-		updateProgressBar()
+		updateProgress()
 
 		# Clean up the preline
 		fadePreline(word.gameboard)
 
+		word.preinnerCircle.attr 'class', 'hidden'
 		word.hollowCircle.attr 'class', 'matched'
-		word.innerCircle.attr 'class', ''
-		word.innerCircle.css color
+		word.innerCircle.attr 'class', color
 
 		word2.preinnerCircle.attr 'class', 'hidden'
-		word2.hollowCircle.attr 'class', 'matched'
-		word2.innerCircle.attr 'class', ''
-		word2.innerCircle.css color
+		word2.hollowCircle.attr 'class', 'matched hidden'
+		word2.innerCircle.attr 'class', color
 
 	showCircle = (id) ->
 		if _data.getWords()[id].matched == -1
+			_circle = _data.getWords()[id].innerCircle
 			_data.getWords()[id].innerCircle.attr 'class', ''
 
 	fadeCircle = (id) ->
 		_data.getWords()[id].innerCircle.attr 'class', 'hidden'
 
+	revertCircleColor = (id) ->
+		_circle = _data.getWords()[id].innerCircle
+		console.log _circle[0].style
+		_circle[0].style = ""
+
 	# Animates the popup in.
 	expandWord = (id) ->
-		popup = $("##{id} .popup-text")
+		$popup = $("#w"+id+" .popup-text")
 
-		popup.css 'display:block;'
+		$popup.css 'display:block;'
 		setTimeout ->
-			popup.className = 'popup-text shown'
+			$popup[0].className = 'popup-text shown'
 		, 5
 
 	# Animates the popup into oblivion.
 	shrinkWord = (id) ->
-		popup = $("##{id} .popup-text")
+		$popup = $("#w"+id+" .popup-text")
 
-		popup.className = 'popup-text'
+		$popup[0].className = 'popup-text'
 		setTimeout ->
-			popup.css('display:none;')
+			$popup.css('display:none;')
 		, 300
 
 	wordOver = (word) ->
-		if word.isLongWord
-			expandWord word.id
+		if word.isLongWord then expandWord word.id
 
 		if _connectState is 'matching' and not _onSameSide(_connectWord, word)
 			drawPreline _connectWord, word
@@ -203,7 +180,11 @@ Namespace('Matching').Draw = do ->
 		fadePreline()
 
 	wordUp = (word) ->
+		showCircle word.id
+		revertCircleColor word.id 
+
 		if _onSameSide(_connectWord, word)
+			if _connectWord.matched is -1 && _connectWord.id isnt word.id then fadeCircle _connectWord.id
 			_connectState = null
 
 		switch _connectState
@@ -214,9 +195,8 @@ Namespace('Matching').Draw = do ->
 				_connectState = 'matching'
 				_connectWord = word
 
-
 	_onSameSide = (word1, word2) ->
-		word1? and word2 and word1.isOnLeft == word2.isOnLeft
+		word1? and word2 and word1.isOnLeft is word2.isOnLeft
 
 	_scaleText = ($wordBlock) ->
 		# Set up target/dummy pair for question
@@ -236,16 +216,15 @@ Namespace('Matching').Draw = do ->
 		if $dummy.width() > _maxWordWidth * 2 then $wordBlock.find('.expand').show()
 
 	_getRandomColor = ->
-		if ++_currentColor > _colors.length then _currentColor = 0
-		color = _colors[_currentColor]
-		{ stroke : color, fill : color }
+		if ++_currentColor > 9 then _currentColor = 1
+		color = 'c'+ _currentColor
 
 	_unMatchWord = (word) ->
 		if word.matched > -1
 			matchedWord = _data.getWords()[word.matched]
 
 			matchedWord.innerCircle.attr 'class', 'hidden'
-			matchedWord.hollowCircle.attr 'class', ''
+			matchedWord.hollowCircle.attr 'class', 'hidden'
 			$(matchedWord.line).attr 'class','hidden'
 
 			matchedWord.matched = -1
@@ -263,24 +242,55 @@ Namespace('Matching').Draw = do ->
 	_makeCircle = (x, y, r) ->
 		circle = $(_makeSVGShape('circle'))
 		circle.attr
-			class: 'hidden'
-			cx: x
-			cy: y
-			r: r
+			class : 'hidden'
+			cx    : x
+			cy    : y
+			r     : r
 		circle
 
 	_makeLine = (className, x, y, x2, y2) ->
 		line = $(_makeSVGShape('line'))
 		line.attr
-			class: className
-			x1: x
-			y1: y
-			x2: x2
-			y2: y2
+			class : className
+			x1    : x
+			y1    : y
+			x2    : x2
+			y2    : y2
 		line
+
+	_makeRect = (width) ->
+		rect = $(_makeSVGShape('rect'))
+		rect.attr
+			id     : 'bar'
+			x      : 0
+			y      : 0
+			width  : width
+			height : 10
+			rx     : 5
+			ry     : 5
+		.css
+			'stroke-width' : 1
+			stroke : '#BDC3C7'
+			fill   : '#BDC3C7'
+			opacity : 0
+		rect
 
 	_makeSVGShape = (type) ->
 		shape = document.createElementNS 'http://www.w3.org/2000/svg', type
+
+	# Animates the progress bar and done button.
+	updateProgress = ->
+		game = _data.getGame()
+		width = 160 * ((game.totalItems - game.remainingItems) / game.totalItems)
+
+		$('#progress-bar svg').html(_makeRect(width))
+
+		setTimeout ->
+			$('#progress-bar svg rect').css 'opacity' , '1'
+		, 10
+
+		if _game.remainingItems is 0 then _dom.submit.className = 'glowing button'
+		else                              _dom.submit.className = 'unselectable button'
 
 	_updatePageButtons = (pageIndex) ->
 		show = 'button shown'
@@ -299,18 +309,18 @@ Namespace('Matching').Draw = do ->
 		, 300
 
 	# Public
-	init : init
-	getDom:getDom
-	drawWord:drawWord
-	showCircle:showCircle
-	makeMatch:makeMatch
-	fadePreline:fadePreline
-	drawPreline:drawPreline
-	drawTitle:drawTitle
-	expandWord:expandWord
-	shrinkWord:shrinkWord
-	showGameBoard:showGameBoard
-	wordOver:wordOver
-	wordOut:wordOut
-	wordUp:wordUp
-	drawBoards:drawBoards
+	init          : init
+	getDom        : getDom
+	drawWord      : drawWord
+	showCircle    : showCircle
+	makeMatch     : makeMatch
+	fadePreline   : fadePreline
+	drawPreline   : drawPreline
+	drawTitle     : drawTitle
+	expandWord    : expandWord
+	shrinkWord    : shrinkWord
+	showGameBoard : showGameBoard
+	wordOver      : wordOver
+	wordOut       : wordOut
+	wordUp        : wordUp
+	drawBoards    : drawBoards

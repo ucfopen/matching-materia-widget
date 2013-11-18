@@ -1,9 +1,12 @@
-# TODO:
-# Title
-# Mouseover
-# Progress Bar Animation
-# Test Finish Button/score
-# Mobile
+###
+
+Materia
+It's a thing
+
+Widget  : Matching, Engine
+Authors : Ian Turgeon, Micheal Parks
+
+###
 
 Namespace('Matching').Engine = do ->
 	_regexNonDigit = /[^0-9\.]+/g
@@ -32,8 +35,6 @@ Namespace('Matching').Engine = do ->
 
 	# Attaches event listeners to the document.
 	_setEventListeners = ->
-		$doc = $(document)
-
 		# Environmental conditions.
 		ms     = window.navigator.msPointerEnabled
 		mobile = navigator.userAgent.match /(iPhone|iPod|iPad|Android|BlackBerry)/
@@ -46,7 +47,7 @@ Namespace('Matching').Engine = do ->
 		upEventType = switch
 			when ms     then "MSPointerUp"
 			when mobile then "touchend"
-			else              "mouseup"
+			else             "mouseup"
 
 		# Next/Prev/Done buttons
 		$(_dom.prev).on downEventType, _onPrevButton
@@ -54,32 +55,14 @@ Namespace('Matching').Engine = do ->
 		$(_dom.submit).on downEventType, _onSubmitButton
 
 		# Word Up
-		$doc.on upEventType, '.word', (event) -> _onWordUp event.target
+		$('.word').on upEventType, (event) -> _onWordUp this
 
 		if mobile
 			# Prevents scrolling.
 			document.addEventListener 'touchmove', (event) -> event.preventDefault()
 		else
-			document.addEventListener 'mouseover', (event) ->
-				target = event.target
-
-				if ! (target instanceof SVGElement)
-					firstClass = target.className.split(' ')[0]
-					switch firstClass
-						when 'popup-text'
-							_onWordOver(target.parentNode)
-						when 'word'
-							_onWordOver(target)
-
-			document.addEventListener 'mouseout', (event) ->
-				target = event.target
-
-				if target instanceof SVGElement then return
-
-				firstClass = target.className.split(' ')[0]
-				switch firstClass
-					when 'popup-text' then _onWordOut(target.parentNode)
-					when 'word'       then _onWordOut(target);
+			$('.word').on 'mouseenter', (event) -> _onWordOver this
+			$('.word').on 'mouseleave', (event) -> _onWordOut this
 
 	_browserSupportsSvg = ->
 		document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.0") || document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Shape", "1.1")
@@ -87,10 +70,10 @@ Namespace('Matching').Engine = do ->
 	_drawBoards = ->
 		# clone board templates
 		for i in [0..._data.getGame().numGameboards]
-			board = _dom.boardTemplate.clone()
-			_dom.main.append board
-			board.addClass 'hidden no-transition' if i > 0 # hide all but first board
-			_dom.boards.push board.get(0)                  # cache for lookup
+			$board = _dom.boardTemplate.clone()
+			_dom.main.append $board
+			$board.addClass 'hidden no-transition' if i > 0 # hide all but first board
+			_dom.boards.push $board[0]                      # cache for lookup
 
 		# show next button if needed
 		_dom.next.className = 'button shown' if i > 1 
@@ -153,37 +136,25 @@ Namespace('Matching').Engine = do ->
 
 	# Submit matched words for scoring.
 	_submitAnswers = ->
-		words     = _data.words
+		words     = _data.getWords()
 		qsetItems = _data.getQset().items[0].items
 		for i in [0...words.length] by 2                           # Loop through all word pairs.
 			for j in [0...qsetItems.length]                        # Loop through the qset word pairs.
 				if qsetItems[j].questions[0].text == words[i].word # Find matching questions.
 					Materia.Score.submitQuestionForScoring(qsetItems[j].id, words[words[i].matched].word)
-					break                                          # Once we've submitted our answer, 
+					break
+		true
 
 	############# EVENT HANDLERS ##################
 
-	_onPrevButton = ->
-		_draw.showGameBoard(-1)
+	_onPrevButton = -> _draw.showGameBoard(-1)
+	_onNextButton = -> _draw.showGameBoard(1)
 
-	_onNextButton = ->
-		_draw.showGameBoard(1)
+	_onSubmitButton = -> if _submitAnswers() then Materia.Engine.end()
 
-	_onSubmitButton = ->
-		_submitAnswers()
-		Materia.Engine.end()
-
-	_onWordOver = (target) ->
-		id = target.id.replace _regexNonDigit, ''
-		_draw.wordOver _data.getWords()[id]
-
-	_onWordOut = (target) ->
-		id = target.id.replace _regexNonDigit, ''
-		_draw.wordOut _data.getWords()[id]
-
-	_onWordUp = (target) ->
-		id = target.id.replace _regexNonDigit, ''
-		_draw.wordUp _data.getWords()[id]
+	_onWordOver = (target) -> _draw.wordOver _data.getWords()[target.id.replace _regexNonDigit, '']
+	_onWordOut  = (target) -> _draw.wordOut _data.getWords()[target.id.replace _regexNonDigit, '']
+	_onWordUp   = (target) -> _draw.wordUp _data.getWords()[target.id.replace _regexNonDigit, '']
 
 	# Public.
 	start : start
