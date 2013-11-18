@@ -1,6 +1,3 @@
-# All methods and properties in "Data" are public,
-# but need to be protected.
-# So we'll make it an object literal.
 Namespace('Matching').Data = do ->
 	_game  = {} # Holds widget instance data and LOGIC.
 	_words = [] # Holds objects that contain word data and svg element references.
@@ -25,9 +22,9 @@ Namespace('Matching').Data = do ->
 			_game.ansIndices.push i
 
 	addWord = (id, gameboard, i, text) ->
-		isOnLeft  = id%2 == 0
+		isOnLeft  = id%2 is 0
 		_x        = if isOnLeft then 270 else 480
-		yLoc      = (i+1)*70.3+65
+		_y        = (i+1)*70.3+65
 
 		_words[id] = word = 
 			id             : id
@@ -42,7 +39,7 @@ Namespace('Matching').Data = do ->
 			hollowCircle   : null
 			innerCircle    : null
 			x              : _x
-			y              : yLoc
+			y              : _y
 
 	matchWords = (id1, id2) ->
 		w1 = _words[id1]
@@ -62,9 +59,9 @@ Namespace('Matching').Data = do ->
 		w1.selected = false
 		w2.selected = false
 
-	init:init
-	addWord:addWord
-	matchWords:matchWords
-	getGame:getGame
-	getQset:getQset
-	getWords:getWords
+	init       : init
+	addWord    : addWord
+	matchWords : matchWords
+	getGame    : getGame
+	getQset    : getQset
+	getWords   : getWords
