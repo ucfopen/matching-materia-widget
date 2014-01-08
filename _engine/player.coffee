@@ -137,10 +137,12 @@ Namespace('Matching').Engine = do ->
 	# Submit matched words for scoring.
 	_submitAnswers = ->
 		words     = _data.getWords()
+		console.log words
 		qsetItems = _data.getQset().items[0].items
 		for i in [0...words.length] by 2                           # Loop through all word pairs.
 			for j in [0...qsetItems.length]                        # Loop through the qset word pairs.
 				if qsetItems[j].questions[0].text == words[i].word # Find matching questions.
+					#TODO: fix when its not matched
 					Materia.Score.submitQuestionForScoring(qsetItems[j].id, words[words[i].matched].word)
 					break
 		true

@@ -289,7 +289,7 @@ Namespace('Matching').Draw = do ->
 			$('#progress-bar svg rect').css 'opacity' , '1'
 		, 10
 
-		if _game.remainingItems is 0 then _dom.submit.className = 'glowing button'
+		if game.remainingItems is 0 then _dom.submit.className = 'glowing button'
 		else                              _dom.submit.className = 'unselectable button'
 
 	_updatePageButtons = (pageIndex) ->
