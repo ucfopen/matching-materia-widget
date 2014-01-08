@@ -1,8 +1,15 @@
 ---
 type: compile_html
-target: widget.html
+target: build.yaml
 include:
-  - font
-  - css
-  - js
-  - img
+# ---
+# type: compile_swf
+# sdk_version: 3.6.0
+# flash_version: 10.2.0
+# app_class: src/Creator.mxml
+# target: swf/matching-creator.swf
+# sources:
+#   - src/
+#   - engine_src/src/
+# libs:
+#   - libs/
