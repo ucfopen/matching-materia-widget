@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Matching Creator</title>
+		<meta charset='utf-8' />
+		<style type='text/css'></style>
+		<script src="js/modernizr.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/angular-animate.min.js"></script>
+		<script type='text/javascript' src='/js/materia.require.js'></script>
+		<link rel='stylesheet' type='text/css' href='css/creator.css'>
+		<script type='text/javascript'>
+			require(['creatorcore', 'js/creator'], function(util) {
+					Materia.CreatorCore.start(Matching.Creator);
+			});
+		</script>
+	</head>
+	<body ng-cloak ng-controller="matchingCreatorCtrl">
+		<div id='modal'></div>
+		<center>
+		<header class="widget-header">
+			<div>
+				<input type='text' id='title' placeholder="Enter widget title here." ng-model="widget.title" value="{{widget.title}}"/>
+			</div>
+		</header>
+		<section class='main-area'>
+			<div class='titles'>
+				<h1>Left Side</h1>
+				<h1>Right Side</h1>
+			</div>
+			<div id='question-container'>
+				<div class='question' ng-repeat="pair in widget.wordPairs">
+					<span class="num">{{$index+1}}</span>
+					<textarea class='question-text' ng-model="pair.question" placeholder="Enter first word here."></textarea>
+					<textarea class='answer-text' ng-model="pair.answer" placeholder="Enter second word here."></textarea>
+					<span class='icon-close' ng-click="removeWordPair($index)"></span>
+				</div>
+			</div>
+			<div id='add-new' ng-click="addWordPair()">
+				<span class='icon-plus'></span>
+				Add new question
+			</div>
+		</section>
+		</center>
+	</body>
+</html>
