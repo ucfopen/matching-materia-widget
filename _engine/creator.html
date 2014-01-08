@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- INJECTS IE CLASSES ONTO HTML TAG -->
+<!--[if IE 8 ]>    <html class="IE8"> <![endif]-->
+<!--[if IE 9 ]>    <html class="IE9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
+	<head>
+		<title>Matching Creator</title>
+		<meta charset="utf-8" />
+
+		<!-- STYLESHEETS -->
+		<link rel="stylesheet" type="text/css" href="creator.css">
+
+		<!-- REQUIRED MATERIA JAVASCRIPT -->
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/materia.creatorcore.js"></script>
+
+		<!-- YOUR PREREQUISITES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.5/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.3/angular-animate.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+
+		<!-- MAIN CREATOR SCRIPT -->
+		<script src="creator.js"></script>
+	</head>
+	<body ng-cloak ng-controller="matchingCreatorCtrl">
+		<div id='modal'></div>
+		<center>
+		<header class="widget-header">
+			<div>
+				<input type='text' id='title' placeholder="Enter widget title here." ng-model="widget.title" value="{{widget.title}}"/>
+			</div>
+		</header>
+		<section class='main-area'>
+			<div class='titles'>
+				<h1>Left Side</h1>
+				<h1>Right Side</h1>
+			</div>
+			<div id='question-container'>
+				<div class='question' ng-repeat="pair in widget.wordPairs">
+					<span class="num">{{$index+1}}</span>
+					<textarea class='question-text' ng-model="pair.question" placeholder="Enter first word here."></textarea>
+					<textarea class='answer-text' ng-model="pair.answer" placeholder="Enter second word here."></textarea>
+					<span class='icon-close' ng-click="removeWordPair($index)"></span>
+				</div>
+			</div>
+			<div id='add-new' ng-click="addWordPair()">
+				<span class='icon-plus'></span>
+				Add new question
+			</div>
+		</section>
+		</center>
+
+		<!-- INITIALIZE -->
+		<script type="text/javascript">
+			angular.bootstrap(document, ['matchingCreator']);
+			Materia.CreatorCore.start(Matching.Creator);
+		</script>
+	</body>
+</html>

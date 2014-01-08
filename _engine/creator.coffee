@@ -5,7 +5,7 @@ It's a thing
 
 Widget  : Matching, Creator
 Authors : Jonathan Warner, Micheal Parks
-Updated : 10/13
+Updated : 1/14
 
 ###
 
@@ -119,10 +119,4 @@ Namespace('Matching').Creator = do ->
 	onMediaImportComplete    : onMediaImportComplete
 	onQuestionImportComplete : onQuestionImportComplete
 	onSaveComplete           : onSaveComplete
-
-# Bootstrap the document and define it as the matching creator module.
-# This will allow angular to add directives to every "ng" HTML attribute.
-angular.bootstrap document, ["matchingCreator"]
-
-
 
