@@ -1,19 +1,30 @@
 <!DOCTYPE html>
-<html>
+<!-- INJECTS IE CLASSES ONTO HTML TAG -->
+<!--[if IE 8 ]>    <html class="IE8"> <![endif]-->
+<!--[if IE 9 ]>    <html class="IE9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
 	<head>
-		<title>HTML Widget Engine</title>
+		<title>Materia Widget Player</title>
 		<meta charset="utf-8" />
-		<style type="text/css"></style>
-		<link rel="stylesheet/less" type="text/css" href="css/widget.less">
-		<script type="text/javascript" src="/js/materia.require.js"></script>
-		<script type="text/javascript">
-			require([
-				'enginecore', 'score', 'less',             // Materia Dependencies.
-				'cs!js/data', 'cs!js/widget', 'cs!js/draw' // Widget files.
-			], function(util) {
-				Materia.Engine.start(Matching.Engine);
-			});
-		</script>
+
+		<!-- STYLESHEETS -->
+		<link rel="stylesheet" type="text/css" href="player.css">
+
+		<!-- REQUIRED MATERIA JAVASCRIPT -->
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/materia.enginecore.js"></script>
+		<script type="text/javascript" src="/js/materia.score.js"></script>
+
+		<!-- OPTIONAL MATERIA JAVASCRIPT -->
+		<!-- <script type="text/javascript" src="/js/materia.storage.manager.js"></script> -->
+		<!-- <script type="text/javascript" src="/js/materia.storage.table.js"></script> -->
+
+		<!-- YOUR PREREQUISITES -->
+		<script type="text/javascript" src="draw.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+
+		<!-- MAIN PLAYER SCRIPT -->
+		<script type="text/javascript" src="player.js"></script>
 	</head>
 	<body onmousedown="event.preventDefault?event.preventDefault():event.returnValue=false">
 
@@ -68,5 +79,9 @@
 				<div class="popup-text"></div>
 		</li></script>
 
+		<!-- INITIALIZE -->
+		<script type="text/javascript">
+			Materia.Engine.start(Materia.Engine);
+		</script>
 	</body>
 </html>
