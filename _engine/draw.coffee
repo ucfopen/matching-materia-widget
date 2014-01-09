@@ -142,7 +142,6 @@ Namespace('Matching').Draw = do ->
 
 	revertCircleColor = (id) ->
 		_circle = _data.getWords()[id].innerCircle
-		console.log _circle[0].style
 		_circle[0].style = ""
 
 	# Animates the popup in.
