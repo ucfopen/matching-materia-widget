@@ -69,6 +69,9 @@
 			<input type='text' placeholder='My Matching widget' ng-model='widget.title'>
 			<input type='button' value='Done'>
 		</div>
+		<div class='arrow_box' ng-show='!widget.wordPairs.length && step'>
+			<span>Click here to add your first pair</span>
+		</div>
 
 		<!-- INITIALIZE -->
 		<script type="text/javascript">

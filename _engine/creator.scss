@@ -128,7 +128,7 @@ body {
 .main-area {
 	position : relative;
 	width    : 80%;
-	margin   : 0 0 70px 0;
+	margin   : 20px 0 70px 0;
 	-webkit-perspective : 800px;
 	   -moz-perspective : 800px;
 	    -ms-perspective : 800px;
@@ -320,3 +320,62 @@ body {
 	}
 }
 
+.arrow_box {
+	position: absolute;
+	background: #fbf767;
+	border: 2px solid #fbf767;
+	left: 50%;
+	top: 110px;
+	color: #151515;
+	font-weight: 400;
+	padding: 5px;
+	height: 55px;
+	width: 180px;
+	margin-left: 140px;
+
+	animation: pounce 1s infinite;
+
+	span {
+		display: inline-block;
+		width: 140px;
+		float: right;
+		margin-top: 8px;
+		margin-right: 12px;
+		text-align: right;
+	}
+}
+.arrow_box:after, .arrow_box:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:after {
+	border-color: rgba(251, 247, 103, 0);
+	border-right-color: #fbf767;
+	border-width: 60px;
+	margin-top: -60px;
+}
+.arrow_box:before {
+	border-color: rgba(251, 247, 103, 0);
+	border-right-color: #fbf767;
+	border-width: 63px;
+	margin-top: -63px;
+}
+
+@keyframes pounce {
+	0% {
+		margin-left: 150px;
+	}
+	50% {
+		margin-left: 140px;
+	}
+	100% {
+		margin-left: 150px;
+	}
+}
