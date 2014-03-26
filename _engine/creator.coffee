@@ -37,7 +37,7 @@ Namespace('Matching').Creator = do ->
 	# Define the angular scope within this namespace to gather data before saving.
 	initNewWidget = (widget, baseUrl) ->
 		$scope = angular.element($('body')).scope()
-		return
+
 		$('#backgroundcover, .intro').addClass 'show'
 
 		$('.intro input[type=button]').click ->
