@@ -59,6 +59,18 @@ body {
 	background: #333;
 	padding: 13px 8px;
 	z-index: 100;
+
+	border-bottom: solid 10px #3393e3;
+
+	.bottom {
+		position:absolute;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		margin: 0px -8px;
+		border-bottom: solid 1px #fff;
+	}
+
 	.logo {
 		display: block;
 		background: url(assets/materialogo.png) no-repeat;
@@ -129,14 +141,9 @@ body {
 	position : relative;
 	width    : 80%;
 	margin   : 20px 0 70px 0;
-	-webkit-perspective : 800px;
-	   -moz-perspective : 800px;
-	    -ms-perspective : 800px;
-	        perspective : 800px;
-	-webkit-transform-origin : 50% 100%;
-	   -moz-transform-origin : 50% 100%;
-	    -ms-transform-origin : 50% 100%;
-	        transform-origin : 50% 100%;
+	perspective : 800px;
+	transform-origin : 50% 100%;
+	
 	.titles {
 		h1 {
 			display   : inline-block;
