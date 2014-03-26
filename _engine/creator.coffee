@@ -5,7 +5,7 @@ It's a thing
 
 Widget  : Matching, Creator
 Authors : Jonathan Warner, Micheal Parks
-Updated : 1/14
+Updated : 3/14
 
 ###
 
@@ -17,31 +17,45 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	# Stores data to be gathered on save.
 	$scope.widget =
-		title     : ""
-		wordPairs : [{question:null,answer:null}]
+		title     : "My Matching widget"
+		wordPairs : []
 
 	# Adds and removes a pair of textareas for users to input a word pair.
 	$scope.addWordPair = (q=null, a=null) -> $scope.widget.wordPairs.push {question:q,answer:a}
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
+
+	$scope.changeTitle = ->
+		$('#backgroundcover, .title').addClass 'show'
+		$('.title input[type=text]').focus()
+		$('.title input[type=button]').click ->
+			$('#backgroundcover, .title').removeClass 'show'
 ]
 
 Namespace('Matching').Creator = do ->
-	_title = _qset = _scope = null
+	_title = _qset = $scope = null
 
 	# Define the angular scope within this namespace to gather data before saving.
-	initNewWidget = (widget, baseUrl) -> 
-		_scope = angular.element($('body')).scope()
+	initNewWidget = (widget, baseUrl) ->
+		$scope = angular.element($('body')).scope()
+		return
+		$('#backgroundcover, .intro').addClass 'show'
+
+		$('.intro input[type=button]').click ->
+			$('#backgroundcover, .intro').removeClass 'show'
+			$scope.$apply ->
+				$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
+				$scope.step = 1
 
 		if not Modernizr.input.placeholder then _polyfill()
 
 	# Apply existing data to the angular scope and angular will update the document accordingly.
 	initExistingWidget = (title, widget, qset, version, baseUrl) ->
 		_items = qset.items[0].items
-		_scope = angular.element($('body')).scope()
-		_scope.$apply ->
-			_scope.widget.title     = title
-			_scope.widget.wordPairs = []
-			_scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text ) for i in [0.._items.length-1]
+		$scope = angular.element($('body')).scope()
+		$scope.$apply ->
+			$scope.widget.title     = title
+			$scope.widget.wordPairs = []
+			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text ) for i in [0.._items.length-1]
 
 		if not Modernizr.input.placeholder then _polyfill()
 
@@ -52,7 +66,7 @@ Namespace('Matching').Creator = do ->
 	onSaveComplete = (title, widget, qset, version) -> true
 
 	onQuestionImportComplete = (questions) ->
-		_scope.$apply -> _scope.addWordPair(question.questions[0].text, question.answers[0].text) for question in questions
+		$scope.$apply -> $scope.addWordPair(question.questions[0].text, question.answers[0].text) for question in questions
 
 	# Matching does not support media
 	onMediaImportComplete = (media) -> null
@@ -63,11 +77,11 @@ Namespace('Matching').Creator = do ->
 		_qset.assets  = []
 		_qset.rand    = false
 		_qset.name    = ''
-		_title        = _scope.widget.title
+		_title        = $scope.widget.title
 		_okToSave     = if _title? && _title != '' then true else false
 
 		_items      = []
-		_wordPairs  = _scope.widget.wordPairs
+		_wordPairs  = $scope.widget.wordPairs
 		_items.push( _process _wordPairs[i] ) for i in [0.._wordPairs.length-1]
 		_qset.items = [{ items: _items }]
 		
