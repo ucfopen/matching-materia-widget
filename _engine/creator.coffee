@@ -21,14 +21,23 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		wordPairs : []
 
 	# Adds and removes a pair of textareas for users to input a word pair.
-	$scope.addWordPair = (q=null, a=null) -> $scope.widget.wordPairs.push {question:q,answer:a}
+	$scope.addWordPair = (q=null, a=null) ->
+		$scope.widget.wordPairs.push {question:q,answer:a}
+		setTimeout ->
+			$('#qt_' + ($scope.widget.wordPairs.length - 1)).focus()
+		, 10
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
 
 	$scope.changeTitle = ->
 		$('#backgroundcover, .title').addClass 'show'
 		$('.title input[type=text]').focus()
-		$('.title input[type=button]').click ->
-			$('#backgroundcover, .title').removeClass 'show'
+	$scope.setTitle = ->
+		$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
+		$scope.step = 1
+		$scope.hideCover()
+	$scope.hideCover = ->
+		$('#backgroundcover, .title, .intro').removeClass 'show'
+
 ]
 
 Namespace('Matching').Creator = do ->
@@ -39,12 +48,6 @@ Namespace('Matching').Creator = do ->
 		$scope = angular.element($('body')).scope()
 
 		$('#backgroundcover, .intro').addClass 'show'
-
-		$('.intro input[type=button]').click ->
-			$('#backgroundcover, .intro').removeClass 'show'
-			$scope.$apply ->
-				$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
-				$scope.step = 1
 
 		if not Modernizr.input.placeholder then _polyfill()
 
