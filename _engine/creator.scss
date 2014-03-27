@@ -20,7 +20,13 @@
 	margin-right: 8px;
 }
 .icon-alert:before {content: "\e006";}
-.icon-plus:before {content: "\e007";}
+.icon-plus:before {
+	font-family: 'icomoon';
+	content: "\e007";
+	color: #fff;
+	margin-right: 8px;
+	margin-left: -10px;
+}
 .icon-close:before { content : "\00d7"; }
 
 $green: #70bd34;
@@ -231,6 +237,10 @@ body {
 		background-color : $green;
 		padding          : 10px 28px;
 		margin           : 40px 0 -50px 0;
+		color: #fff;
+		border: none;
+		font-size: 16px;
+		font-family: 'Lato';
 	}
 }
 
