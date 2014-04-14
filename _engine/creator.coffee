@@ -12,6 +12,16 @@ Updated : 3/14
 # Create an angular module to import the animation module and house our controller.
 MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
 
+MatchingCreator.directive('ngEnter', ->
+    return (scope, element, attrs) ->
+        element.bind("keydown keypress", (event) ->
+            if(event.which == 13)
+                scope.$apply ->
+                    scope.$eval(attrs.ngEnter)
+                event.preventDefault()
+        )
+)
+
 # Set the controller for the scope of the document body.
 MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
