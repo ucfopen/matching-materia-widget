@@ -39,14 +39,20 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
 
 	$scope.changeTitle = ->
-		$('#backgroundcover, .title').addClass 'show'
-		$('.title input[type=text]').focus()
+		setTimeout ->
+			$('#backgroundcover, .title').addClass 'show'
+			$('.title input[type=text]').focus()
+		,1
 	$scope.setTitle = ->
-		$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
-		$scope.step = 1
-		$scope.hideCover()
+		setTimeout ->
+			$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
+			$scope.step = 1
+			$scope.hideCover()
+		,1
 	$scope.hideCover = ->
-		$('#backgroundcover, .title, .intro').removeClass 'show'
+		setTimeout ->
+			$('#backgroundcover, .title, .intro').removeClass 'show'
+		,1
 
 ]
 
