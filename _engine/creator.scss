@@ -252,6 +252,11 @@ body {
 		border: none;
 		font-size: 16px;
 		font-family: 'Lato';
+
+		&:focus {
+			background: #78bf39;
+			box-shadow: 0px 0px 10px $green;
+		}
 	}
 }
 
