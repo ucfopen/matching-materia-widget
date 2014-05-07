@@ -5,7 +5,7 @@ It's a thing
 
 Widget  : Matching, Creator
 Authors : Jonathan Warner, Micheal Parks
-Updated : 3/14
+Updated : 4/14
 
 ###
 
@@ -40,14 +40,16 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	$scope.changeTitle = ->
 		setTimeout ->
-			$('#backgroundcover, .title').addClass 'show'
-			$('.title input[type=text]').focus()
+			$scope.$apply ->
+				$('#backgroundcover, .title').addClass 'show'
+				$('.title input[type=text]').focus()
 		,1
 	$scope.setTitle = ->
 		setTimeout ->
-			$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
-			$scope.step = 1
-			$scope.hideCover()
+			$scope.$apply ->
+				$scope.widget.title = $('.intro input[type=text]').val() or $scope.widget.title
+				$scope.step = 1
+				$scope.hideCover()
 		,1
 	$scope.hideCover = ->
 		setTimeout ->
