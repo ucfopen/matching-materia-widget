@@ -96,12 +96,6 @@ body {
 		margin-left: 17px;
 		margin-top: 2px;
 	}
-	.center {
-		position:absolute;
-		margin-left: -25px;;
-		left: 50%;
-		top: 22px;
-	}
 
 	h1 {
 		margin-left: 8px;
@@ -112,7 +106,14 @@ body {
 		margin-top: 3px;
 		float: left;
 		cursor: pointer;
+		max-width: 512px;
+		overflow:hidden;
+		white-space: nowrap;
+		background:#333;
+		z-index: 10;
+		position: relative;
 	}
+
 	div.link {
 		float: left;
 		cursor: pointer;
@@ -161,17 +162,20 @@ body {
 	perspective : 800px;
 	transform-origin : 50% 100%;
 	
-	.titles {
-		h1 {
-			display   : inline-block;
-			padding   : 10px 0 0 0;
-			color     : #fff;
-			font-family: 'Lato', serif;
-			font-weight: 300;
-			font-size : 19px;
-			&:nth-child(1) { margin-right : 400px; }
-		}
+	.titles h1 {
+		display   : inline-block;
+		padding   : 10px 0 0 0;
+		color     : #fff;
+		font-family: 'Lato', serif;
+		font-weight: 300;
+		font-size : 19px;
+		&:nth-child(1) { margin-right : 400px; }
 	}
+
+	.pair-count {
+		color:#ccc;
+	}
+
 	.question {
 		display        : block;
 		width          : 100%;
@@ -257,6 +261,11 @@ body {
 		&:focus {
 			background: #78bf39;
 			box-shadow: 0px 0px 10px $green;
+		}
+		&:hover{
+			background: #78DD5E;
+			color: #000;
+			cursor: pointer;
 		}
 	}
 }
@@ -350,6 +359,11 @@ body {
 			border: solid 2px #70bd34;
 			padding: 11px;
 			margin-left: 0px;
+		}
+		&[type=button]:hover, &[type=submit]:hover{
+			background: #78DD5E;
+			color: #000;
+			cursor: pointer;
 		}
 	}
 }
