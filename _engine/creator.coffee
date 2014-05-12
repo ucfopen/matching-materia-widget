@@ -55,6 +55,15 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		setTimeout ->
 			$('#backgroundcover, .title, .intro').removeClass 'show'
 		,1
+	
+	$scope.autoSize = (id,text) ->
+		setTimeout ->
+			len = text.length
+			size = if len > 15 then 20 - len / 4 else 20
+			size = 12 if size < 12
+
+			$('#'+id).css('font-size', size + 'px')
+		,1
 
 ]
 
