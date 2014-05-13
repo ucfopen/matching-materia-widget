@@ -191,17 +191,15 @@ body {
 		}
 		&.ng-leave.ng-leave-active,
 		&.ng-enter {
-			transform : rotateX(-180deg) translatez(30px);
+			transform : rotateX(-180deg) translatez(50px);
 			opacity : 0;
 			height  : 0;
-			margin  : 0 0;
 		}
 		&.ng-enter.ng-enter-active,
 		&.ng-leave {
 			transform : rotateX(0deg) translatez(0);
 			opacity : 1;
 			height  : 55px;
-			margin  : 15px 0 0 0;
 		}
 		textarea {
 			vertical-align: middle;
@@ -245,10 +243,10 @@ body {
 	#add-new {
 		display          : inline-block;
 		left             : 50%;
+		margin-top: 50px;
 		bottom           : 0;
 		background-color : $green;
 		padding          : 10px 28px;
-		margin           : 40px 0 -50px 0;
 		color: #fff;
 		border: none;
 		font-size: 16px;
