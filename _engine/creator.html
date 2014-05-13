@@ -18,17 +18,16 @@
 		<!-- YOUR PREREQUISITES -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.5/angular.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.3/angular-animate.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
 		<script src="creator.js"></script>
 	</head>
-	<body ng-cloak ng-controller="matchingCreatorCtrl">
+	<body ng-app='matchingCreator' ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>
 		<div id='header'>
 			<div class='logo'></div>
-			<h1 id='title' ng-bind='widget.title' ng-click='changeTitle()'></h1>
-			<div class='link' ng-click='changeTitle()'>Edit...</div>
+			<h1 id='title' ng-bind='widget.title' ng-click='showTitleDialog = true'></h1>
+			<div class='link' ng-click='showTitleDialog = true'>Edit...</div>
 			<div class='bottom'></div>
 		</div>
 		<center>
@@ -40,7 +39,7 @@
 			</div>
 			<div id='question-container'>
 				<div class='question' ng-repeat="pair in widget.wordPairs">
-					<textarea class='question-text' ng-model="pair.question" ng-style='autoSize(pair)' id='qt_{{$index}}' tabindex='{{$index+1}}'></textarea>
+					<textarea class='question-text' ng-model="pair.question" ng-style='autoSize(pair)' focus-me='true' tabindex='{{$index+1}}'></textarea>
 					<div class='separate'></div>
 					<textarea class='answer-text' ng-enter="addWordPair()" ng-style='autoSize(pair)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
@@ -52,8 +51,8 @@
 		</section>
 		</center>
 
-		<div id='backgroundcover' ng-click='hideCover()'></div>
-		<div class='box intro'>
+		<div id='backgroundcover' ng-click='hideCover()' ng-class='{ show: showTitleDialog || showIntroDialog }'></div>
+		<div class='box intro' ng-class='{ show: showIntroDialog }'>
 			<img src='assets/creator_example.png'>
 			<h1>Matching</h1>
 			<p>Create matching pairs of items that students connect.</p>
@@ -61,26 +60,16 @@
 			<p>Students receive credit equal to the percentage of pairs they match correctly.</p>
 			<hr>
 			<b>Start by giving your Matching widget a title</b><br>
-			<form ng-submit='setTitle()'>
-				<input type='text' placeholder='My Matching widget' autofocus='1'>
-				<input type='submit' value='Get Started'>
-			</form>
+			<input type='text' placeholder='My Matching widget' ng-model='introTitle' autofocus='1' ng-enter='setTitle()' focus-me='showIntroDialog'>
+			<input type='button' value='Get Started' ng-click='setTitle()'>
 		</div>
-		<div class='box title'>
+		<div class='box title' ng-class='{ show: showTitleDialog }'>
 			<b>Give your Matching widget a title</b><br>
-			<form ng-submit='hideCover()'>
-				<input type='text' placeholder='My Matching widget' ng-model='widget.title'>
-				<input type='submit' value='Done'>
-			</form>
+			<input type='text' placeholder='My Matching widget' ng-model='widget.title' ng-enter='hideCover()' focus-me='showTitleDialog'>
+			<input type='submit' value='Done' ng-click='hideCover()'>
 		</div>
 		<div class='arrow_box' ng-show='!widget.wordPairs.length && step'>
 			<span>Click here to add your first pair</span>
 		</div>
-
-		<!-- INITIALIZE -->
-		<script type="text/javascript">
-			angular.bootstrap(document, ['matchingCreator']);
-			Materia.CreatorCore.start(Matching.Creator);
-		</script>
 	</body>
 </html>
