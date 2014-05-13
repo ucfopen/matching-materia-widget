@@ -216,7 +216,7 @@ body {
 			margin  : 15px 0 0 0;
 		}
 		textarea {
-			vertical-align: baseline;
+			vertical-align: middle;
 			width         : 200px;
 			max-width     : 390px;
 			margin        : 0 5px 0 5px;
@@ -234,11 +234,11 @@ body {
 		}
 		.separate {
 			display: inline-block;
+			vertical-align: middle;
 			background: #5d666f;
 			height: 5px;
 			width: 60px;
 			border-radius: 5px;
-			top: -18px;
 			position: relative;
 			margin: 2px 20px;
 		}
