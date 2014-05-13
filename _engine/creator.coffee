@@ -56,15 +56,13 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 			$('#backgroundcover, .title, .intro').removeClass 'show'
 		,1
 	
-	$scope.autoSize = (id) ->
-		setTimeout ->
-			question = $scope.widget.wordPairs[id].question or ''
-			answer = $scope.widget.wordPairs[id].answer or ''
-			len = if question.length > answer.length then question.length else answer.length
-			size = if len > 15 then 30 + len else 30
+	$scope.autoSize = (pair) ->
+		question = pair.question or ''
+		answer = pair.answer or ''
+		len = if question.length > answer.length then question.length else answer.length
+		size = if len > 15 then 30 + len else 30
 
-			$('#qt_'+id+',#a_'+id).css('height', size + 'px')
-		,1
+		pair.style = height: size + 'px'
 
 ]
 
