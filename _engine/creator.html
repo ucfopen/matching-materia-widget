@@ -40,9 +40,9 @@
 			</div>
 			<div id='question-container'>
 				<div class='question' ng-repeat="pair in widget.wordPairs">
-					<textarea class='question-text' ng-model="pair.question" ng-style='pair.style' id='qt_{{$index}}' tabindex='{{$index+1}}' ng-change='autoSize(pair)'></textarea>
+					<textarea class='question-text' ng-model="pair.question" ng-style='autoSize(pair)' id='qt_{{$index}}' tabindex='{{$index+1}}'></textarea>
 					<div class='separate'></div>
-					<textarea class='answer-text' ng-enter="addWordPair()" ng-style='pair.style' ng-model="pair.answer" tabindex='{{$index+2}}' ng-change='autoSize(pair)'></textarea>
+					<textarea class='answer-text' ng-enter="addWordPair()" ng-style='autoSize(pair)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
 			</div>

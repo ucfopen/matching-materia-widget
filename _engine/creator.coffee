@@ -62,8 +62,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		len = if question.length > answer.length then question.length else answer.length
 		size = if len > 15 then 30 + len * 1.1 else 25
 
-		pair.style = height: size + 'px'
-
+		height: size + 'px'
 ]
 
 Namespace('Matching').Creator = do ->
