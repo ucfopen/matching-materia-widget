@@ -21,7 +21,7 @@ MatchingCreator.directive('ngEnter', ->
                 event.preventDefault()
         )
 )
-MatchingCreator.directive('focusMe', ($timeout, $parse) ->
+MatchingCreator.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
 	link: (scope, element, attrs) ->
 		model = $parse(attrs.focusMe)
 		scope.$watch model, (value) ->
@@ -29,7 +29,7 @@ MatchingCreator.directive('focusMe', ($timeout, $parse) ->
 				$timeout ->
 					element[0].focus()
 			value
-)
+])
 
 # Set the controller for the scope of the document body.
 MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
