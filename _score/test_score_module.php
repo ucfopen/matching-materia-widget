@@ -84,7 +84,7 @@ class Test_Score_Modules_Matching extends \Basetest
 						 		"assets":null,
 						 		"answers":[
 						 			{
-						 				"text":"4",
+						 				"text":"This Is A Test",
 						 				"options":{},
 						 				"value":"100"
 						 			}
@@ -242,7 +242,7 @@ class Test_Score_Modules_Matching extends \Basetest
 			"game_time":11
 		}');
 		$log5 = json_decode('{
-			"text":"5",
+			"text":"4",
 			"type":1004,
 			"value":0,
 			"item_id":"'.$qset->data['items'][0]['items'][4]['id'].'",
