@@ -51,6 +51,13 @@ class Score_Modules_Matching extends Score_Module
 			// need to check if the qset allows for case sensitive answers
 			$t1 = $log->text;
 			$t2 = $question->answers[0]['text'];
+
+			// remove weird characters to make sure we're matching on normal characters that wont get lost
+			$valid_characters = '/[^\w!@#$%^&*?=\-+<>,\.;:"\'\(\) \t|]/';
+
+			$t1 = preg_replace($valid_characters, '', $t1);
+			$t2 = preg_replace($valid_characters, '', $t2);
+
 			if ( ! $this->is_case_sensitive)
 			{
 				// we dont care about case, so just convert all to upper
