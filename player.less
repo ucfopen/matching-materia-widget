@@ -403,10 +403,10 @@ html, body {
 	.button {
 		position         : absolute;
 		z-index          : 10;
-		background-color : #4C7BC2;
+		background-color : #E58133;
 		text-align       : center;
 		border-radius    : 10px;
-		border-bottom    : 3px solid #395C91;
+		border-bottom    : 3px solid #BE712A;
 		margin           : 5px;
 		padding          : 5px;
 		width            : 100px;
@@ -414,8 +414,8 @@ html, body {
 		   -moz-transition : 0.2s;
 		        transition : 0.2s;
 		&:hover {
-			background-color    : #7DB1FF;
-			border-bottom-color : #658FCF;
+			background-color    : #E2965A;
+			border-bottom-color : #D3843B;
 			-webkit-transition : 0.2s;
 			   -moz-transition : 0.2s;
 			        transition : 0.2s;
@@ -507,6 +507,40 @@ html, body {
 			padding-top: 16px;
 			font-weight: normal;
 		}
+	}
+}
+
+#pendingItems {
+	position: fixed;
+	display: none;
+
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+
+	padding: 200px 150px;
+
+	color: #fff;
+	background: rgba(0, 0, 0, 0.8);
+
+	font-size: 20px;
+	line-height: 32px;
+	text-align: center;
+
+	z-index: 9999;
+
+	input {
+		margin: 20px;
+		border: none;
+		border-radius: 6px;
+		color: #fff;
+		background: #3498DB;
+		padding: 10px 14px;
+
+		font-size: 17px;
+
+		cursor: pointer;
 	}
 }
 
