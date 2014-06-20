@@ -5,7 +5,7 @@ It's a thing
 
 Widget  : Matching, Creator
 Authors : Jonathan Warner, Micheal Parks
-Updated : 5/14
+Updated : 6/14
 
 ###
 
@@ -39,8 +39,8 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		wordPairs : []
 
 	# Adds and removes a pair of textareas for users to input a word pair.
-	$scope.addWordPair = (q=null, a=null) ->
-		$scope.widget.wordPairs.push {question:q,answer:a}
+	$scope.addWordPair = (q=null, a=null, id='') ->
+		$scope.widget.wordPairs.push {question:q,answer:a,id:id}
 
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
 
@@ -64,7 +64,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
 	$scope.onQuestionImportComplete = (questions) ->
-		$scope.$apply -> $scope.addWordPair(question.questions[0].text, question.answers[0].text) for question in questions
+		$scope.$apply -> $scope.addWordPair(question.questions[0].text, question.answers[0].text, question.id) for question in questions
 
 	$scope.onMediaImportComplete = (media) -> null
 
@@ -110,7 +110,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 			id    : ''
 		]
 		type     : 'QA'
-		id       : ''
+		id       : wordPair.id
 		assets   : []
 
 	Materia.CreatorCore.start $scope
