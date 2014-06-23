@@ -53,7 +53,7 @@ Namespace('Matching').Engine = do ->
 		$(_dom.prev).on downEventType, _onPrevButton
 		$(_dom.next).on downEventType, _onNextButton
 		$(_dom.submit).on downEventType, _onSubmitButton
-		$("#pendingItems").on downEventType, -> $(this).hide()
+		$("#pendingItems").on downEventType, -> $(this).removeClass 'visible'
 
 		# Word Up
 		$('.word').on upEventType, (event) -> _onWordUp this
@@ -139,7 +139,7 @@ Namespace('Matching').Engine = do ->
 	_submitAnswers = ->
 		game = _data.getGame()
 		if game.remainingItems isnt 0
-			$('#pendingItems').show()
+			$('#pendingItems').addClass 'visible'
 			return
 
 		words = _data.getWords()
