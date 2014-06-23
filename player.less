@@ -62,17 +62,9 @@ html, body {
 	position : absolute;
 	top      : 90px;
 	width    : 100%;
-	-webkit-transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	   -moz-transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	        transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-	-webkit-transform-style : preserve-3d;
-	   -moz-transform-style : preserve-3d;
-	    -ms-transform-style : preserve-3d;
-	        transform-style : preserve-3d;
-	-webkit-transform-origin : 0 550px;
-	   -moz-transform-origin : 0 550px;
-	    -ms-transform-origin : 0 550px;
-	        transform-origin : 0 550px;
+	transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+	transform-style : preserve-3d;
+	transform-origin : 0 550px;
 	-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
 
 	transition-delay: 300ms;
@@ -127,9 +119,7 @@ html, body {
 			margin        : 16px 0;
 			padding       : 10px;
 			border-radius : 10px;
-			-webkit-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-			   -moz-transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-				    transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+			transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 			.word-text {
 				z-index          : -3;
 				position         : absolute;
@@ -140,9 +130,7 @@ html, body {
 				border-bottom    : 3px solid #15987E;
 				height           : 43px;
 				width            : 210px;
-				-webkit-transition : 0.2s;
-				   -moz-transition : 0.2s;
-				        transition : 0.2s;
+				transition : 0.2s;
 				.text-wrapper {
 					display          : inline-block;
 					vertical-align   : middle;
@@ -196,17 +184,13 @@ html, body {
 				border-bottom    : 3px solid #DDD;
 				overflow         : auto;
 				-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
-				-webkit-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-				   -moz-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-				        transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+				transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				&.shown {
 					height  : 100px;
 					padding : 10px;
 					margin  : -50px 0 0 -10px;
 					opacity : 0.9;
-					-webkit-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-					   -moz-transition : padding 300ms, height 300ms, opacity 300ms, margin-top 800ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
-					        transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+					transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				}
 			}
 			&.selected {
@@ -241,9 +225,7 @@ html, body {
 					background-color    : #2ECC71;
 					border-bottom-color : #25A55B;
 				}
-				-webkit-transition : 0.2s;
-				   -moz-transition : 0.2s;
-				        transition : 0.2s;
+				transition : 0.2s;
 			}
 		}
 	}
@@ -280,24 +262,18 @@ html, body {
 				&.c8 {stroke : #79f3d6; fill : #79f3d6;}
 				&.hidden {
 					opacity : 0;
-					-webkit-transition : 0.2s;
-					   -moz-transition : 0.2s;
-					        transition : 0.2s;
+					transition : 0.2s;
 				}
 			}
 			.lines line {
 				stroke  : #5b656d;
 				&.phased-out {
 					opacity : 0.5;
-					-webkit-transition : 0.5s;
-					   -moz-transition : 0.5s;
-					        transition : 0.5s;
+					transition : 0.5s;
 				}
 				&.hidden {
 					opacity : 0;
-					-webkit-transition : 0.5s;
-					   -moz-transition : 0.5s;
-					        transition : 0.5s;
+					transition : 0.5s;
 				}
 			}
 			.hollows circle {
@@ -306,15 +282,11 @@ html, body {
 				fill         : none;
 				&.matched {
 					stroke : #5b656d;
-					-webkit-transition : 0.2s;
-					   -moz-transition : 0.2s;
-					        transition : 0.2s;
+					transition : 0.2s;
 				}
 				&.hidden {
 					opacity : 0.2;
-					-webkit-transition : 0.8s;
-					   -moz-transition : 0.8s;
-					        transition : 0.8s;
+					transition : 0.8s;
 				}
 			}
 		}
@@ -346,9 +318,7 @@ html, body {
 			top      : 0; 
 			left     : 0;
 			rect {
-				-webkit-transition : 800ms;
-				   -moz-transition : 800ms;
-				        transition : 800ms;
+			    transition : 800ms;
 			}
 		}
 	}
@@ -361,28 +331,12 @@ html, body {
 		margin           : 0 0 0 -45px;
 		padding          : 5px;
 		border-radius    : 10px;
-		-webkit-transition : 0.2s;
-		   -moz-transition : 0.2s;
-		        transition : 0.2s;
+		transition : 0.2s;
 		&:hover {
 			background-color : rgb(55,61,66);
-			-webkit-transition : 0.2s;
-			   -moz-transition : 0.2s;
-			        transition : 0.2s;
+			transition : 0.2s;
 		}
 		&.glowing {
-			-webkit-animation-name            : glowing;
-			-webkit-animation-duration        : 1.5s;
-			-webkit-animation-iteration-count : infinite;
-
-			-moz-animation-name            : glowing;
-			-moz-animation-duration        : 1.5s;
-			-moz-animation-iteration-count : infinite;
-
-			-ms-animation-name            : glowing;
-			-ms-animation-duration        : 1.5s;
-			-ms-animation-iteration-count : infinite;
-
 			animation-name            : glowing;
 			animation-duration        : 1.5s;
 			animation-iteration-count : infinite;
@@ -415,45 +369,31 @@ html, body {
 		margin           : 5px;
 		padding          : 5px;
 		width            : 100px;
-		-webkit-transition : 0.2s;
-		   -moz-transition : 0.2s;
-		        transition : 0.2s;
+		transition : 0.2s;
 		&:hover {
 			background-color    : #E2965A;
 			border-bottom-color : #D3843B;
-			-webkit-transition : 0.2s;
-			   -moz-transition : 0.2s;
-			        transition : 0.2s;
+			transition : 0.2s;
 		}
 		&#prev-button {
 			left: 40%;
-			-webkit-transition: left 500ms, background-color 100ms, -webkit-transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
-			   -moz-transition: left 500ms, background-color 100ms,    -moz-transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
-			        transition: left 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+			transition: left 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
 			-webkit-transform-style     : preserve-3d;
 			-webkit-transform           : translate3d(0,0,0);
 			-webkit-backface-visibility : hidden;
 			&.shown {
-				-webkit-transform : translate(-200px);
-				   -moz-transform : translate(-200px);
-				    -ms-transform : translate(-200px);
-				        transform : translate(-200px);
+			    transform : translate(-200px);
 			}
 		}
 		&#next-button {
 			top: 0;
 			right: 40%;
-			-webkit-transition: right 500ms, background-color 100ms, -webkit-transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
-			   -moz-transition: right 500ms, background-color 100ms,    -moz-transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
-			        transition: right 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+			transition: right 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
 			-webkit-transform-style     : preserve-3d;
 			-webkit-transform           : translate3d(0,0,0);
 			-webkit-backface-visibility : hidden;
 			&.shown {
-				-webkit-transform : translate(200px);
-				   -moz-transform : translate(200px);
-				    -ms-transform : translate(200px);
-				        transform : translate(200px);
+			    transform : translate(200px);
 			}
 		}
 	}
@@ -468,9 +408,7 @@ html, body {
 		left             : 50%;
 		width            : 80px;
 		margin           : 10px 0 0 -50px;
-		-webkit-transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-		   -moz-transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-		        transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+		transition: all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 		-webkit-transform-style     : preserve-3d;
 		-webkit-transform           : translate3d(0,0,0);
 		-webkit-backface-visibility : hidden;
@@ -478,9 +416,7 @@ html, body {
 }
 
 .no-transition {
-	-webkit-transition : none !important;
-	   -moz-transition : none !important;
-	        transition : none !important;
+    transition : none !important;
 }
 
 .error-notice-container {
