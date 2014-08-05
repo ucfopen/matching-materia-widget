@@ -331,12 +331,16 @@ html, body {
 		margin           : 0 0 0 -45px;
 		padding          : 5px;
 		border-radius    : 10px;
-		transition : 0.2s;
+		transition       : 0.4s;
+		opacity          : 0;
+		pointer-events   : none;
 		&:hover {
 			background-color : rgb(55,61,66);
 			transition : 0.2s;
 		}
 		&.glowing {
+			opacity          : 1;
+			pointer-events   : all;
 			animation-name            : glowing;
 			animation-duration        : 1.5s;
 			animation-iteration-count : infinite;
@@ -368,7 +372,7 @@ html, body {
 		border-bottom    : 3px solid #BE712A;
 		margin           : 5px;
 		padding          : 5px;
-		width            : 100px;
+		width            : 140px;
 		transition : 0.2s;
 		&:hover {
 			background-color    : #E2965A;
@@ -376,7 +380,7 @@ html, body {
 			transition : 0.2s;
 		}
 		&#prev-button {
-			left: 40%;
+			left: 35%;
 			transition: left 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
 			-webkit-transform-style     : preserve-3d;
 			-webkit-transform           : translate3d(0,0,0);
@@ -387,7 +391,7 @@ html, body {
 		}
 		&#next-button {
 			top: 0;
-			right: 40%;
+			right: 35%;
 			transition: right 500ms, background-color 100ms,         transform 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
 			-webkit-transform-style     : preserve-3d;
 			-webkit-transform           : translate3d(0,0,0);
