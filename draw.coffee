@@ -5,6 +5,7 @@ Namespace('Matching').Draw = do ->
 	_maxFontSize  = 17
 	_connectWord  = null
 	_connectState = null
+	_reposition   = []
 	_dom =
 		boards      : []
 		main        : null
@@ -60,6 +61,10 @@ Namespace('Matching').Draw = do ->
 			_dom.main.append board.clone()
 			_dom.boards.push document.getElementsByClassName('gameboard')[i] # cache for lookup
 			_dom.boards[i].className += ' hidden no-transition' if i > 0     # hide all but first board
+
+		#set all words as not repositioned
+		for word, w in _data.getWords()
+			_reposition[w] = false
 
 		# show next button if needed
 		_dom.next.className = 'button shown' if i > 1
@@ -146,20 +151,33 @@ Namespace('Matching').Draw = do ->
 
 	# Animates the popup in.
 	expandWord = (id) ->
+		if id % 2 == 0
+			popupClass = 'left'
+			arrowClass = 'left'
+		else 
+			popupClass = 'right'
+			arrowClass = 'right'
+
 		$popup = $("#w"+id+" .popup-text")
+		$popArrow = $("#w"+id+" .popup-arrow")
+		moveHoverWord(id)
 
 		$popup.css 'display:block;'
 		setTimeout ->
-			$popup[0].className = 'popup-text shown'
+			$popup[0].className = 'popup-text shown ' + popupClass
+			$popArrow[0].className = 'popup-arrow ' + arrowClass
 		, 5
 
 	# Animates the popup into oblivion.
 	shrinkWord = (id) ->
 		$popup = $("#w"+id+" .popup-text")
-
+		$popArrow = $("#w"+id+" .popup-arrow")
+		
 		$popup[0].className = 'popup-text'
+		$popArrow[0].className = 'popup-arrow'
 		setTimeout ->
 			$popup.css('display:none;')
+			$popArrow.css('display:none;')
 		, 300
 
 	wordOver = (word) ->
@@ -193,6 +211,63 @@ Namespace('Matching').Draw = do ->
 			else
 				_connectState = 'matching'
 				_connectWord = word
+
+	# Alters the position of the clue vertically to not go 
+	moveHoverWord = (id) ->
+		$popup = $("#w"+id+" .popup-text")
+		console.log "moving"
+		console.log "window h: " + document.body.clientHeight
+		console.log "popup h: " + $popup.height()
+		console.log "popup t: " + $popup.offset().top
+		console.log "new top " + ($popup.offset().top - $popup.height())
+
+		console.log _data.getGame().numGameboards
+
+		unless _reposition[id]
+			console.log 'repositioning word ' + id
+			# Math to eval new position
+			newStart = $popup.offset().top - $popup.height()
+			console.log "new top " + newStart
+			if newStart < 0
+				$popup.css
+					top: '20px'
+			else 
+				$popup.css
+					top: newStart + 'px'
+
+			# if $popup.height() > 300
+			# 	console.log '**top is gt 300**'
+			# 	if $popup.offset().top > 300
+			# 		console.log 'starting at 50'
+			# 		$popup.css
+			# 			top: '50px'
+			# 	else if $popup.offset().top > 200
+			# 		console.log 'starting at 100'
+			# 		$popup.css
+			# 			top: '100px'
+
+			# 	else if $popup.offset().top > 100
+			# 		console.log 'starting at 200'
+			# 		$popup.css
+			# 			top: '200px'
+
+			# else if $popup.height() > 200
+			# 	console.log '**top is gt 200**'
+			# 	if $popup.offset().top > 300
+			# 		console.log 'starting at 50'
+			# 		$popup.css
+			# 			top: '50px'
+			# 	else if $popup.offset().top > 200
+			# 		console.log 'starting at 100'
+			# 		$popup.css
+			# 			top: '100px'
+
+			# 	else if $popup.offset().top > 100
+			# 		console.log 'starting at 200'
+			# 		$popup.css
+			# 			top: '200px'
+
+		_reposition[id] = true
 
 	_onSameSide = (word1, word2) ->
 		word1? and word2 and word1.isOnLeft is word2.isOnLeft
