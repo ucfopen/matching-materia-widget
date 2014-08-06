@@ -105,9 +105,9 @@ html, body {
 				.word-text {
 					right : 0;
 				}
-				.popup-text {
-					margin-left : 35px !important;
-				}
+				// .popup-text {
+				// 	margin-left : 35px !important;
+				// }
 			}
 		}
 		.word {
@@ -115,7 +115,7 @@ html, body {
 			text-align    : center;
 			font-size     : 25px;
 			width         : 245px;
-			height        : 36px;
+			height        : 33px;
 			margin        : 16px 0;
 			padding       : 10px;
 			border-radius : 10px;
@@ -167,14 +167,30 @@ html, body {
 					border-radius    : 3px;
 				}
 			}
+			.popup-arrow {
+				opacity: .9;
+				position: relative;
+				border-bottom: 20px solid transparent;
+				border-top: 20px solid transparent;
+				top: 10px;
+				&.right {
+					right: 20px;
+					border-left: 20px solid #FFF;
+				}
+				&.left {
+					left: 20px;
+					border-right: 20px solid #FFF;
+				}
+			}
 			.popup-text {
-				// display          : none;
-				z-index          : -2;
-				margin           : -10px 0 0 -10px;
+				position: fixed;
+				max-height: 330px;
+				min-height: 60px;
+				margin           : -20px 0 0 -10px;
 				opacity          : 0;
+				left: 200px;
 				padding          : 0;
-				height           : 0;
-				width            : 200px;
+				width            : 350px;
 				color            : #222;
 				background-color : #FFF;
 				font-size        : 14px;
@@ -183,14 +199,21 @@ html, body {
 				border-radius    : 10px;
 				border-bottom    : 3px solid #DDD;
 				overflow         : auto;
-				-webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
-				transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+				pointer-events: none;
+				// -webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
+				transition: left 300ms ease-out, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+				&.left {
+					left: 315px;
+				}
+				&.right {
+					left: 85px;
+				}
 				&.shown {
-					height  : 100px;
+					pointer-events: all;
 					padding : 10px;
-					margin  : -50px 0 0 -10px;
+					// margin  : -50px 0 0 -10px;
 					opacity : 0.9;
-					transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
+					// transition : padding 300ms, height 200ms, opacity 200ms, margin-top 500ms, z-index 800ms cubic-bezier(0.19, 1, 0.22, 1);
 				}
 			}
 			&.selected {
