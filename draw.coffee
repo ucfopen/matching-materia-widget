@@ -163,9 +163,13 @@ Namespace('Matching').Draw = do ->
 		moveWordPopup(id)
 
 		$popup.css 'display:block;'
+
+		$popup[0].className = 'popup-text ' + popupClass
+		$popArrow[0].className = 'popup-arrow ' + popupClass
+
 		setTimeout ->
-			$popup[0].className = 'popup-text shown ' + popupClass
-			$popArrow[0].className = 'popup-arrow ' + arrowClass
+			$popup[0].className += ' shown'
+			$popArrow[0].className += ' shown'
 		, 5
 
 	# Animates the popup into oblivion.
@@ -173,11 +177,11 @@ Namespace('Matching').Draw = do ->
 		$popup = $("#w"+id+" .popup-text")
 		$popArrow = $("#w"+id+" .popup-arrow")
 		
-		$popup[0].className = 'popup-text'
-		$popArrow[0].className = 'popup-arrow'
+		$popArrow.removeClass 'shown'
+		$popup.removeClass 'shown'
+
 		setTimeout ->
-			$popup.css('display:none;')
-			$popArrow.css('display:none;')
+			$popArrow.removeClass 'left right'
 		, 300
 
 	wordOver = (word) ->
@@ -230,6 +234,11 @@ Namespace('Matching').Draw = do ->
 			# Math to eval new position
 			newStart = $popup.offset().top - $popup.height() + 10
 			console.log "new top " + newStart
+			# if $popup.height() < 80
+			# 	console.log 'adjusting margin-top'
+			# 	$popup.css
+			# 		marginTop: '-40px'
+
 			if newStart < 0
 				$popup.css
 					top: '30px'
