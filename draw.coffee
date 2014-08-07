@@ -160,7 +160,7 @@ Namespace('Matching').Draw = do ->
 
 		$popup = $("#w"+id+" .popup-text")
 		$popArrow = $("#w"+id+" .popup-arrow")
-		moveHoverWord(id)
+		moveWordPopup(id)
 
 		$popup.css 'display:block;'
 		setTimeout ->
@@ -213,7 +213,7 @@ Namespace('Matching').Draw = do ->
 				_connectWord = word
 
 	# Alters the position of the clue vertically to not go 
-	moveHoverWord = (id) ->
+	moveWordPopup = (id) ->
 		$popup = $("#w"+id+" .popup-text")
 		console.log "moving"
 		console.log "window h: " + document.body.clientHeight
@@ -223,50 +223,20 @@ Namespace('Matching').Draw = do ->
 
 		console.log _data.getGame().numGameboards
 
+		# Alters the position of the popup if it has not already been altered.
 		unless _reposition[id]
 			console.log 'repositioning word ' + id
+			
 			# Math to eval new position
-			newStart = $popup.offset().top - $popup.height()
+			newStart = $popup.offset().top - $popup.height() + 10
 			console.log "new top " + newStart
 			if newStart < 0
 				$popup.css
-					top: '20px'
+					top: '30px'
 			else 
 				$popup.css
 					top: newStart + 'px'
-
-			# if $popup.height() > 300
-			# 	console.log '**top is gt 300**'
-			# 	if $popup.offset().top > 300
-			# 		console.log 'starting at 50'
-			# 		$popup.css
-			# 			top: '50px'
-			# 	else if $popup.offset().top > 200
-			# 		console.log 'starting at 100'
-			# 		$popup.css
-			# 			top: '100px'
-
-			# 	else if $popup.offset().top > 100
-			# 		console.log 'starting at 200'
-			# 		$popup.css
-			# 			top: '200px'
-
-			# else if $popup.height() > 200
-			# 	console.log '**top is gt 200**'
-			# 	if $popup.offset().top > 300
-			# 		console.log 'starting at 50'
-			# 		$popup.css
-			# 			top: '50px'
-			# 	else if $popup.offset().top > 200
-			# 		console.log 'starting at 100'
-			# 		$popup.css
-			# 			top: '100px'
-
-			# 	else if $popup.offset().top > 100
-			# 		console.log 'starting at 200'
-			# 		$popup.css
-			# 			top: '200px'
-
+		# Sets this word's extra text as altered.
 		_reposition[id] = true
 
 	_onSameSide = (word1, word2) ->
