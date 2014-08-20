@@ -152,31 +152,29 @@ Namespace('Matching').Draw = do ->
 	# Animates the popup in.
 	expandWord = (id) ->
 		if id % 2 == 0
-			popupClass = 'left'
+			popupSide = 'left'
 		else 
-			popupClass = 'right'
+			popupSide = 'right'
 
-		$popup = $("#w"+id+" .popup-text")
+		$popup = $("#w"+id+" .popup")
+		$popText = $("#w"+id+" .popup-text")
 		$popArrow = $("#w"+id+" .popup-arrow")
+
 		moveWordPopup(id)
 
 		$popup.css 'display:block;'
 
-		$popup.addClass 'popup-text shown ' + popupClass
-		$popArrow.addClass 'popup-arrow shown ' + popupClass 
+		$popText.addClass popupSide
+		$popArrow.addClass popupSide
+
+		$popup.addClass 'shown'
+		$popText.addClass 'scrollable'
 
 	# Animates the popup into oblivion.
 	shrinkWord = (id) ->
-		$popup = $("#w"+id + " .popup-text")
-		$popArrow = $("#w"+id + " .popup-arrow")
+		$("#w"+id+" .popup").removeClass 'shown'
+		$("#w"+id+" .popup-text").removeClass 'scrollable'
 
-		$popArrow.removeClass 'shown'
-		$popup.removeClass 'shown'
-
-		# setTimeout ->
-		# 	$popArrow.removeClass 'left right'
-		# 	$popup.removeClass 'left right'
-		# , 300
 
 	wordOver = (word) ->
 		if word.isLongWord then expandWord word.id
@@ -213,16 +211,18 @@ Namespace('Matching').Draw = do ->
 	# Alters the position of the clue vertically to not go 
 	moveWordPopup = (id) ->
 		$popup = $("#w"+id+" .popup-text")
-		console.log "moving"
-		console.log "window h: " + document.body.clientHeight
-		console.log "popup h: " + $popup.height()
-		console.log "popup t: " + $popup.offset().top
-		console.log "new top " + ($popup.offset().top - $popup.height())
-
-		console.log _data.getGame().numGameboards
 
 		# Alters the position of the popup if it has not already been altered.
 		unless _reposition[id]
+
+			console.log "moving"
+			console.log "window h: " + document.body.clientHeight
+			console.log "popup h: " + $popup.height()
+			console.log "popup t: " + $popup.offset().top
+			console.log "new top " + ($popup.offset().top - $popup.height())
+
+			console.log _data.getGame().numGameboards
+
 			console.log 'repositioning word ' + id
 			
 			# Math to eval new position
@@ -230,11 +230,14 @@ Namespace('Matching').Draw = do ->
 			console.log "new top " + newStart
 
 			if newStart < 0
+				console.log 'repositioning to 30 from top'
 				$popup.css
-				top: '30px'
-			else 
+					top: '30px'
+			else
+				console.log 'repositioning to new top'
 				$popup.css
 					top: newStart + 'px'
+
 		# Sets this word's extra text as altered.
 		_reposition[id] = true
 
