@@ -117,6 +117,11 @@ html, body {
 			padding       : 10px;
 			border-radius : 10px;
 			transition : all 100ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+			&:hover > .word-text > .expand {
+				background: #FFFFFF;
+				transition: 1000ms;
+				border: 30px red;
+			}
 			.word-text {
 				z-index          : -3;
 				position         : absolute;
@@ -162,69 +167,93 @@ html, body {
 					font-size      : 8px;
 					padding        : 3px 2px 2px 2px;
 					border-radius  : 3px;
+					&:hover {
+						background: red;
+					}
 				}
 			}
-			.popup-arrow {
-				opacity        : 0;
-				position       : relative;
-				border-bottom  : 20px solid transparent;
-				border-top     : 20px solid transparent;
-				margin-left    : 115px;
-				margin-right   : 115px;
-				transition     : opacity 300ms ease, margin-top 200ms 100ms ease-in-out;
-				transition-delay: 200ms;
-				&.right {
-					right          : 20px;
-					margin-left    : 0px;
-					margin-right   : 0px;
-					border-left  : 20px solid #FFF;
-				}
-				&.left {
-					left           : 20px;
-					margin-left    : 0px;
-					margin-right   : 0px;
-					border-right   : 20px solid #FFF;
-				}
+			.popup {
+				opacity: 0;
+				position: absolute;
+				transition: 200ms;
+				transition-delay: 100ms;
 				&.shown {
-					opacity        : .9;
-					margin-left    : 0px;
-					margin-right   : 0px;
-				}
-			}
-			.popup-text {
-				position         : fixed;
-				max-height       : 330px;
-				min-height       : 60px;
-				margin           : -25px 0 0 -10px;
-				opacity          : 0;
-				// left             : 200px;
-				// left             : 315px;
-				width            : 350px;
-				padding          : 10px;
-				color            : #222;
-				background-color : #FFF;
-				font-size        : 14px;
-				white-space      : normal;
-				word-wrap        : break-word;
-				border-radius    : 10px;
-				border-bottom    : 3px solid #DDD;
-				overflow         : auto;
-				pointer-events   : none;
-				// -webkit-backface-visibility : hidden; /* Oh Webkit, wherefore art thou bug fixes? This prevents flickering. */
-				transition: left 0ms, height 300ms, opacity 300ms ease, margin-top 200ms 100ms ease-in-out, z-index 300ms cubic-bezier(0.19, 1, 0.22, 1);
-				transition-delay: 200ms;
-				&.left {
-					left: 315px;
-				}
-				&.right {
-					left: 85px;
-				}
-				&.shown {
+					opacity: .85;
+					margin-top: 0px;
 					pointer-events: all;
-					opacity : 0.9;
-					margin-top: -30px;
+					transition-delay: 500ms;
+
+				}
+				.popup-arrow {
+					position       : relative;
+					border-bottom  : 20px solid transparent;
+					border-top     : 20px solid transparent;
+					transition     : opacity 300ms ease, margin-top 200ms 100ms ease-in-out;
+					transition-delay: 500ms;
+					&.right {
+						right          : 20px;
+						margin-right   : 0px;
+						border-left  	: 20px solid #FFF;
+						&:before {
+							content: "";
+							position       : absolute;
+							border-bottom  : 20px solid transparent;
+							border-top     : 20px solid transparent;	
+							border-left   : 20px solid #DDD;
+							height: 4px;
+							margin-top: -20px;
+							margin-left: -20px;
+							z-index: -1;
+						}
+					}
+					&.left {
+						left           : 20px;
+						margin-right   : -245px;
+						margin-left    : 0px;
+						border-right   : 20px solid #FFF;
+						&:before {
+							content: "";
+							position       : absolute;
+							border-bottom  : 20px solid transparent;
+							border-top     : 20px solid transparent;	
+							border-right   : 20px solid #DDD;
+							height: 4px;
+							margin-top: -20px;
+							margin-left: 112px;
+							z-index: -1;
+						}
+					}
+				}
+				.popup-text {
+					position         : fixed;
+					max-height       : 330px;
+					min-height       : 60px;
+					margin           : -30px 0 0 -10px;
+					width            : 350px;
+					padding          : 10px;
+					color            : #222;
+					background-color : #FFF;
+					font-size        : 14px;
+					white-space      : normal;
+					word-wrap        : break-word;
+					border-radius    : 10px;
+					border-bottom    : 3px solid #DDD;
+					overflow         : auto;
+					pointer-events	 : none;
+					transition: left 0ms, height 300ms, opacity 300ms ease, margin-top 200ms 100ms ease-in-out, z-index 300ms cubic-bezier(0.19, 1, 0.22, 1);
+					transition-delay: 200ms;
+					&.left {
+						left: 315px;
+					}
+					&.right {
+						left: 85px;
+					}
+					&.scrollable {
+						pointer-events: all;
+					}
 				}
 			}
+			
 			&.selected {
 				.word-text {
 					background-color    : #27AE60;

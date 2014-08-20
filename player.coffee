@@ -133,8 +133,8 @@ Namespace('Matching').Engine = do ->
 				questionDom  = _draw.drawWord(word1, $leftColumn, 'question', questionText, 'w'+questionId)
 				answerDom    = _draw.drawWord(word2, $rightColumn, 'answer', answerText, 'w'+answerId)
 
-				questionId +=2 # Question IDs will be even.
-				answerId   +=2 # Answer IDs will be odd.
+				questionId += 2 # Question IDs will be even.
+				answerId   += 2 # Answer IDs will be odd.
 				suffledQuestionIndex++
 
 	# Submit matched words for scoring.
