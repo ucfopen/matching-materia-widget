@@ -153,10 +153,8 @@ Namespace('Matching').Draw = do ->
 	expandWord = (id) ->
 		if id % 2 == 0
 			popupClass = 'left'
-			arrowClass = 'left'
 		else 
 			popupClass = 'right'
-			arrowClass = 'right'
 
 		$popup = $("#w"+id+" .popup-text")
 		$popArrow = $("#w"+id+" .popup-arrow")
@@ -164,25 +162,21 @@ Namespace('Matching').Draw = do ->
 
 		$popup.css 'display:block;'
 
-		$popup[0].className = 'popup-text ' + popupClass
-		$popArrow[0].className = 'popup-arrow ' + popupClass
-
-		setTimeout ->
-			$popup[0].className += ' shown'
-			$popArrow[0].className += ' shown'
-		, 5
+		$popup.addClass 'popup-text shown ' + popupClass
+		$popArrow.addClass 'popup-arrow shown ' + popupClass 
 
 	# Animates the popup into oblivion.
 	shrinkWord = (id) ->
-		$popup = $("#w"+id+" .popup-text")
-		$popArrow = $("#w"+id+" .popup-arrow")
-		
+		$popup = $("#w"+id + " .popup-text")
+		$popArrow = $("#w"+id + " .popup-arrow")
+
 		$popArrow.removeClass 'shown'
 		$popup.removeClass 'shown'
 
-		setTimeout ->
-			$popArrow.removeClass 'left right'
-		, 300
+		# setTimeout ->
+		# 	$popArrow.removeClass 'left right'
+		# 	$popup.removeClass 'left right'
+		# , 300
 
 	wordOver = (word) ->
 		if word.isLongWord then expandWord word.id
@@ -234,14 +228,10 @@ Namespace('Matching').Draw = do ->
 			# Math to eval new position
 			newStart = $popup.offset().top - $popup.height() + 10
 			console.log "new top " + newStart
-			# if $popup.height() < 80
-			# 	console.log 'adjusting margin-top'
-			# 	$popup.css
-			# 		marginTop: '-40px'
 
 			if newStart < 0
 				$popup.css
-					top: '30px'
+				top: '30px'
 			else 
 				$popup.css
 					top: newStart + 'px'
