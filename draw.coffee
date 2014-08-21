@@ -159,10 +159,10 @@ Namespace('Matching').Draw = do ->
 		$popup = $("#w"+id+" .popup")
 		$popText = $("#w"+id+" .popup-text")
 		$popArrow = $("#w"+id+" .popup-arrow")
-
-		moveWordPopup(id)
-
-		$popup.css 'display:block;'
+		
+		# Alters the position of the popup if it has not already been altered.
+		unless _reposition[id]
+			moveWordPopup(id)
 
 		$popText.addClass popupSide
 		$popArrow.addClass popupSide
@@ -208,38 +208,26 @@ Namespace('Matching').Draw = do ->
 				_connectState = 'matching'
 				_connectWord = word
 
-	# Alters the position of the clue vertically to not go 
+	# Alters the position of the clue vertically to not go
 	moveWordPopup = (id) ->
-		$popup = $("#w"+id+" .popup-text")
+		$popupText = $("#w"+id+" .popup-text")
 
-		# Alters the position of the popup if it has not already been altered.
-		unless _reposition[id]
+		bottom = $popupText.position().top - 90 + $popupText.height()
+		arrow = $("#w"+id+" .popup-arrow").offset().top - 90
+		top = $popupText.position().top - 110
+		max = 400
 
-			console.log "moving"
-			console.log "window h: " + document.body.clientHeight
-			console.log "popup h: " + $popup.height()
-			console.log "popup t: " + $popup.offset().top
-			console.log "new top " + ($popup.offset().top - $popup.height())
-
-			console.log _data.getGame().numGameboards
-
-			console.log 'repositioning word ' + id
-			
-			# Math to eval new position
-			newStart = $popup.offset().top - $popup.height() + 10
-			console.log "new top " + newStart
-
-			if newStart < 0
-				console.log 'repositioning to 30 from top'
-				$popup.css
-					top: '30px'
-			else
-				console.log 'repositioning to new top'
-				$popup.css
-					top: newStart + 'px'
-
-		# Sets this word's extra text as altered.
-		_reposition[id] = true
+		if top < 0
+			$popupText.css 
+				top: top + 10
+			moveWordPopup(id)
+		else if bottom > max
+			$popupText.css 
+				top: top - 20
+			moveWordPopup(id)
+		else
+			_reposition[id] = true
+			return
 
 	_onSameSide = (word1, word2) ->
 		word1? and word2 and word1.isOnLeft is word2.isOnLeft
