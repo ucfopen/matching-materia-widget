@@ -13,29 +13,29 @@ qset:
             type: QA
             questions:
               - 
-                text: blerp kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: cambiar
             answers:
               - 
                 value: 100
-                text: blerp 2 kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: to change
           - 
             materiaType: question
             id: null
             type: QA
             questions:
               - 
-                text: preferir asd fwe afwefawf w asdfa kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: preferir
             answers:
               - 
                 value: 100
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: to prefer
           - 
             materiaType: question
             id: null
             type: QA
             questions:
               - 
-                text: kjasld kjfalskd jlkajsdlkf 
+                text: poner
             answers:
               - 
                 value: 100
@@ -46,18 +46,18 @@ qset:
             type: QA
             questions:
               - 
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: necesitar
             answers:
               - 
                 value: 100
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: to need, require
           - 
             materiaType: question
             id: null
             type: QA
             questions:
               - 
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: escribir
             answers:
               - 
                 value: 100
@@ -68,18 +68,18 @@ qset:
             type: QA
             questions:
               - 
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: enviar
             answers:
               - 
                 value: 100
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj f
+                text: to send
           - 
             materiaType: question
             id: null
             type: QA
             questions:
               - 
-                text: asd efw efw
+                text: decir
             answers:
               - 
                 value: 100
@@ -90,11 +90,11 @@ qset:
             type: QA
             questions:
               - 
-                text: short kjasldkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: venir
             answers:
               - 
                 value: 100
-                text: short kjasld kjfalskd jlkajsdlkf alskd
+                text: to come
           - 
             materiaType: question
             id: null
@@ -102,10 +102,11 @@ qset:
             questions:
               - 
                 assets: null
-                text: med kjasld kjfjfalskd jlkajsdlkf alkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wasdf aewjfalskd jlkajsdlkf alkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wasdf aewjfalskd jlkajsdlkf alkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wasdf aewalskd jlkajsdlkf alkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wasdf aew
+                text: vender
             answers:
               - 
                 value: 100
-                text: kjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe wkjasld kjfalskd jlkajsdlkf alskdj flkjlkjlkj;lkjs df;l kj;lk;ljlkjl kjfas dfasdf asdf aea sdfasdfa sdfa sdfa sdf asdf asd sdfwe w
+                text: to sell
     options:
       caseSensitive:
+
