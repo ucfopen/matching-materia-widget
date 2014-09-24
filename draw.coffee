@@ -159,6 +159,8 @@ Namespace('Matching').Draw = do ->
 		$popup = $("#w"+id+" .popup")
 		$popText = $("#w"+id+" .popup-text")
 		$popArrow = $("#w"+id+" .popup-arrow")
+
+		$popup.addClass 'shown'
 		
 		# Alters the position of the popup if it has not already been altered.
 		unless _reposition[id]
@@ -167,7 +169,6 @@ Namespace('Matching').Draw = do ->
 		$popText.addClass popupSide
 		$popArrow.addClass popupSide
 
-		$popup.addClass 'shown'
 		$popText.addClass 'scrollable'
 
 	# Animates the popup into oblivion.

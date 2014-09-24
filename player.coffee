@@ -36,15 +36,18 @@ Namespace('Matching').Engine = do ->
 	# Attaches event listeners to the document.
 	_setEventListeners = ->
 		# Environmental conditions.
-		ms     = window.navigator.msPointerEnabled
+		msNoPrefix = window.navigator.pointerEnabled
+		ms     = window.navigator.msPointerEnabled and not msNoPrefix
 		mobile = navigator.userAgent.match /(iPhone|iPod|iPad|Android|BlackBerry)/
 
 		# Event types will adapt to different input types.
 		downEventType = switch
+			when msNoPrefix then "pointerdown"
 			when ms     then "MSPointerDown"
 			when mobile then "touchstart"
 			else              "mousedown"
 		upEventType = switch
+			when msNoPrefix then "pointerup"
 			when ms     then "MSPointerUp"
 			when mobile then "touchend"
 			else             "mouseup"
