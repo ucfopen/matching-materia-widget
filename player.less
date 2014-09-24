@@ -73,7 +73,7 @@ html, body {
 	&.hidden {
 		-webkit-transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		   -moz-transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
-		    -ms-transform       : translate(-550px, 550px);
+		    -ms-transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		        transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		transition-delay        : 0ms;
 		-webkit-transition-delay: 0ms;
@@ -187,11 +187,13 @@ html, body {
 				opacity: 0;
 				position: absolute;
 				transition: 200ms;
+				display: none;
 				&.shown {
 					opacity: .85;
 					pointer-events: all;
 					transition: 300ms;
 					transition-delay: 400ms;
+					display: block;
 				}
 				.popup-arrow {
 					position       : relative;
@@ -216,11 +218,11 @@ html, body {
 					&.left {
 						left           : 20px;
 						margin-right   : -245px;
-						margin-left    : 0px;
 						border-right   : 20px solid #FFF;
 						&:before {
 							content: "";
 							position       : absolute;
+							left: 113px;
 							border-bottom  : 20px solid transparent;
 							border-top     : 20px solid transparent;	
 							border-right   : 20px solid #DDD;
