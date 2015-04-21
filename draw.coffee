@@ -211,21 +211,22 @@ Namespace('Matching').Draw = do ->
 
 	# Alters the position of the clue vertically to not go
 	moveWordPopup = (id) ->
+		return
 		$popupText = $("#w"+id+" .popup-text")
 
 		bottom = $popupText.position().top - 90 + $popupText.height()
-		arrow = $("#w"+id+" .popup-arrow").offset().top - 90
+		arrow = $("#w"+id+" .popup").offset().top - 90
 		top = $popupText.position().top - 110
 		max = 400
 
 		if top < 0
 			$popupText.css 
 				top: top + 10
-			moveWordPopup(id)
+			#moveWordPopup(id)
 		else if bottom > max
 			$popupText.css 
 				top: top - 20
-			moveWordPopup(id)
+			#moveWordPopup(id)
 		else
 			_reposition[id] = true
 			return
