@@ -71,10 +71,12 @@ html, body {
 	-webkit-transition-delay: 300ms;
 
 	&.hidden {
+	    /*
 		-webkit-transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		   -moz-transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		    -ms-transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
 		        transform       : rotateX(-90deg) translateY(-550px) translateZ(550px);
+			*/
 		transition-delay        : 0ms;
 		-webkit-transition-delay: 0ms;
 
@@ -186,9 +188,11 @@ html, body {
 			.popup {
 				opacity: 0;
 				position: absolute;
+				left: 0;
 				transition: 200ms;
 				display: none;
 				&.shown {
+					clear: both;
 					opacity: .85;
 					pointer-events: all;
 					transition: 300ms;
@@ -196,15 +200,18 @@ html, body {
 					display: block;
 				}
 				.popup-arrow {
-					position       : relative;
+					clear: both;
+					position       : absolute;
 					border-bottom  : 20px solid transparent;
 					border-top     : 20px solid transparent;
+					top: 0;
+					left: 0;
 					&.right {
-						right          : 20px;
+						left: -30px;
 						margin-right   : 0px;
 						border-left  	: 20px solid #FFF;
 						&:before {
-							content: "";
+							content: " ";
 							position       : absolute;
 							border-bottom  : 20px solid transparent;
 							border-top     : 20px solid transparent;	
@@ -217,24 +224,24 @@ html, body {
 					}
 					&.left {
 						left           : 20px;
-						margin-right   : -245px;
+						margin-left   : 245px;
 						border-right   : 20px solid #FFF;
 						&:before {
-							content: "";
+							content: " ";
 							position       : absolute;
-							left: 114px;
+							left: 0;
 							border-bottom  : 20px solid transparent;
 							border-top     : 20px solid transparent;	
 							border-right   : 20px solid #DDD;
 							height: 4px;
 							margin-top: -20px;
-							margin-left: 112px;
+							margin-left: 0;
 							z-index: -1;
 						}
 					}
 				}
 				.popup-text {
-					position         : fixed;
+					position         : relative;
 					max-height       : 330px;
 					min-height       : 60px;
 					margin           : -20px 0 0 -10px;
@@ -248,12 +255,13 @@ html, body {
 					border-radius    : 10px;
 					border-bottom    : 3px solid #DDD;
 					overflow         : auto;
+					clear: both;
 					pointer-events	 : none;
 					&.left {
-						left: 315px;
+						left: 295px;
 					}
 					&.right {
-						left: 85px;
+						left: -390px;
 					}
 					&.scrollable {
 						pointer-events: all;
@@ -622,3 +630,8 @@ and (-webkit-min-device-pixel-ratio: 2){
 	content: attr(data-icon);
 	speak: none;
 }
+
+.wrap {
+    position: relative;
+}
+
