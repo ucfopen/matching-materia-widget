@@ -161,10 +161,6 @@ Namespace('Matching').Draw = do ->
 		$popArrow = $("#w"+id+" .popup-arrow")
 
 		$popup.addClass 'shown'
-		
-		# Alters the position of the popup if it has not already been altered.
-		unless _reposition[id]
-			moveWordPopup(id)
 
 		$popText.addClass popupSide
 		$popArrow.addClass popupSide
@@ -208,28 +204,6 @@ Namespace('Matching').Draw = do ->
 			else
 				_connectState = 'matching'
 				_connectWord = word
-
-	# Alters the position of the clue vertically to not go
-	moveWordPopup = (id) ->
-		return
-		$popupText = $("#w"+id+" .popup-text")
-
-		bottom = $popupText.position().top - 90 + $popupText.height()
-		arrow = $("#w"+id+" .popup").offset().top - 90
-		top = $popupText.position().top - 110
-		max = 400
-
-		if top < 0
-			$popupText.css 
-				top: top + 10
-			#moveWordPopup(id)
-		else if bottom > max
-			$popupText.css 
-				top: top - 20
-			#moveWordPopup(id)
-		else
-			_reposition[id] = true
-			return
 
 	_onSameSide = (word1, word2) ->
 		word1? and word2 and word1.isOnLeft is word2.isOnLeft
