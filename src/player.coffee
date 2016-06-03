@@ -26,6 +26,8 @@ Namespace('Matching').Engine = do ->
 		_draw.init(_data)
 		_dom = _draw.getDom()
 
+		if instance.name is undefined or null
+			instance.name = "Widget Title Goes Here"
 		# Setup the game
 		_draw.drawTitle(instance.name)
 		_draw.drawBoards(_dom.boardTemplate, _data.getGame().numGameboards)
