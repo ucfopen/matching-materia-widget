@@ -1,0 +1,163 @@
+{
+  "name": "Spanish Verbs",
+  "qset": {
+    "version": 1,
+    "data": {
+      "items": [
+        {
+          "name": null,
+          "items": [
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "cambiar"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to change"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "preferir"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to prefer"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "poner"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to put, place, set"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "necesitar"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to need, require"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "escribir"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to write"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "enviar"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to send"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "decir"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to say, tell"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "venir"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to come"
+                }
+              ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "assets": null,
+                  "text": "vender"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to sell"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "options": {
+        "caseSensitive": null
+      }
+    }
+  }
+}
