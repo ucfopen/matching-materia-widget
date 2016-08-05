@@ -22,12 +22,11 @@
 namespace Materia;
 class Score_Modules_Matching extends Score_Module
 {
-	
 	/** @var unknown NEEDS DOCUMENTATION */
 	public $is_case_sensitive;
-	public function __construct($play_id, $inst)
+	public function __construct($play_id, $inst, $play = null)
 	{
-		parent::__construct($play_id, $inst);
+		parent::__construct($play_id, $inst, $play);
 
 		if (isset($inst->qset->data['options']['caseSensitive']) && $inst->qset->data['options']['caseSensitive'] == 1)
 		{
@@ -68,7 +67,7 @@ class Score_Modules_Matching extends Score_Module
 			// trim whitespace
 			$t1 = trim($t1);
 			$t2 = trim($t2);
-			
+
 			// check answer
 			if ($t1 == $t2)
 			{
