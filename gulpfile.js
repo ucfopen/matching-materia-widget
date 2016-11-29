@@ -9,7 +9,6 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var less = require('gulp-less');
 var ngAnnotate = require('gulp-ng-annotate');
 var print = require('gulp-print');
 var rename = require('gulp-rename');
@@ -17,8 +16,11 @@ var replace = require('gulp-replace');
 var replaceTask = require('gulp-replace-task');
 var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
+var less = require('gulp-less');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
+
+var Server = require('karma').Server;
 
 var configs = require('../../backend/config.json');
 
@@ -31,6 +33,8 @@ var embed = argv.embed;
 var Embedding = (embed === "false") ? false : true;
 var Mangling = (mangle === "false") ? false : true;
 var Minifying = (minify === "false") ? false : true;
+
+var buildLocation = '.build/';
 
 var sourceString = "";
 
@@ -47,7 +51,7 @@ var materiaJsReplacements = [
 gulp.task('clean:pre', function()
 {
 	gutil.log("Clean:pre Running");
-	return gulp.src([sourceString + '.build/'])
+	return gulp.src([sourceString + buildLocation])
 				.pipe( clean() )
 				.on('error', function(msg) {console.log("clean:pre Fail Error: ", msg.toString());})
 				.pipe( print() );
@@ -56,7 +60,7 @@ gulp.task('clean:pre', function()
 gulp.task('clean:package', function()
 {
 	gutil.log("Clean:package Running");
-	return gulp.src(sourceString + '.build/_output/' + widget + '.zip')
+	return gulp.src(sourceString + buildLocation + '_output/' + widget + '.zip')
 				.pipe( clean({force: true}) )
 				.on('error', function(msg) {console.log("clean:package Fail Error: ", msg.toString());})
 				.pipe( print() );
@@ -70,7 +74,7 @@ gulp.task('coffee', function()
 				.pipe( coffee() )
 				.on('error', function(msg) {console.log("coffee Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 // Transpiles Coffeescript files into Javascript files.
 gulp.task('coffee-assets', function()
@@ -81,27 +85,27 @@ gulp.task('coffee-assets', function()
 				.pipe( coffee() )
 				.on('error', function(msg) {console.log("coffee Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/assets/'));
+				.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
 });
 // Squish those files and assets into that zip file
 gulp.task('compress', function()
 {
 	gutil.log("Compress Running");
-	return gulp.src([sourceString + '.build/**/*',
-					'!' + sourceString + '.build/*.coffee',
-					'!' + sourceString + '.build/**/*.coffee',
-					'!' + sourceString + '.build/*.scss',
-					'!' + sourceString + '.build/**/*.scss',
-					'!' + sourceString + '.build/*.less',
-					'!' + sourceString + '.build/**/*.less',
-					'!' + sourceString + '.build/*.jade',
-					'!' + sourceString + '.build/**/*.jade',
-					'!' + sourceString + '.build/*.zip',
-					'!' + sourceString + '.build/*.wigt',])
+	return gulp.src([sourceString + buildLocation + '**/*',
+					'!' + sourceString + buildLocation + '*.coffee',
+					'!' + sourceString + buildLocation + '**/*.coffee',
+					'!' + sourceString + buildLocation + '*.scss',
+					'!' + sourceString + buildLocation + '**/*.scss',
+					'!' + sourceString + buildLocation + '*.less',
+					'!' + sourceString + buildLocation + '**/*.less',
+					'!' + sourceString + buildLocation + '*.jade',
+					'!' + sourceString + buildLocation + '**/*.jade',
+					'!' + sourceString + buildLocation + '*.zip',
+					'!' + sourceString + buildLocation + '*.wigt'])
 				.pipe( print() )
 				.pipe( zip( widget + '.zip' ) )
 				.on('error', function(msg) {console.log("compress Fail Error: ", msg.toString());})
-				.pipe(gulp.dest(sourceString + '.build/_output/'));
+				.pipe(gulp.dest(sourceString + buildLocation + '_output/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-assets', function()
@@ -111,7 +115,7 @@ gulp.task('copy:init-assets', function()
 	return gulp.src([sourceString + 'src/assets/*', sourceString + 'src/assets/**/*'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/assets/'));
+				.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-baseWidgetFiles', function()
@@ -126,7 +130,7 @@ gulp.task('copy:init-baseWidgetFiles', function()
 					sourceString + 'src/*.css'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-export', function()
@@ -136,7 +140,7 @@ gulp.task('copy:init-export', function()
 	return gulp.src([sourceString + 'src/_export/export_module.php'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/_export/'));
+				.pipe(gulp.dest(sourceString + buildLocation + '_export/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-icons', function()
@@ -146,7 +150,7 @@ gulp.task('copy:init-icons', function()
 	return gulp.src([sourceString + 'src/_icons/*'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/img/'));
+				.pipe(gulp.dest(sourceString + buildLocation + 'img/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-playdata', function()
@@ -156,7 +160,7 @@ gulp.task('copy:init-playdata', function()
 	return gulp.src([sourceString + 'src/_exports/playdata_exporters.php'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/_exports/'));
+				.pipe(gulp.dest(sourceString + buildLocation + '_exports/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-screenshots', function()
@@ -166,7 +170,7 @@ gulp.task('copy:init-screenshots', function()
 	return gulp.src([sourceString + 'src/_screen-shots/*'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/img/screen-shots/'));
+				.pipe(gulp.dest(sourceString + buildLocation + 'img/screen-shots/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-score', function()
@@ -176,7 +180,7 @@ gulp.task('copy:init-score', function()
 	return gulp.src([sourceString + 'src/_score/*.*'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/_score-modules/'));
+				.pipe(gulp.dest(sourceString + buildLocation + '_score-modules/'));
 });
 // Copy files and assets in the beginning
 gulp.task('copy:init-spec', function()
@@ -186,7 +190,7 @@ gulp.task('copy:init-spec', function()
 	return gulp.src([sourceString + 'src/spec/*.*'])
 				.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/spec/'));
+				.pipe(gulp.dest(sourceString + buildLocation + 'spec/'));
 });
 // Minifies the project css files
 gulp.task('cssmin', function()
@@ -194,11 +198,11 @@ gulp.task('cssmin', function()
 	if(Minifying)
 	{
 		gutil.log("CSS Min Running");
-		return gulp.src([sourceString + '.build/**/*.css'])
+		return gulp.src([sourceString + buildLocation + '**/*.css'])
 					.pipe( cssmin() )
 					.on('error', function(msg) {console.log("copy:init Fail Error: ", msg.toString());})
 					.pipe( print() )
-					.pipe(gulp.dest(sourceString + '.build/'));
+					.pipe(gulp.dest(sourceString + buildLocation));
 	}
 	return "";
 });
@@ -208,26 +212,26 @@ gulp.task('embed', function()
 	if(Embedding && Minifying)
 	{
 		gutil.log("Embed Running");
-		return gulp.src(sourceString + '.build/*.html')
+		return gulp.src(sourceString + buildLocation + '*.html')
 					.pipe(replace(/<link.*href="player.css"[^>]*>/, function(s) {
-						var style = fs.readFileSync(sourceString + '.build/player.css', 'utf8');
+						var style = fs.readFileSync(sourceString + buildLocation + 'player.css', 'utf8');
 						return '<style>\n' + style + '\n</style>';
 					}))
 					.pipe(replace(/<link.*href="creator.css"[^>]*>/, function(s) {
-						var style = fs.readFileSync(sourceString + '.build/creator.css', 'utf8');
+						var style = fs.readFileSync(sourceString + buildLocation + 'creator.css', 'utf8');
 						return '<style>\n' + style + '\n</style>';
 					}))
 					.pipe(replace(/<script.*src=\"player.js\"><\/script>/, function(s) {
-						var script = fs.readFileSync(sourceString + '.build/player.js', 'utf8');
+						var script = fs.readFileSync(sourceString + buildLocation + 'player.js', 'utf8');
 						return '<script>\n' + script + '\n</script>';
 					}))
 					.pipe(replace(/<script.*src=\"creator.js\"><\/script>/, function(s) {
-						var script = fs.readFileSync(sourceString + '.build/creator.js', 'utf8');
+						var script = fs.readFileSync(sourceString + buildLocation + 'creator.js', 'utf8');
 						return '<script>\n' + script + '\n</script>';
 					}))
 					.on('error', function(msg) {console.log("inject Fail Error: ", msg.toString());})
 					.pipe( print() )
-					.pipe(gulp.dest(sourceString + '.build/'));
+					.pipe(gulp.dest(sourceString + buildLocation));
 	}
 	return "";
 });
@@ -235,30 +239,6 @@ gulp.task('embed', function()
 gulp.task('help', function()
 {
 	showDocs();
-});
-// Transpiles Less into plain CSS.
-gulp.task('less', function()
-{
-	gutil.log("Less Running");
-	// Engine
-	return gulp.src([sourceString + 'src/*.less'])
-				.pipe( less() )
-				.pipe( autoprefix() )
-				.on('error', function(msg) {console.log("less Fail Error: ", msg.toString());})
-				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
-});
-// Transpiles Less into plain CSS.
-gulp.task('less-assets', function()
-{
-	gutil.log("Less Assets Running");
-	// Assets
-	return gulp.src([sourceString + 'src/assets/*.less', sourceString + 'src/assets/**/*.less'])
-				.pipe( less() )
-				.pipe( autoprefix() )
-				.on('error', function(msg) {console.log("less Fail Error: ", msg.toString());})
-				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/assets/'));
 });
 // Replaces all of the (internally sourced) script tags in the player/creator files with
 // a combined script tag referenceing a single player.js/creator.js source
@@ -283,14 +263,14 @@ gulp.task('minify-creator-js', function()
 function minifyJs(htmlName)
 {
 	var assets = [];
-	var data = fs.readFileSync(sourceString + '.build/' + htmlName + '.html');
+	var data = fs.readFileSync(sourceString + buildLocation + htmlName + '.html');
 	data.toString().replace(/<script.*src=[\'|\"](.*)[\'|\"](.*)>/g, function(toreplace)
 	{
 		if(toreplace.indexOf("//") != -1) return toreplace;
 		if(toreplace.indexOf("materia.") != -1) return toreplace;
 		if(toreplace.indexOf("data-embed='false'") != -1) return toreplace;
 		if(toreplace.indexOf("data-embed=\"false\"") != -1) return toreplace;
-		assets.push(sourceString + '.build/' + arguments['1']);
+		assets.push(sourceString + buildLocation + arguments['1']);
 		return "";
 	});
 
@@ -298,7 +278,7 @@ function minifyJs(htmlName)
 				.pipe( print() )
 				.pipe(concat(htmlName + ".js"))
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 }
 // Replaces all of the (internally sourced) link tags in the player/creator files with
 // a combined link tag referenceing a single player.css/creator.css source
@@ -323,54 +303,54 @@ gulp.task('minify-creator-css', function()
 function minifyCss(htmlName)
 {
 	var assets = [];
-	var data = fs.readFileSync(sourceString + '.build/' + htmlName + '.html');
+	var data = fs.readFileSync(sourceString + buildLocation + htmlName + '.html');
 	data.toString().replace(/<link.*href=[\'|\"](.*)[\'|\"](.*)>/g, function(toreplace)
 	{
 		if(toreplace.indexOf("//") != -1) return toreplace;
 		if(toreplace.indexOf("materia.") != -1) return toreplace;
 		if(toreplace.indexOf("data-embed='false'") != -1) return toreplace;
 		if(toreplace.indexOf("data-embed=\"false\"") != -1) return toreplace;
-		assets.push(sourceString + '.build/' + arguments['1']);
+		assets.push(sourceString + buildLocation + arguments['1']);
 		return "";
 	});
 	return gulp.src(assets)
 				.pipe( print() )
 				.pipe(concat(htmlName + ".css"))
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 }
 // Pre-minifies any Angular app js files.
 gulp.task('ngAnnotate', function()
 {
 	gutil.log("NgAnnotate Running");
-	return gulp.src([sourceString + '.build/*.js', '!' + sourceString + '.build/*.min.js', '!' + sourceString + '.build/*.pack.js'])
+	return gulp.src([sourceString + buildLocation + '*.js', '!' + sourceString + buildLocation + '*.min.js', '!' + sourceString + buildLocation + '*.pack.js'])
 				.pipe(ngAnnotate())
 				.on('error', function(msg) {console.log("ngmin Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 // Copy zipped package into the "output" folder
 gulp.task('rename:ext', function()
 {
 	gutil.log("Rename Ext Running");
-	return gulp.src([sourceString + '.build/_output/*.zip'])
+	return gulp.src([sourceString + buildLocation + '_output/*.zip'])
 				.pipe( rename({ extname: '.wigt' }))
 				.on('error', function(msg) {console.log("rename:ext Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/_output/'));
+				.pipe(gulp.dest(sourceString + buildLocation + '_output/'));
 });
 // Replaces file path data based off of preset patterns.
 gulp.task('replace:build', function()
 {
 	gutil.log("Replace Build Running");
-	return gulp.src([sourceString + '.build/*.html'])
+	return gulp.src([sourceString + buildLocation + '*.html'])
 				.pipe(replaceTask( { patterns: [
 									{match: /\n\t/g, replacement: ''},
 									{match: /\s{2,}/g, replacement: ' '}
 								] } ))
 				.on('error', function(msg) {console.log("replace:build Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 // Replaces all of the (internally sourced) script tags in the player/creator files with
 // a combined script tag referenceing a single player.js/creator.js source
@@ -394,7 +374,7 @@ gulp.task('replace-creator-scripts', function()
 });
 function replaceScriptAssets(htmlName)
 {
-	return gulp.src(sourceString + '.build/' + htmlName + '.html')
+	return gulp.src(sourceString + buildLocation + htmlName + '.html')
 				.pipe( print() )
 				.pipe(replace(/<script.*src=[\'|\"](.*)[\'|\"](.*)>/g, function(toreplace)
 				{
@@ -410,7 +390,7 @@ function replaceScriptAssets(htmlName)
 					return "<script src=\"" + htmlName + ".js\"></script></head>";
 				}))
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 }
 // Replaces all of the (internally sourced) link tags in the player/creator files with
 // a combined link tag referenceing a single player.css/creator.css source
@@ -434,7 +414,7 @@ gulp.task('replace-creator-links', function()
 });
 function replaceLinkAssets(htmlName)
 {
-	return gulp.src(sourceString + '.build/' + htmlName + '.html')
+	return gulp.src(sourceString + buildLocation + htmlName + '.html')
 				.pipe( print() )
 				.pipe(replace(/<link.*href=(\'|\")(.*)(\'|\")(.*)>/g, function(toreplace)
 				{
@@ -450,18 +430,18 @@ function replaceLinkAssets(htmlName)
 					return "<link rel='stylesheet' type='text/css' href=\"" + htmlName + ".css\"></head>";
 				}))
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 }
 // Replaces file path data based off of preset patterns.
 gulp.task('replace:materiaJS', function()
 {
 	gutil.log("Replace Materia JS Running");
-	return gulp.src([sourceString + '.build/*.html'])
+	return gulp.src([sourceString + buildLocation + '*.html'])
 				.pipe( print() )
 				.pipe(replaceTask( { patterns: materiaJsReplacements } ))
 				.on('error', function(msg) {console.log("replace:materiaJS Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 // Transpiles Sass into plain CSS.
 gulp.task('sass', function()
@@ -473,7 +453,7 @@ gulp.task('sass', function()
 				.pipe( print() )
 				.pipe( autoprefix().on('error', function(msg) {console.log("sass Fail Error: ", msg.toString());}) )
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 // Transpiles Sass into plain CSS.
 gulp.task('sass-assets', function()
@@ -485,23 +465,63 @@ gulp.task('sass-assets', function()
 				.pipe( print() )
 				.pipe( autoprefix().on('error', function(msg) {console.log("sass Fail Error: ", msg.toString());}) )
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/assets/'));
+				.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
+});
+// Transpiles Sass into plain CSS.
+gulp.task('less', function()
+{
+	gutil.log("Less Running");
+	// Engine
+	return gulp.src(sourceString + 'src/*.less')
+		.pipe( less().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
+		.pipe( print() )
+		.pipe( autoprefix().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
+		.pipe( print() )
+		.pipe(gulp.dest(sourceString + buildLocation));
+});
+// Transpiles Sass into plain CSS.
+gulp.task('less-assets', function()
+{
+	gutil.log("Less Assets Running");
+	// Assets
+	return gulp.src([sourceString + 'src/assets/*.less', sourceString + 'src/assets/**/*.less'])
+		.pipe( less().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
+		.pipe( print() )
+		.pipe( autoprefix().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
+		.pipe( print() )
+		.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
+});
+// Runs the karma tests
+gulp.task('test', function(done) {
+	if (testFull) {
+		new Server({
+			configFile: __dirname + 'karma-full.conf.js',
+			singleRun: true
+		}, done).start();
+	} else {
+		new Server({
+			configFile: __dirname + 'karma.conf.js',
+			singleRun: true
+		}, done).start();
+	}
 });
 // Mangles code before end-user receives, to protect proprietary content.
 gulp.task('uglify', function()
 {
-	return gulp.src([sourceString + '.build/*.js',
-					sourceString + '.build/**/*.js',
-					'!' + sourceString + '.build/*.min.js',
-					'!' + sourceString + '.build/*.pack.js'])
+	return gulp.src([sourceString + buildLocation + '*.js',
+					sourceString + buildLocation + '**/*.js',
+					'!' + sourceString + buildLocation + '*.min.js',
+					'!' + sourceString + buildLocation + '*.pack.js'])
 				.pipe( uglify({ preserveComments: Minifying, compress: Minifying, mangle: Mangling }) )
 				.on('error', function(msg) {console.log("uglify Fail Error: ", msg.toString());})
 				.pipe( print() )
-				.pipe(gulp.dest(sourceString + '.build/'));
+				.pipe(gulp.dest(sourceString + buildLocation));
 });
 gulp.task('default', function ()
 {
 	sourceString = "";
+
+    buildLocation = '.build/';
 
 	console.log("EMBEDDING: ", Embedding);
 	console.log("MINIFYING: ", Minifying);
@@ -518,8 +538,8 @@ gulp.task('default', function ()
 		'copy:init-score',
 		'copy:init-spec',
 		['coffee','coffee-assets'],
-		['less','less-assets'],
 		['sass','sass-assets'],
+		['less','less-assets'],
 		'replace:materiaJS',
 		'ngAnnotate',
 		'cssmin',
@@ -539,12 +559,96 @@ gulp.task('default', function ()
 		'clean:package'
 	);
 });
+
+gulp.task('build-readable', function()
+{
+    buildLocation = 'build/';
+
+    Embedding = false;
+	Mangling  = false;
+	Minifying = false;
+
+	runSequence(
+		'clean:pre',
+		'copy:init-assets',
+		'copy:init-baseWidgetFiles',
+		'copy:init-export',
+		'copy:init-icons',
+		'copy:init-playdata',
+		'copy:init-screenshots',
+		'copy:init-score',
+		'copy:init-spec',
+		['coffee','coffee-assets'],
+		['sass','sass-assets'],
+		['less','less-assets'],
+		'replace:materiaJS',
+		'replace-player-scripts',
+		'replace-creator-scripts',
+		'replace-player-links',
+		'replace-creator-links',
+		'embed',
+		'replace:build',
+		'compress',
+		'rename:ext',
+		'clean:package'
+	);
+});
+
+var testFull = false;
+exports["buildReadable"] = function(widget, full, callback) {
+	widget = sanitize(widget);
+	sourceString = 'sandbox/' + widget + '/';
+
+	testFull = full;
+
+	buildLocation = 'build/';
+
+	Embedding = false;
+	Mangling = false;
+	Minifying = false;
+
+	// One of the ways to make sure Gulp does it's tasks in the order specified (Otherwise race condtions can occur).
+	gulp.task('callback', function()
+	{
+		return callback(null, null, "");
+	});
+
+	runSequence(
+		'clean:pre',
+		'copy:init-assets',
+		'copy:init-baseWidgetFiles',
+		'copy:init-export',
+		'copy:init-icons',
+		'copy:init-playdata',
+		'copy:init-screenshots',
+		'copy:init-score',
+		'copy:init-spec',
+		['coffee','coffee-assets'],
+		['sass','sass-assets'],
+		['less','less-assets'],
+		'replace:materiaJS',
+		'replace-player-scripts',
+		'replace-creator-scripts',
+		'replace-player-links',
+		'replace-creator-links',
+		'embed',
+		'replace:build',
+		'compress',
+		'rename:ext',
+		'test',
+		'clean:package',
+		'callback'
+	);
+};
+
 exports["gulp"] = function(widget, minify, mangle, embed, callback)
 {
 	widget = sanitize(widget);
 	sourceString = 'sandbox/' + widget + '/';
 
-	console.log("widget: ", widget, "\nEmbed: ", embed, "\nMangle: ", mangle, "\nMinify: ", minify);
+    buildLocation = '.build/';
+
+    console.log("widget: ", widget, "\nEmbed: ", embed, "\nMangle: ", mangle, "\nMinify: ", minify);
 
 	Embedding = (embed === "false") ? false : true;
 	Mangling = (mangle === "false") ? false : true;
@@ -567,8 +671,8 @@ exports["gulp"] = function(widget, minify, mangle, embed, callback)
 		'copy:init-score',
 		'copy:init-spec',
 		['coffee','coffee-assets'],
-		['less','less-assets'],
 		['sass','sass-assets'],
+		['less','less-assets'],
 		'replace:materiaJS',
 		'ngAnnotate',
 		'cssmin',
@@ -602,7 +706,7 @@ var fullExport = function(callback)
 	var totalCommand = "cd " + __dirname.slice(0, -widget.length) +
 	" && find " + configs.materia_docker_location + "/app/fuel/app/tmp/widget_packages -name '" + widget + "*.wigt' -delete" +
 	" && cd " + configs.materia_docker_location +
-	" && cp " + __dirname.slice(0, -(widget.length+8)) + 'sandbox/' + widget + "/.build/_output/" + widget + ".wigt app/fuel/app/tmp/widget_packages/" + widget + "-" + widgetPackagePostFix + ".wigt" +
+	" && cp " + __dirname.slice(0, -(widget.length+8)) + 'sandbox/' + widget + "/" + buildLocation + "_output/" + widget + ".wigt app/fuel/app/tmp/widget_packages/" + widget + "-" + widgetPackagePostFix + ".wigt" +
 	" && eval $(docker-machine env " + configs.materia_docker_machine_name + ")" +
 	" && ./install_widget.sh " + widget + "-" + widgetPackagePostFix + ".wigt";
 
