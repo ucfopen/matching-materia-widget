@@ -9,7 +9,6 @@ module.exports = function(config) {
 
 		files: [
 			'../../js/*.js',
-			'node_modules/jquery/jquery.min.js',
 			'node_modules/angular/angular.js',
 			'node_modules/angular-animate/angular-animate.js',
 			'node_modules/angular-mocks/angular-mocks.js',
