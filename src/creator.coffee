@@ -13,13 +13,13 @@ Updated : 6/14
 MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
 
 MatchingCreator.directive('ngEnter', ->
-    return (scope, element, attrs) ->
-        element.bind("keydown keypress", (event) ->
-            if(event.which == 13)
-                scope.$apply ->
-                    scope.$eval(attrs.ngEnter)
-                event.preventDefault()
-        )
+		return (scope, element, attrs) ->
+				element.bind("keydown keypress", (event) ->
+						if(event.which == 13)
+								scope.$apply ->
+										scope.$eval(attrs.ngEnter)
+								event.preventDefault()
+				)
 )
 MatchingCreator.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
 	link: (scope, element, attrs) ->

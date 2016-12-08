@@ -129,38 +129,5 @@ describe('Matching', function(){
 			//test if both question and answer are given empty values
 			expect($scope.autoSize({question: '', answer: ''})).toEqual({height: '25px'});
 		});
-
-
-			// //for simplicity, just copy the demo qset's questions
-			// var importing = qset.data.items;
-			// //add another to make sure the importer will only import three questions
-			// var newQuestion = {
-			// 	materiaType: 'question',
-			// 	questions: [{text: 'Extra'}],
-			// 	answers: [{
-			// 		id:    '',
-			// 		text:  'extra',
-			// 		value: 100
-			// 	}],
-			// 	id: 4,
-			// 	type: 'MC'
-			// };
-			// importing.push(newQuestion);
-			// //this should create three questions and cause an alert, since we tried importing four
-			// $scope.onQuestionImportComplete(importing);
-			// //make sure the alert went out
-			// expect(Materia.CreatorCore.alert.calls.mostRecent().args).toEqual(['3 Question Limit', 'For this widget, you may create up to 3 questions.']);
-			// Materia.CreatorCore.alert.calls.reset();
-			// //make sure the first three questions were imported
-			// expect($scope.questions.length).toBe(3);
-
-
-
-			// var elementModal = angular.element("<input type='text' placeholder='My Matching widget' ng-model='widget.title' ng-enter='hideCover()' focus-me='showTitleDialog'>");
-			// var elementModalButton = angular.element("<input type='button' value='Get Started' ng-click='setTitle()'>")
-			// // element[0].value = 'thisistwentyonecharcs';
-			// elementModalButton = $compiler(elementModalButton)($scope);
-			// var clickButton = elementModalButton.triggerHandler("click");
-
 	});
 });
