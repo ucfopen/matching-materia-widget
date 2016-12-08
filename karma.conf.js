@@ -1,60 +1,80 @@
 module.exports = function(config) {
-    config.set({
+	config.set({
 
-        autoWatch: false,
+		autoWatch: true,
 
-        basePath: './',
+		basePath: './',
 
-        browsers: ['PhantomJS'],
+		browsers: ['PhantomJS'],
 
-        files: [
-            '../../js/*.js',
-            'node_modules/angular/angular.js',
-            'node_modules/angular-mocks/angular-mocks.js',
-            'node_modules/angular-sanitize/angular-sanitize.js',
-            'build/creator.js',
-            'tests/*.js'
-        ],
+		files: [
+			'../../js/*.js',
+			'node_modules/angular/angular.js',
+			'node_modules/angular-animate/angular-animate.js',
+			'node_modules/angular-mocks/angular-mocks.js',
+			'node_modules/angular-sanitize/angular-sanitize.js',
+			'build/demo.json',
+			'build/creator.js',
+			'tests/*.js'
+		],
 
-        frameworks: ['jasmine'],
+		frameworks: ['jasmine'],
 
-        plugins: [
-            'karma-coverage',
-            'karma-jasmine',
-            'karma-junit-reporter',
-            'karma-mocha-reporter',
-            'karma-phantomjs-launcher'
-        ],
+		plugins: [
+			'karma-coverage',
+			'karma-eslint',
+			'karma-jasmine',
+			'karma-json-fixtures-preprocessor',
+			'karma-mocha-reporter',
+			'karma-phantomjs-launcher'
+		],
 
-        singleRun: true,
+		preprocessors: {
+			'build/*.js': ['coverage', 'eslint'],
+			'build/demo.json': ['json_fixtures'],
+		},
 
-        reporters: ['coverage', 'mocha'],
+		jsonFixturesPreprocessor: {
+			variableName: '__demo__'
+		},
 
-        //reporter-specific configurations
+		//plugin-specific configurations
+		eslint: {
+			stopOnError: true,
+			stopOnWarning: false,
+			showWarnings: true,
+			engine: {
+				configFile: '.eslintrc.json'
+			}
+		},
 
-        coverageReporter: {
-            check: {
-                global: {
-                    statements: 90,
-                    branches:   90,
-                    functions:  90,
-                    lines:      90
-                },
-                each: {
-                    statements: 90,
-                    branches:   90,
-                    functions:  90,
-                    lines:      90
-                }
-            },
-            reporters: [
-                { type: 'cobertura', subdir: '.', file: 'coverage.xml' }
-            ]
-        },
+		reporters: ['coverage', 'mocha'],
 
-        mochaReporter: {
-            output: 'autowatch'
-        }
+		//reporter-specific configurations
 
-    });
+		coverageReporter: {
+			check: {
+				global: {
+					statements: 90,
+					branches:   85,
+					functions:  90,
+					lines:      90
+				},
+				each: {
+					statements: 90,
+					branches:   85,
+					functions:  90,
+					lines:      90
+				}
+			},
+			reporters: [
+				{ type: 'cobertura', subdir: '.', file: 'coverage.xml' }
+			]
+		},
+
+		mochaReporter: {
+			output: 'autowatch'
+		}
+
+	});
 };

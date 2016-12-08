@@ -28,7 +28,6 @@ describe('focusMe Directive', function(){
 	});
 });
 
-
 describe('ngEnter Directive', function() {
 	beforeEach(module('matchingCreator'));
 
@@ -38,31 +37,29 @@ describe('ngEnter Directive', function() {
 	}));
 
 	it('should correctly use ngEnter directive', function () {
-		$scope.enterEvent = function () {
-		};
+		$scope.enterEvent = function () {};
 		spyOn($scope, 'enterEvent');
 		element = angular.element("<textarea ng-enter='enterEvent()'></textarea>");
 		element = $compile(element)($scope);
 		$scope.$digest();
 		//we can use this function to try difference key press events
 		function keyPress(keyCode) {
-			var keyEvent = $.Event("keypress", {
-				which: keyCode
-			});
+			var keyEvent = new Event('keydown');
+			keyEvent.which = keyCode;
 			return keyEvent
 		}
 
 		//test with Backspace key
 		var backspaceKey = keyPress(8);
 		spyOn(backspaceKey, 'preventDefault');
-		element.trigger(backspaceKey);
+		element.triggerHandler(backspaceKey);
 		expect(backspaceKey.preventDefault).not.toHaveBeenCalled();
 		expect($scope.enterEvent).not.toHaveBeenCalled();
 
 		//test with Enter key
 		var enterKey = keyPress(13);
 		spyOn(enterKey, 'preventDefault');
-		element.trigger(enterKey);
+		element.triggerHandler(enterKey);
 		expect(enterKey.preventDefault).toHaveBeenCalled();
 		expect($scope.enterEvent).toHaveBeenCalled();
 	});

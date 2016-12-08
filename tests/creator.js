@@ -121,7 +121,7 @@ describe('Matching', function(){
 			expect(smallHeight).toEqual({height: '25px'});
 			//test given a short and a long pair
 			//javascript floating point multiplication makes 50.9 a weird number
-			expect(bigHeight).toEqual({height: '50.900000000000006px'});
+			expect(bigHeight).toEqual({height: greaterThan15chars.length * 1.1 + 30 + 'px'});
 			//test if question given empty value
 			expect($scope.autoSize({question: '', answer: 'answer'})).toEqual({height: '25px'});
 			//test if answer given empty value
