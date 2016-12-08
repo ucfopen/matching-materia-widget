@@ -33,6 +33,7 @@ MatchingCreator.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) -
 
 # Set the controller for the scope of the document body.
 MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
+	_qset = {}
 	# Stores data to be gathered on save.
 	$scope.widget =
 		title     : "My Matching widget"
@@ -56,17 +57,15 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 			$scope.widget.wordPairs = []
 			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text ) for i in [0.._items.length-1]
 
-	$scope.onSaveClicked = (mode = 'save') ->
-		if $scope.widget.title
-			Materia.CreatorCore.save $scope.widget.title, _buildSaveData()
+	$scope.onSaveClicked = ->
+		if _buildSaveData()
+			Materia.CreatorCore.save $scope.widget.title, _qset
 		else Materia.CreatorCore.cancelSave 'Widget not ready to save.'
 
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
 	$scope.onQuestionImportComplete = (questions) ->
 		$scope.$apply -> $scope.addWordPair(question.questions[0].text, question.answers[0].text, question.id) for question in questions
-
-	$scope.onMediaImportComplete = (media) -> null
 
 	# View actions
 	$scope.setTitle = ->
@@ -87,17 +86,12 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	# Private methods
 	_buildSaveData = ->
-		items      = []
+		okToSave = true
+		_qset.items      = []
 		wordPairs  = $scope.widget.wordPairs
-		items.push( _process wordPairs[i] ) for i in [0..wordPairs.length-1]
-		
-		options : {}
-		assets  : []
-		rand    : false
-		name    : ''
-		items   : [
-			items: items
-		]
+		_qset.items.push( _process wordPairs[i] ) for i in [0..wordPairs.length-1]
+		okToSave = false if $scope.widget.title is ''
+		okToSave
 
 	# Get each pair's data from the controller and organize it into Qset form.
 	_process = (wordPair) ->

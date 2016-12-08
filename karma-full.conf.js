@@ -9,13 +9,13 @@ module.exports = function(config) {
 
         files: [
             '../../js/*.js',
+            'node_modules/jquery/jquery.min.js',
             'node_modules/angular/angular.js',
+            'node_modules/angular-animate/angular-animate.js',
             'node_modules/angular-mocks/angular-mocks.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
-            'node_modules/angular-animate/angular-animate.js',
             'build/demo.json',
             'build/creator.js',
-            'build/creator.html',
             'tests/*.js'
         ],
 
@@ -33,7 +33,7 @@ module.exports = function(config) {
 
         preprocessors: {
             'build/*.js': ['coverage', 'eslint'],
-            'build/demo.json': ['json_fixtures']
+            'build/demo.json': ['json_fixtures'],
         },
 
         jsonFixturesPreprocessor: {
@@ -58,13 +58,13 @@ module.exports = function(config) {
             check: {
                 global: {
                     statements: 90,
-                    branches:   90,
+                    branches:   85,
                     functions:  90,
                     lines:      90
                 },
                 each: {
                     statements: 90,
-                    branches:   90,
+                    branches:   85,
                     functions:  90,
                     lines:      90
                 }
