@@ -13,7 +13,8 @@ module.exports = function(config) {
 			'node_modules/angular-animate/angular-animate.js',
 			'node_modules/angular-mocks/angular-mocks.js',
 			'node_modules/angular-sanitize/angular-sanitize.js',
-			'build/demo.json',
+			'src/demo.json',
+			'build/player.js',
 			'build/creator.js',
 			'tests/*.js'
 		],
@@ -32,7 +33,7 @@ module.exports = function(config) {
 
 		preprocessors: {
 			'build/*.js': ['coverage', 'eslint'],
-			'build/demo.json': ['json_fixtures'],
+			'src/demo.json': ['json_fixtures']
 		},
 
 		jsonFixturesPreprocessor: {
