@@ -5,21 +5,20 @@ It's a thing
 
 Widget  : Matching, Creator
 Authors : Jonathan Warner, Micheal Parks
-Updated : 6/14
-
+Updated : 2/16
 ###
 
 # Create an angular module to import the animation module and house our controller.
 MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
 
 MatchingCreator.directive('ngEnter', ->
-		return (scope, element, attrs) ->
-				element.bind("keydown keypress", (event) ->
-						if(event.which == 13)
-								scope.$apply ->
-										scope.$eval(attrs.ngEnter)
-								event.preventDefault()
-				)
+	return (scope, element, attrs) ->
+		element.bind("keydown keypress", (event) ->
+			if(event.which == 13)
+				scope.$apply ->
+					scope.$eval(attrs.ngEnter)
+				event.preventDefault()
+		)
 )
 MatchingCreator.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
 	link: (scope, element, attrs) ->
@@ -75,7 +74,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	$scope.hideCover = ->
 		$scope.showTitleDialog = $scope.showIntroDialog = false
-	
+
 	$scope.autoSize = (pair) ->
 		question = pair.question or ''
 		answer = pair.answer or ''
@@ -88,24 +87,27 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 	_buildSaveData = ->
 		okToSave = true
 		_qset.items      = []
+		_qset.items[0] =
+			name: "null"
+			items: []
 		wordPairs  = $scope.widget.wordPairs
-		_qset.items.push( _process wordPairs[i] ) for i in [0..wordPairs.length-1]
+		_qset.items[0].items.push( _process wordPairs[i] ) for i in [0..wordPairs.length-1]
 		okToSave = false if $scope.widget.title is ''
 		okToSave
 
 	# Get each pair's data from the controller and organize it into Qset form.
 	_process = (wordPair) ->
 		questions: [
-			text  : wordPair.question
+			text: wordPair.question
 		]
-		answers  : [
-			text  : wordPair.answer
-			value : '100',
-			id    : ''
+		answers: [
+			text: wordPair.answer
+			value: '100',
+			id: ''
 		]
-		type     : 'QA'
-		id       : wordPair.id
-		assets   : []
+		type: 'QA'
+		id: wordPair.id
+		assets: []
 
 	Materia.CreatorCore.start $scope
 ]

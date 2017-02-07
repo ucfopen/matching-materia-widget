@@ -1,6 +1,6 @@
 describe('Matching', function(){
 
-	var widgetInfo = window.__demo__['build/demo'];
+	var widgetInfo = window.__demo__['src/demo'];
 	var qset = widgetInfo.qset;
 	var $scope = {};
 	var ctrl={};
@@ -71,7 +71,7 @@ describe('Matching', function(){
 			//make sure the title was sent correctly
 			expect(successReport.title).toBe($scope.widget.title);
 			//check one of the questions and its answers to make sure it was sent correctly
-			var testQuestion = successReport.qset.items[0];
+			var testQuestion = successReport.qset.items[0].items[0];
 			expect(testQuestion.questions[0].text).toBe('cambiar');
 			expect(testQuestion.answers[0].text).toBe('to change');
 		});
@@ -96,8 +96,8 @@ describe('Matching', function(){
 			//if fields on word pairs are empty- default values are given
 			$scope.addWordPair();
 			expect($scope.widget.wordPairs[0]).toEqual({question: null, answer: null, id: ''});
-			$scope.addWordPair("question", "answer", "12");
-			expect($scope.widget.wordPairs[1]).toEqual({question: "question", answer: "answer", id: '12'});
+			$scope.addWordPair("question", "answer");
+			expect($scope.widget.wordPairs[1]).toEqual({question: "question", answer: "answer", id: ''});
 		});
 
 		it('should import questions properly', function(){
