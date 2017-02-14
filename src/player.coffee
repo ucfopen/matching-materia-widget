@@ -32,6 +32,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 	#these are used for animation
 	$scope.pageAnimate = false
 	$scope.pageNext = false
+	ANIMATION_DURATION = 600
 
 	colorNumber=0
 
@@ -42,6 +43,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 	CIRCLE_RADIUS = 10
 	CIRCLE_SPACING = 69
 	CIRCLE_OFFSET = 61
+	PROGRESS_BAR_LENGTH = 160
 
 	$scope.start = (instance, qset) ->
 		$scope.qset = qset
@@ -109,7 +111,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 		Materia.Engine.setHeight()
 		$scope.$apply()
 
-	$scope.gotoDifferentPage = (direction) ->
+	$scope.changePage = (direction) ->
 		if direction == 'previous'
 			$scope.currentPage-- unless $scope.currentPage <= 0
 			$scope.pageNext = false
@@ -121,7 +123,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 		$scope.pageAnimate = true
 		$timeout ->
 			$scope.pageAnimate= false
-		, 600
+		, ANIMATION_DURATION
 
 	_pushMatch = () ->
 		$scope.matches.push {
@@ -130,10 +132,6 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 			answerId: $scope.selectedAnswer.id
 			answerIndex: $scope.selectedQA[$scope.currentPage].answer
 			matchPageId: $scope.currentPage
-			startX: CIRCLE_START_X
-			endX: CIRCLE_START_X
-			startY: $scope.questionCircles[$scope.currentPage][$scope.selectedQA[$scope.currentPage].question].cy
-			endY: $scope.answerCircles[$scope.currentPage][$scope.selectedQA[$scope.currentPage].answer].cy
 		}
 
 	_applyCircleColor = () ->
@@ -228,9 +226,9 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 	$scope.getProgressAmount = () ->
 		if $scope.totalItems == 0
 			return 0
-		return $scope.matches.length / $scope.totalItems * 160
+		return $scope.matches.length / $scope.totalItems * PROGRESS_BAR_LENGTH
 
-	$scope.checkApplyCircle = (selectionItem) ->
+	$scope.applyCircleClass = (selectionItem) ->
 		#selectionItem.id is the index of circle
 		if selectionItem.type == 'question-circle'
 			if selectionItem.id == $scope.selectedQA[$scope.currentPage].question
@@ -251,10 +249,6 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 			matchedItem = $scope.matches.filter( (match) -> match.questionId == item.id).length
 		else if item.type == 'answer'
 			matchedItem = $scope.matches.filter( (match) -> match.answerId == item.id).length
-		else if item.type == 'question-circle'
-			matchedItem = $scope.matches.filter( (match) -> match.questionIndex == item.id).length
-		else if item.type == 'answer-circle'
-			matchedItem = $scope.matches.filter( (match) -> match.answerIndex == item.id).length
 		else
 			matchedItem = 0
 		matchedItem
@@ -335,7 +329,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 		$scope.selectedQA[$scope.currentPage].answer = indexId
 		_checkForMatches()
 
-	$scope.submitAnswers = () ->
+	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items
 		for i in [0..qsetItems.length-1]
 			#get id of the current qset item use that as the 1st argument
@@ -345,6 +339,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 				matchedItemAnswerId = matchedItem[0].answerId
 				#get the answer of that match at that question id and use that as the 2nd argument
 				mappedQsetItemText = qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].answers[0].text
+			else
+				mappedQsetItemText = null
 			Materia.Score.submitQuestionForScoring(qsetItems[i].id, mappedQsetItemText)
 		Materia.Engine.end true
 

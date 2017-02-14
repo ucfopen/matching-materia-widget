@@ -40,7 +40,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	# Adds and removes a pair of textareas for users to input a word pair.
 	$scope.addWordPair = (q=null, a=null, id='') ->
-		$scope.widget.wordPairs.push {question:q,answer:a,id:id}
+		$scope.widget.wordPairs.push {question:q, answer:a, id:id}
 
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
 
@@ -54,7 +54,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		$scope.$apply ->
 			$scope.widget.title     = title
 			$scope.widget.wordPairs = []
-			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text ) for i in [0.._items.length-1]
+			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, _items[i].id ) for i in [0.._items.length-1]
 
 	$scope.onSaveClicked = ->
 		if _buildSaveData()
@@ -80,7 +80,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		answer = pair.answer or ''
 		len = if question.length > answer.length then question.length else answer.length
 		size = if len > 15 then 30 + len * 1.1 else 25
-
 		height: size + 'px'
 
 	# Private methods
