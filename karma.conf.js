@@ -32,7 +32,8 @@ module.exports = function(config) {
 
 		preprocessors: {
 			'build/*.js': ['coverage', 'eslint'],
-			'src/demo.json': ['json_fixtures']
+			'src/demo.json': ['json_fixtures'],
+			'src/devmateria_demo.json': ['json_fixtures']
 		},
 
 		jsonFixturesPreprocessor: {

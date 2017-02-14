@@ -1,6 +1,7 @@
 describe('Matching', function(){
 
 	var widgetInfo = window.__demo__['src/demo'];
+	// var widgetInfo = window.__demo__['src/devmateria_demo'];
 	var qset = widgetInfo.qset;
 	var $scope = {};
 	var ctrl={};
@@ -60,8 +61,8 @@ describe('Matching', function(){
 		it('should make an existing widget', function(){
 			$scope.initExistingWidget('matcher', widgetInfo, qset.data);
 			expect($scope.widget.title).toEqual('matcher');
-			expect($scope.widget.wordPairs[0]).toEqual({ question: 'cambiar', answer: 'to change', id: '' });
-			expect($scope.widget.wordPairs[1]).toEqual({ question: 'preferir', answer: 'to prefer', id: '' });
+			expect($scope.widget.wordPairs[0]).toEqual({ question: 'cambiar', answer: 'to change', id: ''});
+			expect($scope.widget.wordPairs[1]).toEqual({ question: 'preferir', answer: 'to prefer', id: ''});
 			initialwordPairs = JSON.parse(JSON.stringify( $scope.widget.wordPairs));
 		});
 
@@ -98,6 +99,9 @@ describe('Matching', function(){
 			expect($scope.widget.wordPairs[0]).toEqual({question: null, answer: null, id: ''});
 			$scope.addWordPair("question", "answer");
 			expect($scope.widget.wordPairs[1]).toEqual({question: "question", answer: "answer", id: ''});
+			//cover the case of an id passed in
+			$scope.addWordPair("question", "answer", 'id');
+			expect($scope.widget.wordPairs[2]).toEqual({question: "question", answer: "answer", id: 'id'});
 		});
 
 		it('should import questions properly', function(){

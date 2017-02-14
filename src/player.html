@@ -78,7 +78,7 @@
 						<circle
 										class = "{{circle.color}}"
 										ng-repeat="circle in questionCircles[currentPage]"
-										ng-class="{'selected' : checkApplyCircle(circle),
+										ng-class="{'selected' : applyCircleClass(circle),
 															'circleHover' : questionCircles[currentPage][$index].isHover}"
 										ng-attr-r="{{circle.r/2}}"
 										ng-attr-cx="{{circle.cx}}"
@@ -96,7 +96,7 @@
 						<circle
 								class = "{{circle.color}}"
 								ng-repeat="circle in answerCircles[currentPage]"
-								ng-class="{'selected' : checkApplyCircle(circle),
+								ng-class="{'selected' : applyCircleClass(circle),
 													'circleHover': answerCircles[currentPage][$index].isHover}"
 								ng-attr-r="{{circle.r/2}}"
 								ng-attr-cx="{{circle.cx}}"
@@ -127,11 +127,11 @@
 
 		<footer>
 			<section id="page-selector">
-				<span class="button" id="prev-button" ng-click="gotoDifferentPage('previous')" ng-class="{'shown': currentPage >= 1}">Previous Page</span>
+				<span class="button" id="prev-button" ng-click="changePage('previous')" ng-class="{'shown': currentPage >= 1}">Previous Page</span>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext, 'animateRotationLeft': pageAnimate && !pageNext}">
 					Page <span>{{currentPage+1}}</span>/<span>{{totalPages}}</span>
 				</span>
-				<span class="button" id="next-button" ng-click="gotoDifferentPage('next')" ng-class="{'shown': currentPage+1 < totalPages}">Next Page</span>
+				<span class="button" id="next-button" ng-click="changePage('next')" ng-class="{'shown': currentPage+1 < totalPages}">Next Page</span>
 			</section>
 
 			<section id="submit">
@@ -139,7 +139,7 @@
 					<svg xmlns="http://www.w3.org/2000/svg">
 						<rect id="bar" x="0" y="0" ng-attr-width="{{getProgressAmount()}}" height="10" rx="5" ry="5" style="stroke-width: 1px; stroke: rgb(189, 195, 199); fill: rgb(189, 195, 199); opacity: 1;"></rect>
 					</svg></div>
-				<div class="button" id="submit-button" ng-click="submitAnswers()"
+				<div class="button" id="submit-button" ng-click="submit()"
 				     ng-class="{'glowing': matches.length == totalItems && totalItems != 0}">Done</div>
 			</section>
 		</footer>

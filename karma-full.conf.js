@@ -14,6 +14,7 @@ module.exports = function(config) {
 			'node_modules/angular-mocks/angular-mocks.js',
 			'node_modules/angular-sanitize/angular-sanitize.js',
 			'src/demo.json',
+			'src/devmateria_demo.json',
 			'build/player.js',
 			'build/creator.js',
 			'tests/*.js'
@@ -28,12 +29,13 @@ module.exports = function(config) {
 			'karma-json-fixtures-preprocessor',
 			'karma-junit-reporter',
 			'karma-mocha-reporter',
-			'karma-phantomjs-launcher'
+			'karma-phantomjs-launcher',
 		],
 
 		preprocessors: {
 			'build/*.js': ['coverage', 'eslint'],
-			'src/demo.json': ['json_fixtures']
+			'src/demo.json': ['json_fixtures'],
+			'src/devmateria_demo.json': ['json_fixtures']
 		},
 
 		jsonFixturesPreprocessor: {
