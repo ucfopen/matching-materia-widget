@@ -29,7 +29,7 @@ module.exports = function(config) {
 			'karma-json-fixtures-preprocessor',
 			'karma-junit-reporter',
 			'karma-mocha-reporter',
-			'karma-phantomjs-launcher',
+			'karma-phantomjs-launcher'
 		],
 
 		preprocessors: {

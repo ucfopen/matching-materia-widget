@@ -12,16 +12,17 @@ describe('Matching', function() {
 		$scope.test = {};
 		$scope.test.questions = [];
 		$scope.test.answers = [];
-
-		//set page 1 questions in order of ids
-		var i;
+		//set page 1 questions and answers in order of ids
+		var i, testQIndex, testAIndex;
 		for (i = 1; i <= 5; i++) {
-			$scope.test.questions[i-1] = $scope.pages[0].questions.find(function (item) {
-				return item.id === (i)
-			});
-			$scope.test.answers[i-1] = $scope.pages[0].answers.find(function (item) {
-				return item.id === (i)
-			});
+			testQIndex = $scope.pages[0].questions.map(function (item) {
+				return item.id
+			}).indexOf(i);
+			$scope.test.questions.push($scope.pages[0].questions[testQIndex]);
+			testAIndex = $scope.pages[0].answers.map(function (item) {
+				return item.id
+			}).indexOf(i);
+			$scope.test.answers.push($scope.pages[0].answers[testAIndex]);
 		}
 	}
 
@@ -34,24 +35,6 @@ describe('Matching', function() {
 			$scope = $rootScope.$new();
 			ctrl = $controller('matchingPlayerCtrl', {$scope: $scope});
 			$compile = _$compile_;
-			$scope.setupQA = function(){
-				//set up questions and answers array
-				$scope.currentPage = 0;
-				$scope.test = {};
-				$scope.test.questions = [];
-				$scope.test.answers = [];
-
-				//set page 1 questions in order of ids
-				var i;
-				for (i = 1; i <= 5; i++) {
-					$scope.test.questions[i-1] = $scope.pages[0].questions.find(function (item) {
-						return item.id === (i)
-					});
-					$scope.test.answers[i-1] = $scope.pages[0].answers.find(function (item) {
-						return item.id === (i)
-					});
-				}
-			}
 		}));
 
 		beforeEach(function () {
@@ -73,7 +56,7 @@ describe('Matching', function() {
 			expect($scope.pages.length).toBe(2);
 		});
 
-		it('should change to the previous page', function(){
+		it('should change to the previous page', function () {
 			$scope.currentPage = 1;
 			$scope.changePage('previous');
 			expect($scope.currentPage).toEqual(0);
@@ -82,7 +65,7 @@ describe('Matching', function() {
 			expect($scope.currentPage).toEqual(0);
 		});
 
-		it('should change to the next page', function(){
+		it('should change to the next page', function () {
 			$scope.changePage('next');
 			expect($scope.currentPage).toEqual(1);
 			$scope.changePage('next');
@@ -90,14 +73,14 @@ describe('Matching', function() {
 			expect($scope.currentPage).toEqual(1);
 		});
 
-		it('should animate on page change', inject(function($timeout){
+		it('should animate on page change', inject(function ($timeout) {
 			$scope.changePage('next');
 			$timeout.flush();
 			$timeout.verifyNoPendingTasks();
 			expect($scope.pageAnimate).toBe(false);
 		}));
 
-		it('make a match -- start from empty matches', function() {
+		it('make a match -- start from empty matches', function () {
 			setupQA();
 			//questionId:1 answerId:2
 			$scope.selectQuestion($scope.test.questions[0]);
@@ -108,7 +91,7 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(2);
 		});
 
-		it('make a match -- when existing match clicked', function() {
+		it('make a match -- when existing match clicked', function () {
 			//questionId:1 answerId:2
 			//clicking in different order for additional testing
 			$scope.selectAnswer($scope.test.answers[1]);
@@ -119,7 +102,7 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(2);
 		});
 
-		it('make a match -- override a match with existing answer', function() {
+		it('make a match -- override a match with existing answer', function () {
 			//questionId:2 answerId:2
 			$scope.selectQuestion($scope.test.questions[1]);
 			$scope.selectAnswer($scope.test.answers[1]);
@@ -129,7 +112,7 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(2);
 		});
 
-		it('make a match -- override a match with existing question', function() {
+		it('make a match -- override a match with existing question', function () {
 			//questionId:2 answerId:3
 			$scope.selectQuestion($scope.test.questions[1]);
 			$scope.selectAnswer($scope.test.answers[2]);
@@ -139,7 +122,7 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(3);
 		});
 
-		it('make a match -- add a match to set up for next case', function() {
+		it('make a match -- add a match to set up for next case', function () {
 			//questionId:3 answerId:4
 			$scope.selectQuestion($scope.test.questions[2]);
 			$scope.selectAnswer($scope.test.answers[3]);
@@ -151,7 +134,7 @@ describe('Matching', function() {
 			expect($scope.matches[1].answerId).toEqual(4);
 		});
 
-		it('make a match -- override a match with an existing question and answer', function() {
+		it('make a match -- override a match with an existing question and answer', function () {
 			//questionId:3 answerId:3
 			$scope.selectQuestion($scope.test.questions[2]);
 			$scope.selectAnswer($scope.test.answers[2]);
@@ -163,7 +146,7 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(3);
 		});
 
-		it('make a match -- add a match to set up for final case', function() {
+		it('make a match -- add a match to set up for final case', function () {
 			//questionId:1 answerId:2
 			$scope.selectQuestion($scope.test.questions[0]);
 			$scope.selectAnswer($scope.test.answers[1]);
@@ -177,7 +160,7 @@ describe('Matching', function() {
 
 		it('make a match -- override existing question/answer where ' +
 			'answerindex clicked > questionindex clicked' +
-			'and questionindex != answerindex', function() {
+			'and questionindex != answerindex', function () {
 
 			//reverse matches so the answer clicked exists at a later
 			//index in matches
@@ -193,7 +176,7 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(3);
 		});
 
-		it('should return the the correct progress amount of completed questions', function(){
+		it('should return the the correct progress amount of completed questions', function () {
 			//at this point --- 1 match 9 total items 160 is progress bar length
 			expect($scope.getProgressAmount()).toBe((1/9) *160);
 
@@ -202,7 +185,7 @@ describe('Matching', function() {
 			expect($scope.getProgressAmount()).toBe(0);
 		});
 
-		it('should style circles correctly', function(){
+		it('should style circles correctly', function () {
 			//id is same as question clicked
 			$scope.selectedQA[0].question = 0;
 			expect($scope.applyCircleClass($scope.questionCircles[0][0])).toBe(true);
@@ -289,7 +272,7 @@ describe('Matching', function() {
 			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, null);
 		});
 
-		it('should unapply hover selections', function() {
+		it('should unapply hover selections', function () {
 			$scope.currentPage=0;
 			$scope.questionCircles = [[]];
 			$scope.answerCircles = [[]];
@@ -311,7 +294,7 @@ describe('Matching', function() {
 			expect($scope.answerCircles[0][0].isHover).toBe(false);
 		});
 
-		it('should not shuffle if only 1 item', function(){
+		it('should not shuffle if only 1 item', function () {
 			var smallQset={};
 			angular.copy(qset, smallQset);
 			smallQset.data.items[0].items = smallQset.data.items[0].items.slice(0,1);
