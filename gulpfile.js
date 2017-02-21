@@ -16,7 +16,6 @@ var replace = require('gulp-replace');
 var replaceTask = require('gulp-replace-task');
 var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
-var less = require('gulp-less');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 
@@ -96,8 +95,6 @@ gulp.task('compress', function()
 					'!' + sourceString + buildLocation + '**/*.coffee',
 					'!' + sourceString + buildLocation + '*.scss',
 					'!' + sourceString + buildLocation + '**/*.scss',
-					'!' + sourceString + buildLocation + '*.less',
-					'!' + sourceString + buildLocation + '**/*.less',
 					'!' + sourceString + buildLocation + '*.jade',
 					'!' + sourceString + buildLocation + '**/*.jade',
 					'!' + sourceString + buildLocation + '*.zip',
@@ -467,30 +464,6 @@ gulp.task('sass-assets', function()
 				.pipe( print() )
 				.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
 });
-// Transpiles Sass into plain CSS.
-gulp.task('less', function()
-{
-	gutil.log("Less Running");
-	// Engine
-	return gulp.src(sourceString + 'src/*.less')
-		.pipe( less().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
-		.pipe( print() )
-		.pipe( autoprefix().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
-		.pipe( print() )
-		.pipe(gulp.dest(sourceString + buildLocation));
-});
-// Transpiles Sass into plain CSS.
-gulp.task('less-assets', function()
-{
-	gutil.log("Less Assets Running");
-	// Assets
-	return gulp.src([sourceString + 'src/assets/*.less', sourceString + 'src/assets/**/*.less'])
-		.pipe( less().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
-		.pipe( print() )
-		.pipe( autoprefix().on('error', function(msg) {console.log("less Fail Error: ", msg.toString());}) )
-		.pipe( print() )
-		.pipe(gulp.dest(sourceString + buildLocation + 'assets/'));
-});
 // Runs the karma tests
 gulp.task('test', function(done) {
 	if (testFull) {
@@ -539,7 +512,6 @@ gulp.task('default', function ()
 		'copy:init-spec',
 		['coffee','coffee-assets'],
 		['sass','sass-assets'],
-		['less','less-assets'],
 		'replace:materiaJS',
 		'ngAnnotate',
 		'cssmin',
@@ -580,7 +552,6 @@ gulp.task('build-readable', function()
 		'copy:init-spec',
 		['coffee','coffee-assets'],
 		['sass','sass-assets'],
-		['less','less-assets'],
 		'replace:materiaJS',
 		'replace-player-scripts',
 		'replace-creator-scripts',
@@ -625,7 +596,6 @@ exports["buildReadable"] = function(widget, full, callback) {
 		'copy:init-spec',
 		['coffee','coffee-assets'],
 		['sass','sass-assets'],
-		['less','less-assets'],
 		'replace:materiaJS',
 		'replace-player-scripts',
 		'replace-creator-scripts',
@@ -672,7 +642,6 @@ exports["gulp"] = function(widget, minify, mangle, embed, callback)
 		'copy:init-spec',
 		['coffee','coffee-assets'],
 		['sass','sass-assets'],
-		['less','less-assets'],
 		'replace:materiaJS',
 		'ngAnnotate',
 		'cssmin',
