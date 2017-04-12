@@ -82,6 +82,14 @@ Namespace('Matching').Draw = do ->
 			_game.currentGameboard = _nextBoard
 			_updatePageButtons _nextBoard
 
+			console.log(_game, _game.currentGameboard, _currentBoard, boardDelta)
+
+			Materia.Engine.postMessage({
+				type: 'changePage',
+				from: _currentBoard,
+				to: _nextBoard
+			})
+
 	# Draws a line from one column to another.
 	drawPreline = (word1, word2) ->
 		$preline = $(word1.gameboard).find('.preline line')
@@ -123,6 +131,15 @@ Namespace('Matching').Draw = do ->
 
 		word.node.className  = 'word matched'
 		word2.node.className = 'word matched'
+
+		words = [word.word, word2.word]
+		if not word.isOnLeft
+			words = words.reverse()
+
+		Materia.Engine.postMessage({
+			type: 'matchedWords',
+			words: words
+		})
 
 		updateProgress()
 
@@ -191,7 +208,13 @@ Namespace('Matching').Draw = do ->
 
 	wordUp = (word) ->
 		showCircle word.id
-		revertCircleColor word.id 
+		revertCircleColor word.id
+
+		Materia.Engine.postMessage({
+			type: 'clickWord',
+			word: word.word,
+			side: if word.isOnLeft then 'left' else 'right'
+		})
 
 		if _onSameSide(_connectWord, word)
 			if _connectWord.matched is -1 && _connectWord.id isnt word.id then fadeCircle _connectWord.id
@@ -232,6 +255,11 @@ Namespace('Matching').Draw = do ->
 	_unMatchWord = (word) ->
 		if word.matched > -1
 			matchedWord = _data.getWords()[word.matched]
+
+			Materia.Engine.postMessage({
+				type: 'unmatchedWords',
+				words: [word.word, matchedWord.word]
+			})
 
 			matchedWord.innerCircle.attr 'class', 'hidden'
 			matchedWord.hollowCircle.attr 'class', 'hidden'
