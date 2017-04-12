@@ -218,6 +218,46 @@ body {
 			font-weight   : 300;
 			overflow      : auto;
 		}
+		.audio-display {
+			vertical-align: middle;
+			width         : 220px;
+			max-width     : 390px;
+			margin        : 0 5px 0 5px;
+			font-size     : 20px;
+			height        : 45px;
+			border        : none;
+			padding       : 0px;
+			border-radius : 5px;
+			color         : #fff;
+			background    : #1ABC9C;
+			border-bottom : 3px solid #15987E;
+			font-family   : "CorbelBold", sans-serif;
+			font-weight   : 300;
+			overflow      : auto;
+			display       : inline-block;
+		}
+		.audio-image {
+			display       : inline;
+		}
+		#audio {
+			width         : 180px;
+			height        : 39px;
+			border-radius : 5px;
+		}
+		audio::-webkit-media-controls {
+			overflow : hidden !important
+		}
+		audio::-webkit-media-controls-enclosure {
+		    width       : calc(100% + 32px);
+		    margin-left : auto;
+		}
+		.add-audio {
+			width         : 32px;
+			margin-bottom : -8px;
+		}
+		.add-audio:hover {
+			cursor        : pointer;
+		}
 		.separate {
 			display: inline-block;
 			vertical-align: middle;
