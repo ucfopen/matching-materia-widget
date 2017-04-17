@@ -224,7 +224,7 @@ body {
 			max-width     : 390px;
 			margin        : 0 5px 0 5px;
 			font-size     : 20px;
-			height        : 45px;
+			height        : 85px;
 			border        : none;
 			padding       : 0px;
 			border-radius : 5px;
@@ -240,9 +240,40 @@ body {
 			display       : inline;
 		}
 		#audio {
+			display       : block;
 			width         : 180px;
 			height        : 39px;
-			border-radius : 5px;
+		}
+		.add-desc {
+			margin-top    : 12px;
+			font-size     : 17px;
+			font-family   : Arial;
+			cursor        : pointer;
+		}
+		.desc-input {
+			width         : 170px;
+			height        : 25px;
+			border        : none;
+			font-size     : 17px;
+			font-family   : CorbelBold, sans-serif;
+			background    : #1ABC9C;
+			color         : #fff;
+			overflow      : hidden;
+		}
+		/* Change Placeholder Text Color */
+		::-webkit-input-placeholder { /* Chrome */
+		  color: #fff;
+		}
+		:-ms-input-placeholder { /* IE 10+ */
+		  color: #fff;
+		}
+		::-moz-placeholder { /* Firefox 19+ */
+		  color: #fff;
+		  opacity: 1;
+		}
+		:-moz-placeholder { /* Firefox 4 - 18 */
+		  color: #fff;
+		  opacity: 1;
 		}
 		audio::-webkit-media-controls {
 			overflow : hidden !important
