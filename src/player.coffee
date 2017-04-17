@@ -10,7 +10,7 @@ item ids are filled in
 ###
 Matching= angular.module 'matchingPlayer', []
 
-Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeout) ->
+Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
 	$scope.title = ''
 
 	$scope.items = []
@@ -68,11 +68,17 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 				_itemIndex = 0
 				_pageIndex++
 
+			wrapQuestionUrl = ->
+				console.log($scope.pages[_pageIndex])
+				if item.assets[0] != 0
+					return $sce.trustAsResourceUrl(item.assets[0])
+
 			$scope.pages[_pageIndex].questions.push {
 				text: item.questions[0].text
 				id: item.id
 				pageId: _pageIndex
 				type: 'question'
+				asset: wrapQuestionUrl()
 			}
 
 			$scope.questionCircles[_pageIndex].push {
@@ -85,11 +91,16 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 				color: 'c0'
 			}
 
+			wrapAnswerUrl = ->
+				if item.assets[1] != 0
+					return $sce.trustAsResourceUrl(item.assets[1])
+
 			$scope.pages[_pageIndex].answers.push {
 				text: item.answers[0].text
 				id: item.id
 				pageId: _pageIndex
 				type: 'answer'
+				asset: wrapAnswerUrl()
 			}
 
 			$scope.answerCircles[_pageIndex].push {
@@ -124,6 +135,14 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 		$timeout ->
 			$scope.pageAnimate= false
 		, ANIMATION_DURATION
+
+	$scope.checkForQuestionAudio = (index) ->
+		if $scope.pages[0].questions[index].asset != undefined
+			return true
+
+	$scope.checkForAnswerAudio = (index) ->
+		if $scope.pages[0].answers[index].asset != undefined
+			return true
 
 	_pushMatch = () ->
 		$scope.matches.push {

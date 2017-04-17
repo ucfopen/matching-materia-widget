@@ -110,6 +110,14 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		else
 			return $scope.widget.wordPairs[index].media[which] != 0
 
+	$scope.checkMediaDesc = (index, which) ->
+		if which == 0
+			if $scope.widget.wordPairs[index].audioQuestionDesc != ''
+				return true
+		else
+			if $scope.widget.wordPairs[index].audioAnswerDesc != ''
+				return true
+
 	# View actions
 	$scope.setTitle = ->
 		$scope.widget.title = $scope.introTitle or $scope.widget.title
