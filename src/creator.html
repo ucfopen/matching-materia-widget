@@ -39,12 +39,12 @@
 			</div>
 			<div id='question-container'>
 				<div class='question' ng-repeat="pair in widget.wordPairs">
-					<textarea class='question-text' ng-hide="checkMedia($index, 0)" ng-model="pair.question" ng-style='autoSize(pair)' focus-me='true' tabindex='{{$index+1}}'></textarea>
-					<div class="audio-display" ng-show="checkMedia($index, 0)">
+					<textarea class='question-text' ng-hide="checkMedia($index, 0)" ng-model="pair.question" ng-style='autoSize(pair, false)' focus-me='true' tabindex='{{$index+1}}'></textarea>
+					<div class="audio-display" ng-show="checkMedia($index, 0)" ng-style='autoSize(pair, true)'>
 						<audio id="audio" controls="controls">
 							<source id="audio-source" ng-src="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}" type="audio/mpeg">
 						</audio>
-						<textarea type="text" class="desc-input" placeholder="Add Audio Description" ng-model="pair.question"></textarea>
+						<textarea type="text" class="desc-input" placeholder="Add Audio Description" ng-model="pair.question" ng-style='autoSize(pair, false)' focus-me="checkMedia($index, 0)"></textarea>
 					</div>
 					<div class="audio-image" ng-init="imgSrcQ='assets/add_audio.svg'" ng-mouseover="imgSrcQ='assets/add_audio_hover.svg'" ng-mouseout="imgSrcQ='assets/add_audio.svg'">
 						<img class="add-audio" ng-src="{{imgSrcQ}}" ng-click="beginMediaImport($index, 0); checkMedia($index, 0)">
@@ -53,12 +53,12 @@
 					<div class="audio-image" ng-init="imgSrcA='assets/add_audio.svg'" ng-mouseover="imgSrcA='assets/add_audio_hover.svg'" ng-mouseout="imgSrcA='assets/add_audio.svg'">
 						<img class="add-audio" ng-src="{{imgSrcA}}" ng-click="beginMediaImport($index, 1); checkMedia($index, 1)">
 					</div>
-					<textarea class='answer-text' ng-hide="checkMedia($index, 1)" ng-enter="addWordPair()" ng-style='autoSize(pair)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
-					<div class="audio-display" ng-show="checkMedia($index, 1)">
+					<textarea class='answer-text' ng-hide="checkMedia($index, 1)" ng-enter="addWordPair()" ng-style='autoSize(pair, false)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
+					<div class="audio-display" ng-show="checkMedia($index, 1)" ng-style='autoSize(pair, true)'>
 						<audio id="audio" controls="controls">
 							<source id="audio-source" ng-src="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}" type="audio/mpeg">
 						</audio>
-						<textarea type="text" class="desc-input" placeholder="Add Audio Description" ng-model="pair.answer"></textarea>
+						<textarea type="text" class="desc-input" placeholder="Add Audio Description" ng-model="pair.answer" ng-style='autoSize(pair, false)' focus-me="checkMedia($index, 1)"></textarea>
 					</div>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
