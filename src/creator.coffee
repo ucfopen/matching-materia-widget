@@ -127,11 +127,14 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 	$scope.hideCover = ->
 		$scope.showTitleDialog = $scope.showIntroDialog = false
 
-	$scope.autoSize = (pair) ->
+	$scope.autoSize = (pair, audio) ->
 		question = pair.question or ''
 		answer = pair.answer or ''
 		len = if question.length > answer.length then question.length else answer.length
-		size = if len > 15 then 30 + len * 1.1 else 25
+		if audio == true
+			size = if len > 15 then 85 + len * 1.1 else 85
+		else
+			size = if len > 15 then 25 + len * 1.1 else 25
 		height: size + 'px'
 
 	unwrapQuestionValue = (counter) ->
