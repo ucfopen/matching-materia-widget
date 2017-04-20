@@ -179,9 +179,9 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 	checkForEmptyInputs = ->
 		wordPairs = $scope.widget.wordPairs
 		for i in [0..wordPairs.length-1]
-			if (wordPairs[i].media[0] == 0) && (wordPairs[i].question == null || wordPairs[i].question == '')
+			if wordPairs[i].media[0] is 0 and (wordPairs[i].question is null or wordPairs[i].question is '')
 				return false
-			else if (wordPairs[i].media[1] == 0) && (wordPairs[i].answer == null || wordPairs[i].answer == '')
+			else if wordPairs[i].media[1] is 0 and (wordPairs[i].answer is null or wordPairs[i].answer is '')
 				return false
 		return true
 
