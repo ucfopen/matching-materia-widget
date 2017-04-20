@@ -69,7 +69,6 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				_pageIndex++
 
 			wrapQuestionUrl = ->
-				console.log($scope.pages[_pageIndex])
 				if item.assets[0] != 0
 					return $sce.trustAsResourceUrl(item.assets[0])
 
@@ -350,6 +349,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items
+
 		for i in [0..qsetItems.length-1]
 			#get id of the current qset item use that as the 1st argument
 			#find the id of that qset item in the matches object array
@@ -358,9 +358,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				matchedItemAnswerId = matchedItem[0].answerId
 				#get the answer of that match at that question id and use that as the 2nd argument
 				mappedQsetItemText = qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].answers[0].text
+				mappedQsetAudioString = qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets[2]
 			else
 				mappedQsetItemText = null
-			Materia.Score.submitQuestionForScoring(qsetItems[i].id, mappedQsetItemText)
+			Materia.Score.submitQuestionForScoring(qsetItems[i].id, mappedQsetItemText, mappedQsetAudioString)
 		Materia.Engine.end true
 
 	_shuffle = (qsetItems) ->
