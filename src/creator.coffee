@@ -47,6 +47,8 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 
 	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
 
+	$scope.removeAudio = (index, which) -> $scope.widget.wordPairs[index].media.splice(which, 1, 0)
+
 	# Public methods
 	$scope.initNewWidget = (widget, baseUrl) ->
 		$scope.$apply ->
@@ -64,7 +66,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			try
 				return [$sce.trustAsResourceUrl(_items[counter].assets[0]), 0]
 			catch error
-				return 0
+				return [0,0]
 
 		$scope.$apply ->
 			$scope.widget.title     = title
@@ -72,7 +74,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, wrapInitMedia(i), _items[i].id ) for i in [0.._items.length-1]
 
 	$scope.onSaveClicked = ->
-		if _buildSaveData()
+		if _buildSaveData() && checkForEmptyInputs()
 			Materia.CreatorCore.save $scope.widget.title, _qset
 		else Materia.CreatorCore.cancelSave 'Widget not ready to save.'
 
@@ -137,6 +139,8 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			size = if len > 15 then 25 + len * 1.1 else 25
 		height: size + 'px'
 
+
+
 	unwrapQuestionValue = (counter) ->
 		try
 			return $scope.widget.wordPairs[counter].media[0].$$unwrapTrustedValue()
@@ -149,6 +153,39 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		catch error
 			return 0
 
+	# the following 3 functions give a unique id to answers with audio that doesn't have a description
+	s4 = ->
+		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
+
+	guid = ->
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+
+	assignString = (counter) ->
+			answer = $scope.widget.wordPairs[counter].answer
+			question = $scope.widget.wordPairs[counter].question
+			questionAudio = $scope.widget.wordPairs[counter].media[0]
+			answerAudio = $scope.widget.wordPairs[counter].media[1]
+			# checks if there are wordpairs with audio that don't have a description
+			# if any exist the description placeholder is set to Audio
+			if questionAudio != 0 && (question == null || question == '')
+				$scope.widget.wordPairs[counter].question = 'Audio'
+				return guid()
+			else if answerAudio != 0 && (answer == null || answer == '')
+				$scope.widget.wordPairs[counter].answer = 'Audio'
+				return guid()
+
+	# checks for any blank question and answer fields
+	# returns false if there are blanks so that the widget cannot be saved
+	checkForEmptyInputs = ->
+		wordPairs = $scope.widget.wordPairs
+		for i in [0..wordPairs.length-1]
+			if (wordPairs[i].media[0] == 0) && (wordPairs[i].question == null || wordPairs[i].question == '')
+				return false
+			else if (wordPairs[i].media[1] == 0) && (wordPairs[i].answer == null || wordPairs[i].answer == '')
+				return false
+		return true
+
+
 	# Private methods
 	_buildSaveData = ->
 		okToSave = true
@@ -157,12 +194,13 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			name: "null"
 			items: []
 		wordPairs  = $scope.widget.wordPairs
-		_qset.items[0].items.push( _process wordPairs[i],unwrapQuestionValue(i),unwrapAnswerValue(i) ) for i in [0..wordPairs.length-1]
+
+		_qset.items[0].items.push( _process wordPairs[i],unwrapQuestionValue(i),unwrapAnswerValue(i),assignString(i)) for i in [0..wordPairs.length-1]
 		okToSave = false if $scope.widget.title is ''
 		okToSave
 
 	# Get each pair's data from the controller and organize it into Qset form.
-	_process = (wordPair, questionMedia, answerMedia) ->
+	_process = (wordPair, questionMedia, answerMedia, audioString) ->
 		questions: [
 			text: wordPair.question
 		]
@@ -173,7 +211,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		]
 		type: 'QA'
 		id: wordPair.id
-		assets: [questionMedia,answerMedia]
+		assets: [questionMedia,answerMedia,audioString]
 
 	Materia.CreatorCore.start $scope
 ]

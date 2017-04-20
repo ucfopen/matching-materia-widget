@@ -48,8 +48,14 @@ class Score_Modules_Matching extends Score_Module
 		{
 			$question = $this->questions[$log->item_id];
 			// need to check if the qset allows for case sensitive answers
-			$t1 = $log->text;
-			$t2 = $question->answers[0]['text'];
+			if($log->value != '')
+			{
+				$t1 = $log->value;
+				$t2 = $question->assets[2];
+			} else {
+				$t1 = $log->text;
+				$t2 = $question->answers[0]['text'];
+			}
 
 			// remove weird characters to make sure we're matching on normal characters that wont get lost
 			$valid_characters = '/[^\w!@#$%^&*?=\-+<>,\.;:"\'\(\) \t|]/';
