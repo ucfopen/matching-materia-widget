@@ -140,7 +140,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		height: size + 'px'
 
 
-
+	# safely unwraps media content to allow it to be pushed to the qset
 	unwrapQuestionValue = (counter) ->
 		try
 			return $scope.widget.wordPairs[counter].media[0].$$unwrapTrustedValue()
@@ -153,7 +153,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		catch error
 			return 0
 
-	# the following 3 functions give a unique id to answers with audio that doesn't have a description
+	# the following 3 functions give a unique id to answers with audio that don't have a description
 	s4 = ->
 		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
 
@@ -174,7 +174,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 				$scope.widget.wordPairs[counter].answer = 'Audio'
 				return guid()
 
-	# checks for any blank question and answer fields
+	# checks for any blank question/answer fields
 	# returns false if there are blanks so that the widget cannot be saved
 	checkForEmptyInputs = ->
 		wordPairs = $scope.widget.wordPairs
@@ -212,7 +212,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		type: 'QA'
 		id: wordPair.id
 		assets: [questionMedia,answerMedia,audioString]
-
+		# questionMedia and answerMedia value will be 0 or 1 depending on if the question/answer has media or not
 	Materia.CreatorCore.start $scope
 ]
 
