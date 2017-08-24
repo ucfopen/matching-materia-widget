@@ -61,8 +61,8 @@ describe('Matching', function(){
 		it('should make an existing widget', function(){
 			$scope.initExistingWidget('matcher', widgetInfo, qset.data);
 			expect($scope.widget.title).toEqual('matcher');
-			expect($scope.widget.wordPairs[0]).toEqual({ question: 'cambiar', answer: 'to change', id: ''});
-			expect($scope.widget.wordPairs[1]).toEqual({ question: 'preferir', answer: 'to prefer', id: ''});
+			expect($scope.widget.wordPairs[0]).toEqual({ question: 'cambiar', answer: 'to change', media: [0,0], id: 1});
+			expect($scope.widget.wordPairs[1]).toEqual({ question: 'preferir', answer: 'to prefer', media: [0,0], id: 2});
 			initialwordPairs = JSON.parse(JSON.stringify( $scope.widget.wordPairs));
 		});
 
@@ -88,7 +88,7 @@ describe('Matching', function(){
 
 		it('should properly remove word pair', function(){
 			$scope.removeWordPair(0);
-			expect($scope.widget.wordPairs[0]).toEqual({question: 'preferir', answer: 'to prefer', id: ''});
+			expect($scope.widget.wordPairs[0]).toEqual({question: 'preferir', answer: 'to prefer', media: [0,0], id: ''});
 		});
 
 		it('should properly add word pairs', function(){
@@ -96,12 +96,15 @@ describe('Matching', function(){
 			$scope.widget.wordPairs = [];
 			//if fields on word pairs are empty- default values are given
 			$scope.addWordPair();
-			expect($scope.widget.wordPairs[0]).toEqual({question: null, answer: null, id: ''});
+			expect($scope.widget.wordPairs[0]).toEqual({question: null, answer: null, media: [0,0], id: ''});
 			$scope.addWordPair("question", "answer");
-			expect($scope.widget.wordPairs[1]).toEqual({question: "question", answer: "answer", id: ''});
+			expect($scope.widget.wordPairs[1]).toEqual({question: "question", answer: "answer", media: [0,0], id: ''});
 			//cover the case of an id passed in
 			$scope.addWordPair("question", "answer", 'id');
-			expect($scope.widget.wordPairs[2]).toEqual({question: "question", answer: "answer", id: 'id'});
+			expect($scope.widget.wordPairs[2]).toEqual({question: "question", answer: "answer", media: [0,0], id: ''});
+			//cover the case of media passed in
+			$scope.addWordPair("question", "answer", [1,1], 'id');
+			expect($scope.widget.wordPairs[3]).toEqual({question: "question", answer: "answer", media: [1,1], id: ''});
 		});
 
 		it('should import questions properly', function(){
