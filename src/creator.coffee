@@ -85,7 +85,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 
 	$scope.beginMediaImport = (index, which) ->
 		Materia.CreatorCore.showMediaImporter($scope.acceptedMediaTypes)
-
 		audioRef[0] = index
 		audioRef[1] = which
 
