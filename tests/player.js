@@ -1,6 +1,6 @@
 describe('Matching', function() {
 
-	var widgetInfo = window.__demo__['src/devmateria_demo'];
+	var widgetInfo = window.__demo__['src/demo'];
 	var qset = widgetInfo.qset;
 	var $scope = {};
 	var ctrl = {};
@@ -18,11 +18,11 @@ describe('Matching', function() {
 			testQIndex = $scope.pages[0].questions.map(function (item) {
 				return item.id
 			}).indexOf(i);
-			$scope.test.questions.push($scope.pages[0].questions[testQIndex]);
+			$scope.test.questions.push($scope.pages[0].questions[i]);
 			testAIndex = $scope.pages[0].answers.map(function (item) {
 				return item.id
 			}).indexOf(i);
-			$scope.test.answers.push($scope.pages[0].answers[testAIndex]);
+			$scope.test.answers.push($scope.pages[0].answers[i]);
 		}
 	}
 
@@ -174,6 +174,11 @@ describe('Matching', function() {
 			// [1,3]
 			expect($scope.matches[0].questionId).toEqual(1);
 			expect($scope.matches[0].answerId).toEqual(3);
+		});
+
+		it('should check for question/answer audio correctly', function() {
+			$scope.pages[0].questions[0].asset = 'test.mp3';
+			$scope.checkForQuestionAudio();
 		});
 
 		it('should return the the correct progress amount of completed questions', function () {

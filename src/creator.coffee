@@ -100,24 +100,14 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		audioAmount = audioTags.length
 		count = 0
 
-		for count in [0..audioAmount]
+		for count in [0..audioAmount-1]
 			# if statement used here to only load the audio tags that have a src
 			if audioTags[count] != undefined
 				audioTags[count].load()
+		return;
 
 	$scope.checkMedia = (index, which) ->
-		if $scope.widget.wordPairs[index].media == 0
-			return false
-		else
 			return $scope.widget.wordPairs[index].media[which] != 0
-
-	$scope.checkMediaDesc = (index, which) ->
-		if which == 0
-			if $scope.widget.wordPairs[index].audioQuestionDesc != ''
-				return true
-		else
-			if $scope.widget.wordPairs[index].audioAnswerDesc != ''
-				return true
 
 	# View actions
 	$scope.setTitle = ->
@@ -184,7 +174,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 				return false
 		return true
 
-
 	# Private methods
 	_buildSaveData = ->
 		okToSave = true
@@ -211,7 +200,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		type: 'QA'
 		id: wordPair.id
 		assets: [questionMedia,answerMedia,audioString]
-		# questionMedia and answerMedia value will be 0 or 1 depending on if the question/answer has media or not
 	Materia.CreatorCore.start $scope
 ]
 
