@@ -61,8 +61,8 @@ describe('Matching', function(){
 		it('should make an existing widget', function(){
 			$scope.initExistingWidget('matcher', widgetInfo, qset.data);
 			expect($scope.widget.title).toEqual('matcher');
-			expect($scope.widget.wordPairs[0]).toEqual({ question: 'cambiar', answer: 'to change', media: [0,0], id: 1});
-			expect($scope.widget.wordPairs[1]).toEqual({ question: 'preferir', answer: 'to prefer', media: [0,0], id: 2});
+			expect($scope.widget.wordPairs[0]).toEqual({ question: 'cambiar', answer: 'to change', media: [0,0], id: ''});
+			expect($scope.widget.wordPairs[1]).toEqual({ question: 'preferir', answer: 'to prefer', media: [0,0], id: ''});
 			initialwordPairs = JSON.parse(JSON.stringify( $scope.widget.wordPairs));
 		});
 
@@ -77,9 +77,36 @@ describe('Matching', function(){
 			expect(testQuestion.answers[0].text).toBe('to change');
 		});
 
-		it('should cancel saving if something is invalid', function(){
+		it('should cancel saving if widget title is invalid', function(){
+			$scope.addWordPair("question", "", [0,"answer.mp3"]);
+			$scope.addWordPair("", "answer", ["question.mp3",0]);
+
 			//unset the widget title
 			$scope.widget.title = '';
+			//the error message should be what we expect it to be
+			expect(function(){
+				$scope.onSaveClicked();
+			}).toThrow(new Error('Widget not ready to save.'));
+		});
+
+		it('should cancel saving if question text and question audio are blank', function(){
+			//set title again so that the widget fails saving because of
+			//question or answer text and audio being blank
+			$scope.widget.title = 'Widget Title';
+			//add wordpair that has blank question text and no question audio 
+			$scope.addWordPair("", "answer", [0,0]);
+			//the error message should be what we expect it to be
+			expect(function(){
+				$scope.onSaveClicked();
+			}).toThrow(new Error('Widget not ready to save.'));
+		});
+
+		it('should cancel saving if answer text and answer audio are blank', function(){
+			//remove previously added wordPair so that the widget fails saving on
+			//the new wordPair we create that has no answer text/audio
+			$scope.widget.wordPairs.splice(11, 1);
+			//add wordpair that has blank answer text and no answer audio 
+			$scope.addWordPair("question", "", [0,0]);
 			//the error message should be what we expect it to be
 			expect(function(){
 				$scope.onSaveClicked();
@@ -91,6 +118,11 @@ describe('Matching', function(){
 			expect($scope.widget.wordPairs[0]).toEqual({question: 'preferir', answer: 'to prefer', media: [0,0], id: ''});
 		});
 
+		it('should properly remove audio', function(){
+			$scope.removeAudio(0,0);
+			expect($scope.widget.wordPairs[0].media[0]).toEqual(0);
+		});
+
 		it('should properly add word pairs', function(){
 			//clear the current word pairs accumulated from previous tests
 			$scope.widget.wordPairs = [];
@@ -100,21 +132,37 @@ describe('Matching', function(){
 			$scope.addWordPair("question", "answer");
 			expect($scope.widget.wordPairs[1]).toEqual({question: "question", answer: "answer", media: [0,0], id: ''});
 			//cover the case of an id passed in
-			$scope.addWordPair("question", "answer", 'id');
-			expect($scope.widget.wordPairs[2]).toEqual({question: "question", answer: "answer", media: [0,0], id: ''});
+			$scope.addWordPair("question", "answer", [0,0], 1);
+			expect($scope.widget.wordPairs[2]).toEqual({question: "question", answer: "answer", media: [0,0], id: 1});
 			//cover the case of media passed in
-			$scope.addWordPair("question", "answer", [1,1], 'id');
-			expect($scope.widget.wordPairs[3]).toEqual({question: "question", answer: "answer", media: [1,1], id: ''});
+			$scope.addWordPair("", "", [1,1]);
+			expect($scope.widget.wordPairs[3]).toEqual({question: "", answer: "", media: [1,1], id: ''});
 		});
 
 		it('should import questions properly', function(){
 			var importing = qset.data.items[0].items;
 			//clear the current word pairs accumulated from previous tests
 			$scope.widget.wordPairs = [];
+
 			//verify we have a clean slate to test this function
 			expect($scope.widget.wordPairs).toEqual([]);
 			$scope.onQuestionImportComplete(importing);
 			expect($scope.widget.wordPairs).toEqual(initialwordPairs);
+		});
+
+		it('should import media properly', function(){
+			var media = [{id: "audio", title: "test.mp3", file_size: "434710"}];
+			$scope.checkMedia(0,0);
+			$scope.beginMediaImport(0,0);
+			//create and audio tag with a src
+			var newAudio = document.createElement("AUDIO");
+			var newSource = document.createElement("SOURCE");
+			newAudio.appendChild(newSource);
+			newSource.setAttribute("ng-src", "test.mp3");
+			document.body.appendChild(newAudio);
+			audioTags = document.getElementsByTagName('audio');
+			//test initial media importerk
+			$scope.onMediaImportComplete(media);
 		});
 
 		it('should autosize correctly', function () {
@@ -127,14 +175,18 @@ describe('Matching', function(){
 			//test given to short pairs
 			expect(smallHeight).toEqual({height: '25px'});
 			//test given a short and a long pair
-			//javascript floating point multiplication makes 50.9 a weird number
-			expect(bigHeight).toEqual({height: greaterThan15chars.length * 1.1 + 30 + 'px'});
+			//javascript floating point multiplication makes 45.9 a weird number
+			expect(bigHeight).toEqual({height: greaterThan15chars.length * 1.1 + 25 + 'px'});
 			//test if question given empty value
 			expect($scope.autoSize({question: '', answer: 'answer'})).toEqual({height: '25px'});
 			//test if answer given empty value
 			expect($scope.autoSize({question: 'question', answer: ''})).toEqual({height: '25px'});
 			//test if both question and answer are given empty values
 			expect($scope.autoSize({question: '', answer: ''})).toEqual({height: '25px'});
+			//test if audio is true
+			expect($scope.autoSize({question: '', answer: ''}, true)).toEqual({height: '85px'});
+			//test if audio is true and there are more than 15 characters
+			expect($scope.autoSize({question: 'thisIsNineteenChars', answer: 'thisIsNineteenChars'}, true)).toEqual({height: 85 + greaterThan15chars.length * 1.1 + 'px'});
 		});
 	});
 });

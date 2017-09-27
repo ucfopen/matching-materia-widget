@@ -494,7 +494,7 @@ gulp.task('default', function ()
 {
 	sourceString = "";
 
-    buildLocation = '.build/';
+    buildLocation = 'build/';
 
 	console.log("EMBEDDING: ", Embedding);
 	console.log("MINIFYING: ", Minifying);
