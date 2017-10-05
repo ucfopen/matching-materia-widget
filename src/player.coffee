@@ -165,6 +165,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			#check if the id already exists in matches
 			clickQuestionId = $scope.selectedQuestion.id
 			clickAnswerId = $scope.selectedAnswer.id
+
 			#increment color cycle
 			colorNumber = (colorNumber+1)%NUM_OF_COLORS
 			if colorNumber == 0
@@ -280,7 +281,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 		elementId = hoverItem.id
 		#get the index of the item in the current page by finding it with its id
-		endIndex = $scope.pages[$scope.currentPage].answers.map((element) -> element.id).indexOf elementId
+		endIndex = $scope.pages[$scope.currentPage].answers.map((element) -> 
+			if(element != undefined)
+				element.id
+			).indexOf elementId
 
 		if $scope.prelines.length > 0
 			$scope.prelines = []
@@ -307,7 +311,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 		elementId = hoverItem.id
 		#get the index of the item in the current page by finding it with its id
-		endIndex = $scope.pages[$scope.currentPage].questions.map((element) -> element.id).indexOf elementId
+		endIndex = $scope.pages[$scope.currentPage].questions.map((element) ->
+			if(element != undefined)
+				element.id
+		).indexOf elementId
 
 		if $scope.prelines.length > 0
 			$scope.prelines = []

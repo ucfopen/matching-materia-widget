@@ -37,6 +37,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 	$scope.widget =
 		title     : "My Matching widget"
 		wordPairs : []
+		uniqueIds : []
 
 	$scope.acceptedMediaTypes = ['mp3']
 	audioRef = []
@@ -142,26 +143,40 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		catch error
 			return 0
 
-	# the following 3 functions give a unique id to answers with audio that don't have a description
-	s4 = ->
-		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
+	checkIds = (currentId, idList) ->
+		# prevents duplicate ids
+		intCheck = $scope.widget.uniqueIds.indexOf(uniqueId)
+		while(intCheck > -1)
+			uniqueId = Math.floor(Math.random() * 10000)
+			intCheck = $scope.widget.uniqueIds.indexOf(uniqueId)
+		$scope.widget.uniqueIds.push(uniqueId)
 
-	guid = ->
-		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+		if(uniqueId == undefined)
+			return currentId.toString()
+		else
+			return uniqueId.toString()
 
 	assignString = (counter) ->
 			answer = $scope.widget.wordPairs[counter].answer
 			question = $scope.widget.wordPairs[counter].question
 			questionAudio = $scope.widget.wordPairs[counter].media[0]
 			answerAudio = $scope.widget.wordPairs[counter].media[1]
+
+			# create unique id
+			uniqueId = Math.floor(Math.random() * 10000)
+
 			# checks if there are wordpairs with audio that don't have a description
 			# if any exist the description placeholder is set to Audio
 			if questionAudio != 0 && (question == null || question == '')
 				$scope.widget.wordPairs[counter].question = 'Audio'
-				return guid()
+				$scope.widget.wordPairs[counter].question = 'Audio'
+				return checkIds(uniqueId, $scope.widget.uniqueIds)
+			else if questionAudio != 0 && (question == null || question == '')
+				$scope.widget.wordPairs[counter].question = 'Audio'
+				return checkIds(uniqueId, $scope.widget.uniqueIds)
 			else if answerAudio != 0 && (answer == null || answer == '')
 				$scope.widget.wordPairs[counter].answer = 'Audio'
-				return guid()
+				return checkIds(uniqueId, $scope.widget.uniqueIds)
 
 	# checks for any blank question/answer fields
 	# returns false if there are blanks so that the widget cannot be saved

@@ -41,7 +41,7 @@
 						<div class="word-text">
 							<span class="text-wrapper">{{question.text}}</span>
 						</div>
-						<audio controls id="audio" ng-show="{{checkForQuestionAudio($index)}}">
+						<audio controls id="audio" preload="none" ng-show="{{checkForQuestionAudio($index)}}">
 							<source ng-src="{{question.asset}}" type="audio/mpeg">
 						</audio>
 
@@ -119,7 +119,7 @@
 					<div class="word-text">
 						<span class="text-wrapper">{{answer.text}}</span>
 					</div>
-					<audio controls id="audio" ng-show="{{checkForAnswerAudio($index)}}">
+					<audio controls id="audio" preload="none" ng-show="{{checkForAnswerAudio($index)}}">
 						<source ng-src="{{answer.asset}}" type="audio/mpeg">
 					</audio>
 
