@@ -15,14 +15,25 @@ describe('Matching', function() {
 		//set page 1 questions and answers in order of ids
 		var i, testQIndex, testAIndex;
 		for (i = 1; i <= 5; i++) {
+			$scope.pages[0].questions[i].id = i;
 			testQIndex = $scope.pages[0].questions.map(function (item) {
 				return item.id
 			}).indexOf(i);
 			$scope.test.questions.push($scope.pages[0].questions[i]);
+			$scope.pages[0].answers[i].id = i;
 			testAIndex = $scope.pages[0].answers.map(function (item) {
 				return item.id
 			}).indexOf(i);
 			$scope.test.answers.push($scope.pages[0].answers[i]);
+		}
+	}
+
+	function setupQAIds() {
+		//Add ids to the qset
+		var i = 0;
+		for (var item in qset.data.items[0].items) {
+			qset.data.items[0].items[i].id = i;
+			i++;
 		}
 	}
 
@@ -50,6 +61,12 @@ describe('Matching', function() {
 		});
 
 		it('should start properly', function () {
+			setupQAIds();
+
+			//add audio placeholder for an answer/question
+			qset.data.items[0].items[0].assets[0] = "test";
+			qset.data.items[0].items[0].assets[1] = "test";
+
 			$scope.start(widgetInfo, qset.data);
 			expect($scope.title).toBe('Spanish Verbs');
 			expect($scope.totalPages).toBe(2);
@@ -177,8 +194,13 @@ describe('Matching', function() {
 		});
 
 		it('should check for question/answer audio correctly', function() {
-			$scope.pages[0].questions[0].asset = 'test.mp3';
-			$scope.checkForQuestionAudio();
+			$scope.pages[0].questions[0].asset = "test";
+			$scope.pages[0].answers[0].asset = "test";
+
+			$scope.checkForQuestionAudio(0);
+			$scope.checkForQuestionAudio(2);
+			$scope.checkForAnswerAudio(0);
+			$scope.checkForAnswerAudio(2);
 		});
 
 		it('should return the the correct progress amount of completed questions', function () {
@@ -265,11 +287,17 @@ describe('Matching', function() {
 			$scope.selectedQA[0].answers = 0;
 			$scope.drawPrelineToLeft($scope.pages[0].questions[0]);
 			expect($scope.prelines.length).toBe(1);
+
+			//should only have 1 preline at a time
+			$scope.selectedQA[0].answers = 0;
+			$scope.drawPrelineToLeft($scope.pages[0].questions[0]);
+			expect($scope.prelines.length).toBe(1);
 		});
 
 		it('should submit questions correctly', function () {
 			$scope.matches = [];
 			$scope.matches.push({questionId:1, answerId: 1});
+
 			$scope.submit();
 			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, 'to change');
 			$scope.matches = [];

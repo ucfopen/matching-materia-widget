@@ -80,7 +80,6 @@ describe('Matching', function(){
 		it('should cancel saving if widget title is invalid', function(){
 			$scope.addWordPair("question", "", [0,"answer.mp3"]);
 			$scope.addWordPair("", "answer", ["question.mp3",0]);
-
 			//unset the widget title
 			$scope.widget.title = '';
 			//the error message should be what we expect it to be
@@ -151,18 +150,37 @@ describe('Matching', function(){
 		});
 
 		it('should import media properly', function(){
-			var media = [{id: "audio", title: "test.mp3", file_size: "434710"}];
+			//create fake media object
+			var media = [{id: "audioTest"}];
+			//check if media exists and begin import
 			$scope.checkMedia(0,0);
 			$scope.beginMediaImport(0,0);
+
 			//create and audio tag with a src
 			var newAudio = document.createElement("AUDIO");
 			var newSource = document.createElement("SOURCE");
+			//attach load function to audio tag
+			newAudio.load = function() {};
 			newAudio.appendChild(newSource);
 			newSource.setAttribute("ng-src", "test.mp3");
 			document.body.appendChild(newAudio);
-			audioTags = document.getElementsByTagName('audio');
-			//test initial media importerk
+
+			var newAudioTwo = document.createElement("AUDIO");
+			var newSourceTwo = document.createElement("SOURCE");
+			//attach load function to audio tag
+			newAudioTwo.load = function() {};
+			newAudioTwo.appendChild(newSourceTwo);
+			newSourceTwo.setAttribute("ng-src", "test2.mp3");
+			document.body.appendChild(newAudioTwo);
+			//create spies to ensure the load function is being called
+			audioSpy = spyOn(newAudio, 'load').and.callThrough();
+			audioSpyTwo = spyOn(newAudioTwo, 'load').and.callThrough();
+
+			//complete the media import
 			$scope.onMediaImportComplete(media);
+
+			expect(audioSpy.calls.any()).toEqual(true);
+			expect(audioSpyTwo.calls.any()).toEqual(true);
 		});
 
 		it('should autosize correctly', function () {
