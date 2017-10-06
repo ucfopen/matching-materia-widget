@@ -164,7 +164,7 @@ body {
 	margin   : 20px 0 70px 0;
 	perspective : 800px;
 	transform-origin : 50% 100%;
-	
+
 	.titles h1 {
 		display   : inline-block;
 		padding   : 10px 0 0 0;
@@ -172,7 +172,18 @@ body {
 		font-family: 'Lato', serif;
 		font-weight: 300;
 		font-size : 19px;
-		&:nth-child(1) { margin-right : 400px; }
+		width: 220px;
+		text-align: center;
+	}
+
+	.titles .separate {
+		display: inline-block;
+		opacity: 0;
+		vertical-align: middle;
+		min-width: 60px;
+		width: 25%;
+		position: relative;
+		margin: 2px 25px;
 	}
 
 	.pair-count {
@@ -185,8 +196,8 @@ body {
 		white-space    : nowrap;
 		margin         : 15px 0 0 0;
 		transform-style : preserve-3d;
-		&.ng-enter, 
-		&.ng-leave { 
+		&.ng-enter,
+		&.ng-leave {
 			transition : 1025ms cubic-bezier(0.190, 1.000, 0.220, 1.000) all;
 		}
 		&.ng-leave.ng-leave-active,
@@ -223,7 +234,8 @@ body {
 			vertical-align: middle;
 			background: #5d666f;
 			height: 5px;
-			width: 60px;
+			min-width: 60px;
+			width: 25%;
 			border-radius: 5px;
 			position: relative;
 			margin: 2px 20px;
