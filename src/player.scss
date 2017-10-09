@@ -168,6 +168,16 @@ html, body {
           opacity: .6;
         }
       }
+      &:hover > .wrap > .popup {
+        &.shown {
+          clear: both;
+          opacity: .85;
+          pointer-events: all;
+          transition: 300ms;
+          transition-delay: 400ms;
+          display: block;
+        }
+      }
       .word-text {
         z-index          : -3;
         position         : absolute;
@@ -192,6 +202,9 @@ html, body {
             font-size    :17px;
           }
         }
+        .long {
+          font-size:17px;
+        }
         .text-wrapper-dummy {
           position         : absolute;
           display          : block;
@@ -201,7 +214,6 @@ html, body {
           white-space      : nowrap;
         }
         .expand {
-          display        : none;
           position       : absolute;
           width          : 12px;
           height         : 11px;
@@ -226,6 +238,9 @@ html, body {
             z-index: -1;
           }
         }
+        .noExpand {
+          display: none;
+        }
       }
       .popup {
         opacity: 0;
@@ -233,14 +248,6 @@ html, body {
         left: 0;
         transition: 200ms;
         display: none;
-        &.shown {
-          clear: both;
-          opacity: .85;
-          pointer-events: all;
-          transition: 300ms;
-          transition-delay: 400ms;
-          display: block;
-        }
         .popup-arrow {
           clear: both;
           position       : absolute;
