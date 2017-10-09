@@ -39,12 +39,14 @@
 							ng-class="{'matched' : isInMatch(question)}">
 
 						<div class="word-text">
-							<span class="text-wrapper">{{question.text}}</span>
+							<span class="text-wrapper" ng-class="{'long': (question.text.length > 17)}">{{question.text}}</span>
+							<span ng-class="{'expand': (question.text.length > 61), 'noExpand': (question.text.length <= 61)}" data-icon="&#xe000;" aria-hidden="true"></span>
 						</div>
 
 						<div class="wrap">
-							<div class="popup">
-								<div class="popup-text"></div>
+							<div class="popup" ng-class="{'shown': (question.text.length > 61)}">
+								<div class="popup-text left">{{question.text}}</div>
+								<div class="popup-arrow" ng-class="{'left': (question.text.length > 61)}"></div>
 							</div>
 						</div>
 
@@ -114,13 +116,15 @@
 						ng-mouseleave="unapplyHoverSelections()"
 						ng-class="{matched : isInMatch(answer)}">
 					<div class="word-text">
-						<span class="text-wrapper">{{answer.text}}</span>
-					</div>
-					<div class="wrap">
-						<div class="popup">
-							<div class="popup-text"></div>
+							<span class="text-wrapper" ng-class="{'long': (answer.text.length > 17)}">{{answer.text}}</span>
+							<span ng-class="{'expand': (answer.text.length > 61), 'noExpand': (answer.text.length <= 61)}" data-icon="&#xe000;" aria-hidden="true"></span>
 						</div>
-					</div>
+					<div class="wrap">
+							<div class="popup" ng-class="{'shown': (answer.text.length > 61)}">
+								<div class="popup-text right">{{answer.text}}</div>
+								<div class="popup-arrow" ng-class="{'right': (answer.text.length > 61)}"></div>
+							</div>
+						</div>
 				</li>
 			</ul>
 		</section>
