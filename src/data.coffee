@@ -11,7 +11,7 @@ Namespace('Matching').Data = do ->
 		_qset = qset
 
 		_game.remainingItems   = _game.totalItems = _qset.items[0].items.length
-		_game.numGameboards    = Math.ceil(_game.totalItems/5)
+		_game.numGameboards    = Math.ceil(_game.totalItems/6)
 		_game.currentGameboard = 0
 		_game.questionsOnBoard = []
 		_game.qIndices         = []
@@ -26,7 +26,7 @@ Namespace('Matching').Data = do ->
 		_x        = if isOnLeft then 270 else 480
 		_y        = (i+1)*70.3+65
 
-		_words[id] = word = 
+		_words[id] = word =
 			id             : id
 			gameboard      : gameboard
 			selected       : false

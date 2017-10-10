@@ -89,9 +89,9 @@ Namespace('Matching').Engine = do ->
 		numGB = game.numGameboards
 		top   = game.totalItems-1  							# Store a reference to the top of the array of total word pairs.
 		$('#numPages').html(numGB)							# Set the number of boards for the wheel on each page.
-		
+
 		for i in [0...numGB]                                # Iterate through the expected number of gameboards.
-			_bottom = top-4                                 # By default 5 word pairs are put on a single page.
+			_bottom = top-5                                 # By default 6 word pairs are put on a single page.
 			if i is numGB-2 then _bottom = Math.ceil(top/2) # If we're at the second to last gameboard, split the remaining items and use half.
 			if i is numGB-1 then _bottom = 0                # If we're at the last gameboard, use the remaining items.
 
