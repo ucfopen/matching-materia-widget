@@ -136,7 +136,10 @@ Namespace('Matching').Engine = do ->
 				word2        = _data.addWord(answerId, boards[bIndex], qOnBIndex, answerText)
 
 				questionDom  = _draw.drawWord(word1, $leftColumn, 'question', questionText, 'w'+questionId)
-				answerDom    = _draw.drawWord(word2, $rightColumn, 'answer', answerText, 'w'+answerId)
+				if answerText == ''
+					game.remainingItems--
+				else
+					answerDom    = _draw.drawWord(word2, $rightColumn, 'answer', answerText, 'w'+answerId)
 
 				questionId += 2 # Question IDs will be even.
 				answerId   += 2 # Answer IDs will be odd.
@@ -152,10 +155,15 @@ Namespace('Matching').Engine = do ->
 		words = _data.getWords()
 
 		qsetItems = _data.getQset().items[0].items
+
 		for i in [0...words.length] by 2                           # Loop through all word pairs.
 			for j in [0...qsetItems.length]                        # Loop through the qset word pairs.
 				if qsetItems[j].questions[0].text == words[i].word # Find matching questions.
-					Materia.Score.submitQuestionForScoring(qsetItems[j].id, words[words[i].matched].word)
+					# If it's not matched, send the empty string
+					if words[i].matched == -1
+						Materia.Score.submitQuestionForScoring(qsetItems[j].id, '')
+					else
+						Materia.Score.submitQuestionForScoring(qsetItems[j].id, words[words[i].matched].word)
 					break
 		true
 
