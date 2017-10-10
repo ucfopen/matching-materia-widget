@@ -105,8 +105,18 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 	_buildSaveData = ->
 		items      = []
 		wordPairs  = $scope.widget.wordPairs
-		items.push( _process wordPairs[i] ) for i in [0..wordPairs.length-1]
-		
+		for pair in wordPairs
+			# Don't allow any with blank quesitons
+			if not pair.question? or pair.question.trim() == ''
+				continue
+
+
+			if not pair.answer?
+				pair.answer = ''
+			else
+				pair.answer = pair.answer.trim()
+			items.push( _process pair )
+
 		options : {}
 		assets  : []
 		rand    : false
