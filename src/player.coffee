@@ -126,6 +126,7 @@ Namespace('Matching').Engine = do ->
 			$leftColumn  = $(_dom.boards[bIndex]).find('.column1') # Cache the current board's left column.
 			$rightColumn = $(_dom.boards[bIndex]).find('.column2') # Cache the current board's right column.
 
+			indexShift = 0  # account for blank answers
 			# EACH QUESTION ON THIS BOARD
 			for qOnBIndex in [0...game.questionsOnBoard[bIndex]]
 
@@ -133,11 +134,12 @@ Namespace('Matching').Engine = do ->
 				answerText   = questions[game.ansIndices[suffledQuestionIndex]].answers[0].text
 
 				word1        = _data.addWord(questionId, boards[bIndex], qOnBIndex, questionText)
-				word2        = _data.addWord(answerId, boards[bIndex], qOnBIndex, answerText)
+				word2        = _data.addWord(answerId, boards[bIndex], qOnBIndex - indexShift, answerText)
 
 				questionDom  = _draw.drawWord(word1, $leftColumn, 'question', questionText, 'w'+questionId)
 				if answerText == ''
 					game.remainingItems--
+					indexShift++
 				else
 					answerDom    = _draw.drawWord(word2, $rightColumn, 'answer', answerText, 'w'+answerId)
 

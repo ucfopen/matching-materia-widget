@@ -110,7 +110,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 			if not pair.question? or pair.question.trim() == ''
 				continue
 
-
+			# Blank answers are allowed, they just won't show up when playing
 			if not pair.answer?
 				pair.answer = ''
 			else
