@@ -231,6 +231,69 @@ body {
 			font-family   : "CorbelBold", sans-serif;
 			font-weight   : 300;
 			overflow      : auto;
+			&.ng-empty.question-text {
+				background-color: #FFBA74;
+				border-bottom: 3px solid #FF9620;
+			}
+			&.ng-empty.answer-text {
+				opacity: .4;
+			}
+		}
+		.emptyInfoDot {
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+			position: absolute;
+			top: -5px;
+			z-index: 2;
+			margin-left : -20px;
+			border-radius: 5px;
+			&.left {
+				background-color: red;
+				&:hover {
+					background-color: lighten(red, 15%);
+				}
+			}
+			&.right {
+				color: black;
+				background-color: lightgoldenrodyellow;
+				&:hover {
+					background-color: darken(lightgoldenrodyellow, 5%);
+				}
+			}
+		}
+		.popup {
+			opacity: 0;
+			position: absolute;
+			right: 0;
+			z-index: -1;
+			transition: 200ms;
+			&.shown {
+				clear: both;
+				z-index: 1;
+				opacity: .90;
+				pointer-events: all;
+				transition: 300ms;
+				display: block;
+			}
+			.popup-text {
+				position         : relative;
+				height           : 40px;
+				margin           : -5px 0 0 0;
+				width            : 250px;
+				padding          : 10px;
+				color            : #222;
+				background-color : #FFF;
+				font-size        : 15px;
+				white-space      : normal;
+				word-wrap        : break-word;
+				border-radius    : 10px;
+				border-bottom    : 3px solid #DDD;
+				overflow         : auto;
+				clear            : both;
+				pointer-events   : none;
+				left: -20px;
+			}
 		}
 		.separate {
 			display: inline-block;
@@ -423,6 +486,11 @@ body {
 	border-right-color: #fbf767;
 	border-width: 63px;
 	margin-top: -63px;
+}
+
+.wrap {
+	display: inline;
+	position: absolute;
 }
 
 @keyframes pounce {

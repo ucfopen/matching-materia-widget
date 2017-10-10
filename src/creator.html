@@ -45,8 +45,20 @@
 			<div id='question-container'>
 				<div class='question' ng-repeat="pair in widget.wordPairs">
 					<textarea class='question-text' ng-enter="" ng-model="pair.question" ng-style='autoSize(pair)' focus-me='true' tabindex='{{$index+1}}'></textarea>
+					<div class="emptyInfoDot left" ng-style='displayInfoDot(pair, true)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup(this)">i</div>
+					<div class="wrap">
+						<div class="popup">
+							<div class="popup-text left">Term can't be left blank.</div>
+						</div>
+					</div>
 					<div class='separate'></div>
 					<textarea class='answer-text' ng-enter="addWordPair()" ng-style='autoSize(pair)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
+					<div class="emptyInfoDot right" ng-style='displayInfoDot(pair, false)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
+					<div class="wrap">
+						<div class="popup">
+							<div class="popup-text right">If you leave this side blank, it will not appear when playing.</div>
+						</div>
+					</div>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
 			</div>

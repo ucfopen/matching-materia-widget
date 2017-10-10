@@ -76,7 +76,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 
 	$scope.hideCover = ->
 		$scope.showTitleDialog = $scope.showIntroDialog = false
-	
+
 	$scope.autoSize = (pair) ->
 		question = pair.question or ''
 		answer = pair.answer or ''
@@ -84,6 +84,22 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', ($scope) ->
 		size = if len > 15 then 30 + len * 1.1 else 25
 
 		height: size + 'px'
+
+	$scope.displayInfoDot = (pair, isQuestion) ->
+		question = pair.question or ''
+		answer = pair.answer or ''
+
+		# hide the empty info box if they're not empty
+		if isQuestion and question.length
+			'display': 'none'
+		else if not isQuestion and answer.length
+			'display': 'none'
+
+	$scope.showPopup = (e) ->
+		$(e.currentTarget.nextElementSibling.children[0]).addClass 'shown'
+
+	$scope.hidePopup = (e) ->
+		$(e.currentTarget.nextElementSibling.children[0]).removeClass 'shown'
 
 	# Private methods
 	_buildSaveData = ->
