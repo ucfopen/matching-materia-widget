@@ -78,8 +78,6 @@ describe('Matching', function(){
 		});
 
 		it('should cancel saving if widget title is invalid', function(){
-			$scope.addWordPair("question", "", [0,"answer.mp3"]);
-			$scope.addWordPair("", "answer", ["question.mp3",0]);
 			//unset the widget title
 			$scope.widget.title = '';
 			//the error message should be what we expect it to be
@@ -89,6 +87,10 @@ describe('Matching', function(){
 		});
 
 		it('should cancel saving if question text and question audio are blank', function(){
+			//Add wordpair that has no answer text but has answer audio (this covers assignString function)
+			$scope.addWordPair("question", "", [0,"answer.mp3"]);
+			//Add wordpair that has no answer/question text but has answer/question audio (this covers assignString function)
+			$scope.addWordPair("", "", ["question.mp3","answer.mp3"]);
 			//set title again so that the widget fails saving because of
 			//question or answer text and audio being blank
 			$scope.widget.title = 'Widget Title';
@@ -101,6 +103,8 @@ describe('Matching', function(){
 		});
 
 		it('should cancel saving if answer text and answer audio are blank', function(){
+			//Add wordpair that has no question text but has question audio (this covers assignString function)
+			$scope.addWordPair("", "answer", ["question.mp3",0]);
 			//remove previously added wordPair so that the widget fails saving on
 			//the new wordPair we create that has no answer text/audio
 			$scope.widget.wordPairs.splice(11, 1);

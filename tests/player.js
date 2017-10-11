@@ -15,16 +15,19 @@ describe('Matching', function() {
 		//set page 1 questions and answers in order of ids
 		var i, testQIndex, testAIndex;
 		for (i = 1; i <= 5; i++) {
-			$scope.pages[0].questions[i].id = i;
 			testQIndex = $scope.pages[0].questions.map(function (item) {
 				return item.id
 			}).indexOf(i);
 			$scope.test.questions.push($scope.pages[0].questions[i]);
-			$scope.pages[0].answers[i].id = i;
 			testAIndex = $scope.pages[0].answers.map(function (item) {
 				return item.id
 			}).indexOf(i);
 			$scope.test.answers.push($scope.pages[0].answers[i]);
+		}
+		//Add ids to the scope questions/answers
+		for(i = 1; i <= 4; i++) {
+			$scope.pages[0].answers[i].id = i;
+			$scope.pages[0].questions[i].id = i;
 		}
 	}
 
@@ -298,11 +301,33 @@ describe('Matching', function() {
 			$scope.matches = [];
 			$scope.matches.push({questionId:1, answerId: 1});
 
+			//change the qset to only have 1 item
+			qset.data.items[0].items = [
+			{
+			  "id": 1,
+			  "questions": [
+				{
+				  "text": "cambiar"
+				}
+			  ],
+			  "answers": [
+				{
+				  "text": "to change"
+				}
+			  ],
+			   "assets":[  
+				  0,
+				  0,
+				  null
+			   ]
+			}];
+
 			$scope.submit();
-			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, 'to change');
+			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, 'to change', null);
+
+			//cover the situation where qset item text = null
 			$scope.matches = [];
 			$scope.submit();
-			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, null);
 		});
 
 		it('should unapply hover selections', function () {
