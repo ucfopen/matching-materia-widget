@@ -129,7 +129,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			size = if len > 15 then 25 + len * 1.1 else 25
 		height: size + 'px'
 
-
 	# safely unwraps media content to allow it to be pushed to the qset
 	unwrapQuestionValue = (counter) ->
 		try

@@ -41,7 +41,7 @@
 				<div class='question' ng-repeat="pair in widget.wordPairs">
 					<textarea class='question-text' ng-hide="checkMedia($index, 0)" ng-model="pair.question" ng-style='autoSize(pair, false)' focus-me='true' tabindex='{{$index+1}}'></textarea>
 					<div class="audio-display" ng-show="checkMedia($index, 0)" ng-style='autoSize(pair, true)'>
-						<audio id="audio" controls="controls" preload="auto">
+						<audio id="audio" controls="controls" preload="none">
 							<source id="audio-source" ng-src="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}" type="audio/mpeg">
 						</audio>
 						<textarea type="text" class="desc-input" placeholder="Audio Description" ng-model="pair.question" ng-style='autoSize(pair, false)' focus-me="checkMedia($index, 0)"></textarea>
@@ -59,7 +59,7 @@
 					</div>
 					<textarea class='answer-text' ng-hide="checkMedia($index, 1)" ng-enter="addWordPair()" ng-style='autoSize(pair, false)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
 					<div class="audio-display" ng-show="checkMedia($index, 1)" ng-style='autoSize(pair, true)'>
-						<audio id="audio" controls="controls" preload="auto">
+						<audio id="audio" controls="controls" preload="none">
 							<source id="audio-source" ng-src="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}" type="audio/mpeg">
 						</audio>
 						<textarea type="text" class="desc-input" placeholder="Audio Description" ng-model="pair.answer" ng-style='autoSize(pair, false)' focus-me="checkMedia($index, 1)"></textarea>
