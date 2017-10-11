@@ -108,7 +108,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		return;
 
 	$scope.checkMedia = (index, which) ->
-			return $scope.widget.wordPairs[index].media[which] != 0
+		return $scope.widget.wordPairs[index].media[which] != 0
 
 	# View actions
 	$scope.setTitle = ->
@@ -167,9 +167,9 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 
 			# checks if there are wordpairs with audio that don't have a description
 			# if any exist the description placeholder is set to Audio
-			if questionAudio != 0 && (question == null || question == '')
+			if questionAudio != 0 && answerAudio != 0 && (question == null || question == '') && (answer == null || answer == '')
 				$scope.widget.wordPairs[counter].question = 'Audio'
-				$scope.widget.wordPairs[counter].question = 'Audio'
+				$scope.widget.wordPairs[counter].answer = 'Audio'
 				return checkIds(uniqueId, $scope.widget.uniqueIds)
 			else if questionAudio != 0 && (question == null || question == '')
 				$scope.widget.wordPairs[counter].question = 'Audio'
