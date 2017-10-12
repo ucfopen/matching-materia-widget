@@ -261,6 +261,7 @@ audio::-webkit-media-controls-enclosure {
         left: 0;
         transition: 200ms;
         display: none;
+        z-index: 1;
         .popup-arrow {
           clear: both;
           position       : absolute;
