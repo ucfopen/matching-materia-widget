@@ -77,6 +77,12 @@ Namespace('Matching').Draw = do ->
 		_nextBoard    = _currentBoard + boardDelta
 
 		if boardDelta? and _dom.boards[_nextBoard]?
+			# Before moving to a new board, hide dot from selected but unmatched word
+			for word, w in _data.getWords()
+				if word.innerCircle? and word.preinnerCircle? and word.matched is -1
+					word.innerCircle.attr 'class', 'hidden'
+					word.preinnerCircle.attr 'class', 'hidden'
+
 			_dom.boards[_currentBoard].className = 'gameboard hidden'
 			_dom.boards[_nextBoard].className = 'gameboard'
 			_game.currentGameboard = _nextBoard
@@ -145,6 +151,7 @@ Namespace('Matching').Draw = do ->
 	fadeCircle = (id) ->
 		_data.getWords()[id].innerCircle.attr 'class', 'hidden'
 
+
 	revertCircleColor = (id) ->
 		_circle = _data.getWords()[id].innerCircle
 		_circle[0].style = ""
@@ -153,7 +160,7 @@ Namespace('Matching').Draw = do ->
 	expandWord = (id) ->
 		if id % 2 == 0
 			popupSide = 'left'
-		else 
+		else
 			popupSide = 'right'
 
 		$popup = $("#w"+id+" .popup")
@@ -191,9 +198,11 @@ Namespace('Matching').Draw = do ->
 
 	wordUp = (word) ->
 		showCircle word.id
-		revertCircleColor word.id 
+		revertCircleColor word.id
+		if word.isLongWord then shrinkWord(word.id)
 
 		if _onSameSide(_connectWord, word)
+			_connectWord.preinnerCircle.attr 'class', 'hidden'
 			if _connectWord.matched is -1 && _connectWord.id isnt word.id then fadeCircle _connectWord.id
 			_connectState = null
 
@@ -300,7 +309,7 @@ Namespace('Matching').Draw = do ->
 		, 10
 
 		if game.remainingItems is 0 then _dom.submit.className = 'glowing button'
-		else                              _dom.submit.className = 'unselectable button'
+		else                             _dom.submit.className = 'unselectable button'
 
 	_updatePageButtons = (pageIndex) ->
 		show = 'button shown'
