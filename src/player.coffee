@@ -112,6 +112,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 		$scope.$apply()
 
 	$scope.changePage = (direction) ->
+		_clearSelections()
 		if direction == 'previous'
 			$scope.currentPage-- unless $scope.currentPage <= 0
 			$scope.pageNext = false
@@ -240,8 +241,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', ($scope, $timeo
 
 	$scope.unapplyHoverSelections = () ->
 		$scope.prelines = []
-		$scope.questionCircles[$scope.currentPage].map((element) -> element.isHover = false)
-		$scope.answerCircles[$scope.currentPage].map((element) -> element.isHover = false)
+		$scope.questionCircles[$scope.currentPage].forEach (element) -> 
+			element.isHover = false
+		$scope.answerCircles[$scope.currentPage].forEach (element) ->
+			element.isHover = false
 
 	#truthiness evaluated from function return
 	$scope.isInMatch = (item) ->
