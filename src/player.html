@@ -32,11 +32,11 @@
 								ng-class="{'pageAnimate': pageAnimate}">
 				<ul class="column column1">
 					<li class="word"
-							ng-repeat="question in pages[currentPage].questions"
-							ng-click="selectQuestion(question)"
-							ng-mouseover="drawPrelineToLeft(question)"
-							ng-mouseleave="unapplyHoverSelections()"
-							ng-class="{'matched' : isInMatch(question)}">
+						ng-repeat="question in pages[currentPage].questions"
+						ng-click="selectQuestion(question)"
+						ng-mouseover="drawPrelineToLeft(question)"
+						ng-mouseleave="unapplyHoverSelections()"
+						ng-class="{'matched' : isInMatch(question)}">
 
 						<div class="word-text">
 							<span class="text-wrapper" ng-class="{'long': (question.text.length > 17)}">{{checkForQuestionAudio($index) ? "" : question.text}}</span>
@@ -57,7 +57,7 @@
 				</ul>
 
 				<div class="column svg-column">
-					<svg id="holder" style="height:400px">
+					<svg id="holder" style="height:450px">
 
 						<line ng-repeat="line in lines[currentPage]"
 						      class="linePlaced"
@@ -73,39 +73,39 @@
 						      ng-attr-y2="{{line.liney2}}"/>
 
 						<circle class="hollows"
-										ng-repeat="circle in questionCircles[currentPage]"
-										ng-attr-r="{{circle.r}}"
-										ng-attr-cx="{{circle.cx}}"
-										ng-attr-cy="{{circle.cy}}"
-										ng-class="{'hollows-selected' : questionCircles[currentPage][$index].isHover}">
+							ng-repeat="circle in questionCircles[currentPage]"
+							ng-attr-r="{{circle.r}}"
+							ng-attr-cx="{{circle.cx}}"
+							ng-attr-cy="{{circle.cy}}"
+							ng-class="{'hollows-selected' : questionCircles[currentPage][$index].isHover}">
 						</circle>
 
 						<circle
-										class = "{{circle.color}}"
-										ng-repeat="circle in questionCircles[currentPage]"
-										ng-class="{'selected' : applyCircleClass(circle),
-															'circleHover' : questionCircles[currentPage][$index].isHover}"
-										ng-attr-r="{{circle.r/2}}"
-										ng-attr-cx="{{circle.cx}}"
-										ng-attr-cy="{{circle.cy}}">
+							class = "{{circle.color}}"
+							ng-repeat="circle in questionCircles[currentPage]"
+							ng-class="{'selected' : applyCircleClass(circle),
+												'circleHover' : questionCircles[currentPage][$index].isHover}"
+							ng-attr-r="{{circle.r/2}}"
+							ng-attr-cx="{{circle.cx}}"
+							ng-attr-cy="{{circle.cy}}">
 						</circle>
 
 						<circle class="hollows"
-										ng-repeat="circle in answerCircles[currentPage]"
-										ng-attr-r="{{circle.r}}"
-										ng-attr-cx="{{circle.cx}}"
-										ng-attr-cy="{{circle.cy}}"
-										ng-class="{'hollows-selected' : answerCircles[currentPage][$index].isHover}">
+							ng-repeat="circle in answerCircles[currentPage]"
+							ng-attr-r="{{circle.r}}"
+							ng-attr-cx="{{circle.cx}}"
+							ng-attr-cy="{{circle.cy}}"
+							ng-class="{'hollows-selected' : answerCircles[currentPage][$index].isHover}">
 						</circle>
 
 						<circle
-								class = "{{circle.color}}"
-								ng-repeat="circle in answerCircles[currentPage]"
-								ng-class="{'selected' : applyCircleClass(circle),
-													'circleHover': answerCircles[currentPage][$index].isHover}"
-								ng-attr-r="{{circle.r/2}}"
-								ng-attr-cx="{{circle.cx}}"
-								ng-attr-cy="{{circle.cy}}">
+							class = "{{circle.color}}"
+							ng-repeat="circle in answerCircles[currentPage]"
+							ng-class="{'selected' : applyCircleClass(circle),
+												'circleHover': answerCircles[currentPage][$index].isHover}"
+							ng-attr-r="{{circle.r/2}}"
+							ng-attr-cx="{{circle.cx}}"
+							ng-attr-cy="{{circle.cy}}">
 						</circle>
 
 					</svg>

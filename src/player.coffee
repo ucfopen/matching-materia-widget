@@ -36,7 +36,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	colorNumber=0
 
-	ITEMS_PER_PAGE = 5
+	ITEMS_PER_PAGE = 6
 	NUM_OF_COLORS = 7
 	CIRCLE_START_X = 20
 	CIRCLE_END_X = 220
@@ -281,7 +281,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 		elementId = hoverItem.id
 		#get the index of the item in the current page by finding it with its id
-		endIndex = $scope.pages[$scope.currentPage].answers.map((element) -> 
+		endIndex = $scope.pages[$scope.currentPage].answers.map((element) ->
 			if(element != undefined)
 				element.id
 			).indexOf elementId
