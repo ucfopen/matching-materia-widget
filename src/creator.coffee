@@ -129,6 +129,22 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			size = if len > 15 then 25 + len * 1.1 else 25
 		height: size + 'px'
 
+	$scope.displayInfoDot = (pair, isQuestion, index) ->
+		question = pair.question or ''
+		answer = pair.answer or ''
+
+		# hide the empty info box if they're not empty
+		if isQuestion and (question.length or $scope.checkMedia(index, 0))
+			'display': 'none'
+		else if not isQuestion and (answer.length or $scope.checkMedia(index, 1))
+			'display': 'none'
+
+	$scope.showPopup = (e) ->
+		$(e.currentTarget.nextElementSibling.children[0]).addClass 'shown'
+
+	$scope.hidePopup = (e) ->
+		$(e.currentTarget.nextElementSibling.children[0]).removeClass 'shown'
+
 	# safely unwraps media content to allow it to be pushed to the qset
 	unwrapQuestionValue = (counter) ->
 		try

@@ -16,8 +16,8 @@
 		<script src="materia.creatorcore.js"></script>
 
 		<!-- YOUR PREREQUISITES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-animate.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-animate.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
 		<script src="creator.js"></script>
@@ -34,12 +34,23 @@
 		<section class='main-area'>
 			<div class='titles' ng-show='widget.wordPairs.length'>
 				<h1>Left Side</h1>
+				<div class="separate"></div>
 				<h1>Right Side</h1>
-				<div class='pair-count'>{{widget.wordPairs.length}} Pairs</div>
+				<div class='pair-count'>
+					<ng-pluralize count="widget.wordPairs.length"
+						when="{'1': '1 Pair', 'other': '{} Pairs'}">
+					</ng-pluralize>
+				</div>
 			</div>
 			<div id='question-container'>
 				<div class='question' ng-repeat="pair in widget.wordPairs">
-					<textarea class='question-text' ng-hide="checkMedia($index, 0)" ng-model="pair.question" ng-style='autoSize(pair, false)' focus-me='true' tabindex='{{$index+1}}'></textarea>
+					<textarea class='question-text' ng-enter="" ng-hide="checkMedia($index, 0)" ng-model="pair.question" ng-style='autoSize(pair, false)' focus-me='true' tabindex='{{$index+1}}'></textarea>
+					<div class="emptyInfoDot left" ng-style='displayInfoDot(pair, true, $index)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
+					<div class="wrap">
+						<div class="popup">
+							<div class="popup-text left">Term can't be left blank.</div>
+						</div>
+					</div>
 					<div class="audio-display" ng-show="checkMedia($index, 0)" ng-style='autoSize(pair, true)'>
 						<audio id="audio" controls="controls" preload="none">
 							<source id="audio-source" ng-src="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}" type="audio/mpeg">
@@ -58,6 +69,12 @@
 						<img class="add-audio" ng-init="removeImgA='assets/remove_audio.svg'" ng-mouseover="removeImgA='assets/remove_audio_hover.svg'" ng-mouseout="removeImgA='assets/remove_audio.svg'" ng-show="checkMedia($index, 1)" ng-src="{{removeImgA}}" ng-click="removeAudio($index, 1)">
 					</div>
 					<textarea class='answer-text' ng-hide="checkMedia($index, 1)" ng-enter="addWordPair()" ng-style='autoSize(pair, false)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
+					<div class="emptyInfoDot left" ng-style='displayInfoDot(pair, true, $index)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
+					<div class="wrap">
+						<div class="popup">
+							<div class="popup-text left">Term can't be left blank.</div>
+						</div>
+					</div>
 					<div class="audio-display" ng-show="checkMedia($index, 1)" ng-style='autoSize(pair, true)'>
 						<audio id="audio" controls="controls" preload="none">
 							<source id="audio-source" ng-src="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}" type="audio/mpeg">
