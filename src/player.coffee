@@ -29,7 +29,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.qset = {}
 
-	#these are used for animation
+	# these are used for animation
 	$scope.pageAnimate = false
 	$scope.pageNext = false
 	ANIMATION_DURATION = 600
@@ -51,7 +51,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.totalItems = qset.items[0].items.length
 		$scope.totalPages = Math.ceil $scope.totalItems/ITEMS_PER_PAGE
 
-		#set up the pages
+		# set up the pages
 		for [1..$scope.totalPages]
 			$scope.pages.push {questions:[], answers:[]}
 			$scope.selectedQA.push {question:-1, answer:-1}
@@ -129,7 +129,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
 			$scope.pageNext = true
 
-		#pageAnimate is used by the li elements and the rotating circle
+		# pageAnimate is used by the li elements and the rotating circle
 		$scope.pageAnimate = true
 		$timeout ->
 			$scope.pageAnimate= false
@@ -153,7 +153,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		}
 
 	_applyCircleColor = () ->
-		#find appropriate circle
+		# find appropriate circle
 		$scope.questionCircles[$scope.currentPage][$scope.selectedQA[$scope.currentPage].question].color = _getColor()
 		$scope.answerCircles[$scope.currentPage][$scope.selectedQA[$scope.currentPage].answer].color = _getColor()
 
@@ -162,17 +162,17 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	_checkForMatches = () ->
 		if $scope.selectedQA[$scope.currentPage].question != -1 and $scope.selectedQA[$scope.currentPage].answer != -1
-			#check if the id already exists in matches
+			# check if the id already exists in matches
 			clickQuestionId = $scope.selectedQuestion.id
 			clickAnswerId = $scope.selectedAnswer.id
 
-			#increment color cycle
+			# increment color cycle
 			colorNumber = (colorNumber+1)%NUM_OF_COLORS
 			if colorNumber == 0
 				colorNumber = 1
 
-			#if the id of the question exists in a set of matches, delete that set of matches
-			#get the index of the match where the question/answer exists
+			# if the id of the question exists in a set of matches, delete that set of matches
+			# get the index of the match where the question/answer exists
 			indexOfQuestion = $scope.matches.map((element) -> element.questionId).indexOf clickQuestionId
 			indexOfAnswer = $scope.matches.map((element) -> element.answerId).indexOf clickAnswerId
 
@@ -184,9 +184,9 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				match2_QIndex = $scope.matches[indexOfAnswer].questionIndex
 				match2_AIndex = $scope.matches[indexOfAnswer].answerIndex
 
-			#if both question and answer are in matches then take out where they exist in matches
+			# if both question and answer are in matches then take out where they exist in matches
 			if indexOfQuestion != -1 and indexOfAnswer != -1
-				#need to account here for the indexOfQuestion and indexOfAnswer being the same
+				# need to account here for the indexOfQuestion and indexOfAnswer being the same
 				$scope.questionCircles[$scope.currentPage][match1_QIndex].color = 'c0'
 				$scope.questionCircles[$scope.currentPage][match2_QIndex].color = 'c0'
 
@@ -194,21 +194,21 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
 
 				$scope.matches.splice indexOfQuestion, 1
-				#only proceed to do the following if the index of question and answer
-				#are not the same- otherwise an extra pair will be deleted
+				# only proceed to do the following if the index of question and answer
+				# are not the same- otherwise an extra pair will be deleted
 				if indexOfQuestion != indexOfAnswer
 					if indexOfAnswer > indexOfQuestion
-						#we have to subtract 1 to account for the previous slice
+						# we have to subtract 1 to account for the previous slice
 						$scope.matches.splice indexOfAnswer-1, 1
 					else
-						#in this case we don't need to subtract to account for splice
+						# in this case we don't need to subtract to account for splice
 						$scope.matches.splice indexOfAnswer, 1
-			#only the question exists in a match
+			# only the question exists in a match
 			else if indexOfQuestion != -1  and indexOfAnswer == -1
 				$scope.questionCircles[$scope.currentPage][match1_QIndex].color = 'c0'
 				$scope.answerCircles[$scope.currentPage][match1_AIndex].color = 'c0'
 				$scope.matches.splice indexOfQuestion, 1
-			#only the answer exists in a match
+			# only the answer exists in a match
 			else if indexOfQuestion == -1 and indexOfAnswer != -1
 				$scope.questionCircles[$scope.currentPage][match2_QIndex].color = 'c0'
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
@@ -248,7 +248,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		return $scope.matches.length / $scope.totalItems * PROGRESS_BAR_LENGTH
 
 	$scope.applyCircleClass = (selectionItem) ->
-		#selectionItem.id is the index of circle
+		# selectionItem.id is the index of circle
 		if selectionItem.type == 'question-circle'
 			if selectionItem.id == $scope.selectedQA[$scope.currentPage].question
 				return true
@@ -262,7 +262,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.questionCircles[$scope.currentPage].map((element) -> element.isHover = false)
 		$scope.answerCircles[$scope.currentPage].map((element) -> element.isHover = false)
 
-	#truthiness evaluated from function return
+	# truthiness evaluated from function return
 	$scope.isInMatch = (item) ->
 		if item.type == 'question'
 			matchedItem = $scope.matches.filter( (match) -> match.questionId == item.id).length
@@ -273,14 +273,14 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		matchedItem
 
 	$scope.drawPrelineToRight = (hoverItem) ->
-		#exit if a question has not been selected
+		# exit if a question has not been selected
 		if $scope.selectedQA[$scope.currentPage].question == -1
 			return
 
 		startIndex = $scope.selectedQA[$scope.currentPage].question
 
 		elementId = hoverItem.id
-		#get the index of the item in the current page by finding it with its id
+		# get the index of the item in the current page by finding it with its id
 		endIndex = $scope.pages[$scope.currentPage].answers.map((element) ->
 			if(element != undefined)
 				element.id
@@ -290,27 +290,27 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.prelines = []
 
 		$scope.prelines.push {
-			#left column
+			# left column
 			linex1 : $scope.questionCircles[$scope.currentPage][startIndex].cx
-			#right column
+			# right column
 			linex2 : $scope.answerCircles[$scope.currentPage][endIndex].cx
 
-			#left column
+			# left column
 			liney1 : $scope.questionCircles[$scope.currentPage][startIndex].cy
-			#right column
+			# right column
 			liney2 : $scope.answerCircles[$scope.currentPage][endIndex].cy
 		}
 		$scope.answerCircles[$scope.currentPage][endIndex].isHover = true
 
 	$scope.drawPrelineToLeft = (hoverItem) ->
-		#exit if a question has not been selected
+		# exit if a question has not been selected
 		if $scope.selectedQA[$scope.currentPage].answer == -1
 			return
 
 		startIndex = $scope.selectedQA[$scope.currentPage].answer
 
 		elementId = hoverItem.id
-		#get the index of the item in the current page by finding it with its id
+		# get the index of the item in the current page by finding it with its id
 		endIndex = $scope.pages[$scope.currentPage].questions.map((element) ->
 			if(element != undefined)
 				element.id
@@ -320,37 +320,37 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.prelines = []
 
 		$scope.prelines.push {
-			#right column
+			# right column
 			linex1 : $scope.answerCircles[$scope.currentPage][startIndex].cx
-			#left column
+			# left column
 			linex2 : $scope.questionCircles[$scope.currentPage][endIndex].cx
 
-			#right column
+			# right column
 			liney1 : $scope.answerCircles[$scope.currentPage][startIndex].cy
-			#left column
+			# left column
 			liney2 : $scope.questionCircles[$scope.currentPage][endIndex].cy
 		}
 		$scope.questionCircles[$scope.currentPage][endIndex].isHover = true
 
 	$scope.selectQuestion = (selectionItem) ->
 		elementId = selectionItem.id
-		#get the index of the item in the current page by finding it with its id
+		# get the index of the item in the current page by finding it with its id
 		indexId = $scope.pages[$scope.currentPage].questions.map((element) -> element.id).indexOf elementId
-		#selectedQuestion allows us to find the item we want in our initialized question array at the specified index
-		#selectedQuestion represents the question [left] column selection
+		# selectedQuestion allows us to find the item we want in our initialized question array at the specified index
+		# selectedQuestion represents the question [left] column selection
 		$scope.selectedQuestion = $scope.pages[$scope.currentPage].questions[indexId]
-		#selectedQA stores the index of the current selected answer and question for a particular page
+		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].question = indexId
 		_checkForMatches()
 
 	$scope.selectAnswer = (selectionItem) ->
 		elementId = selectionItem.id
-		#get the index of the item in the current page by finding it with its id
+		# get the index of the item in the current page by finding it with its id
 		indexId = $scope.pages[$scope.currentPage].answers.map((element) -> element.id).indexOf elementId
-		#selectedAnswer allows us to find the item we want in our initialized question array at the specified index
-		#selectedAnswer represents the answer [right] column selection
+		# selectedAnswer allows us to find the item we want in our initialized question array at the specified index
+		# selectedAnswer represents the answer [right] column selection
 		$scope.selectedAnswer = $scope.pages[$scope.currentPage].answers[indexId]
-		#selectedQA stores the index of the current selected answer and question for a particular page
+		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].answer = indexId
 		_checkForMatches()
 
@@ -358,12 +358,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		qsetItems = $scope.qset.items[0].items
 
 		for i in [0..qsetItems.length-1]
-			#get id of the current qset item use that as the 1st argument
-			#find the id of that qset item in the matches object array
+			# get id of the current qset item use that as the 1st argument
+			# find the id of that qset item in the matches object array
 			matchedItem = $scope.matches.filter( (match) -> match.questionId == qsetItems[i].id)
 			if matchedItem?.length
 				matchedItemAnswerId = matchedItem[0].answerId
-				#get the answer of that match at that question id and use that as the 2nd argument
+				# get the answer of that match at that question id and use that as the 2nd argument
 				mappedQsetItemText = qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].answers[0].text
 				mappedQsetAudioString = qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets[2]
 			else
@@ -372,7 +372,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		Materia.Engine.end true
 
 	_shuffle = (qsetItems) ->
-		#don't shuffle if less than 2 elements
+		# don't shuffle if less than 2 elements
 		return qsetItems unless qsetItems.length >= 2
 		for index in [1..qsetItems.length-1]
 			randomIndex = Math.floor Math.random() * (index + 1)
