@@ -67,6 +67,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				_shuffle $scope.pages[_pageIndex].questions
 				_shuffle $scope.pages[_pageIndex].answers
 				_itemIndex = 0
+				_indexShift = 0
 				_pageIndex++
 
 			wrapQuestionUrl = ->
