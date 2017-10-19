@@ -136,11 +136,11 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		, ANIMATION_DURATION
 
 	$scope.checkForQuestionAudio = (index) ->
-		if $scope.pages[0].questions[index].asset != undefined
+		if $scope.pages[$scope.currentPage].questions[index].asset != undefined
 			return true
 
 	$scope.checkForAnswerAudio = (index) ->
-		if $scope.pages[0].answers[index].asset != undefined
+		if $scope.pages[$scope.currentPage].answers[index].asset != undefined
 			return true
 
 	_pushMatch = () ->
