@@ -71,10 +71,10 @@
 						<img class="add-audio" ng-init="removeImgA='assets/remove_audio.svg'" ng-mouseover="removeImgA='assets/remove_audio_hover.svg'" ng-mouseout="removeImgA='assets/remove_audio.svg'" ng-show="checkMedia($index, 1)" ng-src="{{removeImgA}}" ng-click="removeAudio($index, 1)">
 					</div>
 					<textarea class='answer-text' ng-hide="checkMedia($index, 1)" ng-enter="addWordPair()" ng-style='autoSize(pair, false)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
-					<div class="emptyInfoDot left" ng-style='displayInfoDot(pair, false, $index)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
+					<div class="emptyInfoDot right" ng-style='displayInfoDot(pair, false, $index)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
 					<div class="wrap">
 						<div class="popup">
-							<div class="popup-text left">Term can't be left blank.</div>
+							<div class="popup-text right">If you leave this side blank, it will not appear when playing.</div>
 						</div>
 					</div>
 					<div class="audio-display" ng-show="checkMedia($index, 1)" ng-style='autoSize(pair, true)'>
