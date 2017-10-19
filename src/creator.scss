@@ -250,14 +250,14 @@ body {
 			&.left {
 				background-color: red;
 				&:hover {
-					background-color: lighten(red, 15%);
+					background-color: lighten(red, 20%);
 				}
 			}
 			&.right {
 				color: black;
 				background-color: lightgoldenrodyellow;
 				&:hover {
-					background-color: darken(lightgoldenrodyellow, 5%);
+					background-color: darken(lightgoldenrodyellow, 10%);
 				}
 			}
 		}
@@ -270,7 +270,7 @@ body {
 			&.shown {
 				clear: both;
 				z-index: 1;
-				opacity: .90;
+				opacity: .95;
 				pointer-events: all;
 				transition: 300ms;
 				display: block;
@@ -385,6 +385,10 @@ body {
 			&:hover {
 				opacity: 1;
 			}
+		}
+		.wrap {
+			display: inline;
+			position: absolute;
 		}
 	}
 	#add-new {
@@ -555,11 +559,6 @@ body {
 	border-right-color: #fbf767;
 	border-width: 63px;
 	margin-top: -63px;
-}
-
-.wrap {
-	display: inline;
-	position: absolute;
 }
 
 @keyframes pounce {
