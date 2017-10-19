@@ -62,14 +62,16 @@
 
 						<img class="add-audio" ng-init="removeImgQ='assets/remove_audio.svg'" ng-mouseover="removeImgQ='assets/remove_audio_hover.svg'" ng-mouseout="removeImgQ='assets/remove_audio.svg'" ng-show="checkMedia($index, 0)" ng-src="{{removeImgQ}}" ng-click="removeAudio($index, 0)">
 					</div>
+
 					<div class='separate'></div>
+
 					<div class="audio-image" ng-init="imgA='assets/add_audio.svg'" ng-mouseover="imgA='assets/add_audio_hover.svg'" ng-mouseout="imgA='assets/add_audio.svg'">
 						<img class="add-audio" ng-hide="checkMedia($index, 1)" ng-src="{{imgA}}" ng-click="beginMediaImport($index, 1); checkMedia($index, 1)">
 
 						<img class="add-audio" ng-init="removeImgA='assets/remove_audio.svg'" ng-mouseover="removeImgA='assets/remove_audio_hover.svg'" ng-mouseout="removeImgA='assets/remove_audio.svg'" ng-show="checkMedia($index, 1)" ng-src="{{removeImgA}}" ng-click="removeAudio($index, 1)">
 					</div>
 					<textarea class='answer-text' ng-hide="checkMedia($index, 1)" ng-enter="addWordPair()" ng-style='autoSize(pair, false)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
-					<div class="emptyInfoDot left" ng-style='displayInfoDot(pair, true, $index)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
+					<div class="emptyInfoDot left" ng-style='displayInfoDot(pair, false, $index)' ng-mouseenter="showPopup($event)" ng-mouseleave="hidePopup($event)">i</div>
 					<div class="wrap">
 						<div class="popup">
 							<div class="popup-text left">Term can't be left blank.</div>
