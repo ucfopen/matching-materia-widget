@@ -122,6 +122,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.$apply()
 
 	$scope.changePage = (direction) ->
+		_clearSelections()
 		if direction == 'previous'
 			$scope.currentPage-- unless $scope.currentPage <= 0
 			$scope.pageNext = false
@@ -136,11 +137,11 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		, ANIMATION_DURATION
 
 	$scope.checkForQuestionAudio = (index) ->
-		if $scope.pages[0].questions[index].asset != undefined
+		if $scope.pages[$scope.currentPage].questions[index].asset != undefined
 			return true
 
 	$scope.checkForAnswerAudio = (index) ->
-		if $scope.pages[0].answers[index].asset != undefined
+		if $scope.pages[$scope.currentPage].answers[index].asset != undefined
 			return true
 
 	_pushMatch = () ->
@@ -259,8 +260,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.unapplyHoverSelections = () ->
 		$scope.prelines = []
-		$scope.questionCircles[$scope.currentPage].map((element) -> element.isHover = false)
-		$scope.answerCircles[$scope.currentPage].map((element) -> element.isHover = false)
+		$scope.questionCircles[$scope.currentPage].forEach (element) -> element.isHover = false
+		$scope.answerCircles[$scope.currentPage].forEach (element) -> element.isHover = false
 
 	# truthiness evaluated from function return
 	$scope.isInMatch = (item) ->
