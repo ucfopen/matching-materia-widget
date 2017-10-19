@@ -75,9 +75,8 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, wrapInitMedia(i), _items[i].id ) for i in [0.._items.length-1]
 
 	$scope.onSaveClicked = ->
-		if _buildSaveData() && checkForEmptyInputs()
-			Materia.CreatorCore.save $scope.widget.title, _qset
-		else Materia.CreatorCore.cancelSave 'Widget not ready to save.'
+		_buildSaveData()
+		Materia.CreatorCore.save $scope.widget.title, _qset
 
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
@@ -172,50 +171,49 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			return uniqueId.toString()
 
 	assignString = (counter) ->
-			answer = $scope.widget.wordPairs[counter].answer
-			question = $scope.widget.wordPairs[counter].question
-			questionAudio = $scope.widget.wordPairs[counter].media[0]
-			answerAudio = $scope.widget.wordPairs[counter].media[1]
+		answer = $scope.widget.wordPairs[counter].answer
+		question = $scope.widget.wordPairs[counter].question
+		questionAudio = $scope.widget.wordPairs[counter].media[0]
+		answerAudio = $scope.widget.wordPairs[counter].media[1]
 
-			# create unique id
-			uniqueId = Math.floor(Math.random() * 10000)
+		# create unique id
+		uniqueId = Math.floor(Math.random() * 10000)
 
-			# checks if there are wordpairs with audio that don't have a description
-			# if any exist the description placeholder is set to Audio
-			if questionAudio != 0 && answerAudio != 0 && (question == null || question == '') && (answer == null || answer == '')
-				$scope.widget.wordPairs[counter].question = 'Audio'
-				$scope.widget.wordPairs[counter].answer = 'Audio'
-				return checkIds(uniqueId, $scope.widget.uniqueIds)
-			else if questionAudio != 0 && (question == null || question == '')
-				$scope.widget.wordPairs[counter].question = 'Audio'
-				return checkIds(uniqueId, $scope.widget.uniqueIds)
-			else if answerAudio != 0 && (answer == null || answer == '')
-				$scope.widget.wordPairs[counter].answer = 'Audio'
-				return checkIds(uniqueId, $scope.widget.uniqueIds)
-
-	# checks for any blank question/answer fields
-	# returns false if there are blanks so that the widget cannot be saved
-	checkForEmptyInputs = ->
-		wordPairs = $scope.widget.wordPairs
-		for i in [0..wordPairs.length-1]
-			if wordPairs[i].media[0] is 0 and (wordPairs[i].question is null or wordPairs[i].question is '')
-				return false
-			else if wordPairs[i].media[1] is 0 and (wordPairs[i].answer is null or wordPairs[i].answer is '')
-				return false
-		return true
+		# checks if there are wordpairs with audio that don't have a description
+		# if any exist the description placeholder is set to Audio
+		if questionAudio != 0 && answerAudio != 0 && (question == null || question == '') && (answer == null || answer == '')
+			$scope.widget.wordPairs[counter].question = 'Audio'
+			$scope.widget.wordPairs[counter].answer = 'Audio'
+			return checkIds(uniqueId, $scope.widget.uniqueIds)
+		else if questionAudio != 0 && (question == null || question == '')
+			$scope.widget.wordPairs[counter].question = 'Audio'
+			return checkIds(uniqueId, $scope.widget.uniqueIds)
+		else if answerAudio != 0 && (answer == null || answer == '')
+			$scope.widget.wordPairs[counter].answer = 'Audio'
+			return checkIds(uniqueId, $scope.widget.uniqueIds)
 
 	# Private methods
 	_buildSaveData = ->
-		okToSave = true
-		_qset.items      = []
+		return false if $scope.widget.title is ''
+		_qset.items = []
 		_qset.items[0] =
 			name: "null"
 			items: []
-		wordPairs  = $scope.widget.wordPairs
+		wordPairs = $scope.widget.wordPairs
 
-		_qset.items[0].items.push( _process wordPairs[i],unwrapQuestionValue(i),unwrapAnswerValue(i),assignString(i)) for i in [0..wordPairs.length-1]
-		okToSave = false if $scope.widget.title is ''
-		okToSave
+		for i in [0..wordPairs.length-1]
+			pair = wordPairs[i]
+			# Don't allow any with blank questions (left side)
+			if not pair.question? or pair.question.trim() == ''
+				continue
+
+			# Blank answers (right side) are allowed, they just won't showup when playing
+			if not pair.answer?
+				pair.answer = ''
+
+			pairData = _process wordPairs[i],unwrapQuestionValue(i),unwrapAnswerValue(i),assignString(i)
+			_qset.items[0].items.push(pairData)
+		true
 
 	# Get each pair's data from the controller and organize it into Qset form.
 	_process = (wordPair, questionMedia, answerMedia, audioString) ->
@@ -223,13 +221,13 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			text: wordPair.question
 		]
 		answers: [
-			text: wordPair.answer
+			text: wordPair.answer.trim()
 			value: '100',
 			id: ''
 		]
 		type: 'QA'
 		id: wordPair.id
 		assets: [questionMedia,answerMedia,audioString]
+
 	Materia.CreatorCore.start $scope
 ]
-
