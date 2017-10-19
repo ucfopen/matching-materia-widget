@@ -60,6 +60,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 		_itemIndex = 0
 		_pageIndex = 0
+		_indexShift = 0
 
 		for item in qset.items[0].items
 			if _itemIndex == ITEMS_PER_PAGE
@@ -90,6 +91,13 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				color: 'c0'
 			}
 
+			# Adjust if this is a 'fakeout' answer option
+			if item.assets[1] == 0 and not item.answers[0].text.length
+				_itemIndex++
+				_indexShift++
+				$scope.totalItems--
+				continue
+
 			wrapAnswerUrl = ->
 				if item.assets[1] != 0
 					return $sce.trustAsResourceUrl(item.assets[1])
@@ -105,7 +113,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.answerCircles[_pageIndex].push {
 				r:CIRCLE_RADIUS
 				cx: CIRCLE_END_X
-				cy:CIRCLE_SPACING *_itemIndex + CIRCLE_OFFSET
+				cy:CIRCLE_SPACING * (_itemIndex - _indexShift) + CIRCLE_OFFSET
 				id:_itemIndex
 				isHover: false
 				type: 'answer-circle'
@@ -226,8 +234,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.unapplyHoverSelections()
 
 	_clearSelections = () ->
-			$scope.selectedQA[$scope.currentPage].question = -1
-			$scope.selectedQA[$scope.currentPage].answer = -1
+		$scope.selectedQA[$scope.currentPage].question = -1
+		$scope.selectedQA[$scope.currentPage].answer = -1
 
 	_updateLines = () ->
 		$scope.lines = []
