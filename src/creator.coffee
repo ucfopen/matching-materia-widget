@@ -204,14 +204,14 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		for i in [0..wordPairs.length-1]
 			pair = wordPairs[i]
 			# Don't allow any with blank questions (left side)
-			if not pair.question? or pair.question.trim() == ''
+			if (not pair.question? or pair.question.trim() == '') and not wordPairs[i].media[0]
 				continue
 
 			# Blank answers (right side) are allowed, they just won't showup when playing
 			if not pair.answer?
 				pair.answer = ''
 
-			pairData = _process wordPairs[i],unwrapQuestionValue(i),unwrapAnswerValue(i),assignString(i)
+			pairData = _process wordPairs[i], unwrapQuestionValue(i), unwrapAnswerValue(i), assignString(i)
 			_qset.items[0].items.push(pairData)
 		true
 
