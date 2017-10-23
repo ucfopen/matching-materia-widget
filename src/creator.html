@@ -51,7 +51,7 @@
 							<div class="popup-text left">Term can't be left blank.</div>
 						</div>
 					</div>
-					<div class="audio-display" ng-show="checkMedia($index, 0)" ng-style='autoSize(pair, true)'>
+					<div class="audio-display" ng-if="checkMedia($index, 0)" ng-style='autoSize(pair, true)'>
 						<audio id="audio" controls="controls" preload="none">
 							<source id="audio-source" ng-src="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}" type="audio/mpeg">
 						</audio>
@@ -77,7 +77,7 @@
 							<div class="popup-text right">If you leave this side blank, it will not appear when playing.</div>
 						</div>
 					</div>
-					<div class="audio-display" ng-show="checkMedia($index, 1)" ng-style='autoSize(pair, true)'>
+					<div class="audio-display" ng-if="checkMedia($index, 1)" ng-style='autoSize(pair, true)'>
 						<audio id="audio" controls="controls" preload="none">
 							<source id="audio-source" ng-src="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}" type="audio/mpeg">
 						</audio>
