@@ -135,7 +135,7 @@
 			</ul>
 		</section>
 
-		<footer>
+		<footer ng-class="{'onTop': pageAnimate}">
 			<section id="page-selector">
 				<span class="button" id="prev-button" ng-click="changePage('previous')" ng-class="{'shown': currentPage >= 1}">Previous Page</span>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext, 'animateRotationLeft': pageAnimate && !pageNext}">

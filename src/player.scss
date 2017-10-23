@@ -374,6 +374,9 @@ footer {
   height: 80px;
   bottom: 0px;
   z-index: 10;
+  &.onTop {
+    z-index: 30;
+  }
   #submit {
     position                : absolute;
     background-color        : #3498DB;

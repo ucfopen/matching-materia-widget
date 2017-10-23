@@ -133,19 +133,23 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.$apply()
 
 	$scope.changePage = (direction) ->
+		return if $scope.pageAnimate
 		_clearSelections()
-		if direction == 'previous'
-			$scope.currentPage-- unless $scope.currentPage <= 0
-			$scope.pageNext = false
-		if direction == 'next'
-			$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
-			$scope.pageNext = true
 
-		# pageAnimate is used by the li elements and the rotating circle
+		# pageAnimate is used by the li elements and the rotating circle, also sets footer onTop
+		$scope.pageNext = (direction == 'next')
 		$scope.pageAnimate = true
 		$timeout ->
-			$scope.pageAnimate= false
-		, ANIMATION_DURATION
+			if direction == 'previous'
+				$scope.currentPage-- unless $scope.currentPage <= 0
+			if direction == 'next'
+				$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
+		, ANIMATION_DURATION/3
+
+		$timeout ->
+			$scope.pageAnimate = false
+		, ANIMATION_DURATION*1.1
+
 
 	$scope.checkForQuestionAudio = (index) ->
 		$scope.pages[$scope.currentPage].questions[index].asset != undefined
