@@ -61,9 +61,11 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		_itemIndex = 0
 		_pageIndex = 0
 		_indexShift = 0
+		# Splits the the last items over the last two pages
+		_splitPoint = ~~(4 + (1 + ($scope.totalItems % ITEMS_PER_PAGE))/3)
 
 		for item in qset.items[0].items
-			if _itemIndex == ITEMS_PER_PAGE
+			if _itemIndex == ITEMS_PER_PAGE or (_pageIndex == $scope.totalPages - 2 && _itemIndex == _splitPoint)
 				_shuffle $scope.pages[_pageIndex].questions
 				_shuffle $scope.pages[_pageIndex].answers
 				_itemIndex = 0
