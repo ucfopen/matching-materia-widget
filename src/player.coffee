@@ -62,7 +62,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		_pageIndex = 0
 		_indexShift = 0
 		# Splits the the last items over the last two pages
-		_splitPoint = ~~(4 + (1 + ($scope.totalItems % ITEMS_PER_PAGE))/3)
+		_splitPoint = ~~(4 + (($scope.totalItems % ITEMS_PER_PAGE) - 1)/2)
 
 		for item in qset.items[0].items
 			if _itemIndex == ITEMS_PER_PAGE or (_pageIndex == $scope.totalPages - 2 && _itemIndex == _splitPoint)
