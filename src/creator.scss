@@ -527,6 +527,7 @@ body {
 	margin-left: 140px;
 
 	animation: pounce 1s infinite;
+	&.ng-animate { -webkit-animation: none 0s; }
 
 	span {
 		display: inline-block;
