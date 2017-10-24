@@ -166,15 +166,12 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 
 			# checks if there are wordpairs with audio that don't have a description
 			# if any exist the description placeholder is set to Audio
-			if questionAudio != 0 && answerAudio != 0 && (question == null || question == '') && (answer == null || answer == '')
+			if questionAudio != 0 && (question == null || question == '')
 				$scope.widget.wordPairs[counter].question = 'Audio'
-				$scope.widget.wordPairs[counter].answer = 'Audio'
-			else if questionAudio != 0 && (question == null || question == '')
-				$scope.widget.wordPairs[counter].question = 'Audio'
-			else if answerAudio != 0 && (answer == null || answer == '')
+			if answerAudio != 0 && (answer == null || answer == '')
 				$scope.widget.wordPairs[counter].answer = 'Audio'
 
-			return checkIds(uniqueId, $scope.widget.uniqueIds)
+			return checkIds(uniqueId, $scope.widget.uniqueIds) if answerAudio
 
 	# checks for any blank question/answer fields
 	# returns false if there are blanks so that the widget cannot be saved
