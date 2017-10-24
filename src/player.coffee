@@ -94,6 +94,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				cy:CIRCLE_SPACING * _itemIndex + CIRCLE_OFFSET
 				id:_itemIndex
 				isHover: false
+				lightHover: false
 				type: 'question-circle'
 				color: 'c0'
 			}
@@ -123,6 +124,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				cy:CIRCLE_SPACING * (_itemIndex - _indexShift) + CIRCLE_OFFSET
 				id:_itemIndex
 				isHover: false
+				lightHover: false
 				type: 'answer-circle'
 				color: 'c0'
 			}
@@ -278,8 +280,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.unapplyHoverSelections = () ->
 		$scope.prelines = []
-		$scope.questionCircles[$scope.currentPage].forEach (element) -> element.isHover = false
-		$scope.answerCircles[$scope.currentPage].forEach (element) -> element.isHover = false
+		$scope.questionCircles[$scope.currentPage].forEach (element) ->
+			element.isHover = false
+			element.lightHover = false
+		$scope.answerCircles[$scope.currentPage].forEach (element) ->
+			element.isHover = false
+			element.lightHover = false
 
 	# truthiness evaluated from function return
 	$scope.isInMatch = (item) ->
@@ -292,18 +298,19 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		matchedItem
 
 	$scope.drawPrelineToRight = (hoverItem) ->
-		# exit if a question has not been selected
-		if $scope.selectedQA[$scope.currentPage].question == -1
-			return
-
-		startIndex = $scope.selectedQA[$scope.currentPage].question
-
 		elementId = hoverItem.id
 		# get the index of the item in the current page by finding it with its id
 		endIndex = $scope.pages[$scope.currentPage].answers.map((element) ->
 			if(element != undefined)
 				element.id
 			).indexOf elementId
+
+		# exit if a question has not been selected
+		if $scope.selectedQA[$scope.currentPage].question == -1
+			$scope.answerCircles[$scope.currentPage][endIndex].lightHover = true
+			return
+
+		startIndex = $scope.selectedQA[$scope.currentPage].question
 
 		if $scope.prelines.length > 0
 			$scope.prelines = []
@@ -322,18 +329,19 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.answerCircles[$scope.currentPage][endIndex].isHover = true
 
 	$scope.drawPrelineToLeft = (hoverItem) ->
-		# exit if a question has not been selected
-		if $scope.selectedQA[$scope.currentPage].answer == -1
-			return
-
-		startIndex = $scope.selectedQA[$scope.currentPage].answer
-
 		elementId = hoverItem.id
 		# get the index of the item in the current page by finding it with its id
 		endIndex = $scope.pages[$scope.currentPage].questions.map((element) ->
 			if(element != undefined)
 				element.id
 		).indexOf elementId
+
+		# exit if a question has not been selected
+		if $scope.selectedQA[$scope.currentPage].answer == -1
+			$scope.questionCircles[$scope.currentPage][endIndex].lightHover = true
+			return
+
+		startIndex = $scope.selectedQA[$scope.currentPage].answer
 
 		if $scope.prelines.length > 0
 			$scope.prelines = []
