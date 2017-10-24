@@ -140,10 +140,12 @@ audio::-webkit-media-controls-enclosure {
             stroke: #1ABC9C;
             stroke-width: 2;
             fill: none;
-            opacity: 0.2
+            opacity: 0.2;
           }
-
-          &.hollows-selected{
+          &.hollows-hover {
+            opacity: 0.5;
+          }
+          &.hollows-selected {
             opacity: 1;
           }
         } //end circle
