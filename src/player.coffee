@@ -26,6 +26,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	$scope.totalPages = 1
 	$scope.currentPage = 0
 	$scope.totalItems = 0
+	$scope.setCreated = false
 
 	$scope.qset = {}
 
@@ -131,6 +132,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		# final shuffling for last page
 		_shuffle $scope.pages[_pageIndex].questions
 		_shuffle $scope.pages[_pageIndex].answers
+		$scope.setCreated = true
 
 		Materia.Engine.setHeight()
 		$scope.$apply()
