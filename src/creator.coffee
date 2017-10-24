@@ -169,13 +169,12 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			if questionAudio != 0 && answerAudio != 0 && (question == null || question == '') && (answer == null || answer == '')
 				$scope.widget.wordPairs[counter].question = 'Audio'
 				$scope.widget.wordPairs[counter].answer = 'Audio'
-				return checkIds(uniqueId, $scope.widget.uniqueIds)
 			else if questionAudio != 0 && (question == null || question == '')
 				$scope.widget.wordPairs[counter].question = 'Audio'
-				return checkIds(uniqueId, $scope.widget.uniqueIds)
 			else if answerAudio != 0 && (answer == null || answer == '')
 				$scope.widget.wordPairs[counter].answer = 'Audio'
-				return checkIds(uniqueId, $scope.widget.uniqueIds)
+
+			return checkIds(uniqueId, $scope.widget.uniqueIds)
 
 	# checks for any blank question/answer fields
 	# returns false if there are blanks so that the widget cannot be saved
