@@ -42,7 +42,7 @@
 							<span class="text-wrapper" ng-class="{'long': (question.text.length > 17)}">{{checkForQuestionAudio($index) ? "" : question.text}}</span>
 							<span ng-class="{'expand': (question.text.length > 61), 'noExpand': (question.text.length <= 61 || checkForQuestionAudio($index))}" data-icon="&#xe000;" aria-hidden="true"></span>
 						</div>
-						<audio controls id="audio" preload="none" ng-show="{{checkForQuestionAudio($index)}}">
+						<audio controls controlsList="nodownload" id="audio" preload="none" ng-show="{{checkForQuestionAudio($index)}}">
 							<source ng-src="{{question.asset}}" type="audio/mpeg">
 						</audio>
 
@@ -122,7 +122,7 @@
 						<span class="text-wrapper" ng-class="{'long': (answer.text.length > 17)}">{{checkForAnswerAudio($index) ? "" : answer.text}}</span>
 						<span ng-class="{'expand': (answer.text.length > 61), 'noExpand': (answer.text.length <= 61 || checkForAnswerAudio($index))}" data-icon="&#xe000;" aria-hidden="true"></span>
 					</div>
-					<audio controls id="audio" preload="none" ng-show="{{checkForAnswerAudio($index)}}">
+					<audio controls controlsList="nodownload" id="audio" preload="none" ng-show="{{checkForAnswerAudio($index)}}">
 						<source ng-src="{{answer.asset}}" type="audio/mpeg">
 					</audio>
 

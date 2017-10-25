@@ -62,13 +62,6 @@ html, body {
   width         : 200px;
   margin-left   : -38px;
 }
-audio::-webkit-media-controls {
-  overflow : hidden !important
-}
-audio::-webkit-media-controls-enclosure {
-  width       : calc(100% + 32px);
-  margin-left : auto;
-}
 
 .gameboard {
   z-index  : 20;
