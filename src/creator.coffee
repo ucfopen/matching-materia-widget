@@ -190,7 +190,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 
 	# Private methods
 	_buildSaveData = ->
-		return false if $scope.widget.title is ''
 		_qset.items = []
 		_qset.items[0] =
 			name: "null"
