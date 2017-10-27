@@ -77,43 +77,63 @@ describe('Matching', function(){
 			expect(testQuestion.answers[0].text).toBe('to change');
 		});
 
-		it('should cancel saving if widget title is invalid', function(){
-			//unset the widget title
-			$scope.widget.title = '';
-			//the error message should be what we expect it to be
-			expect(function(){
-				$scope.onSaveClicked();
-			}).toThrow(new Error('Widget not ready to save.'));
+		it('should handle null question and answers', function() {
+			// When three rows are added, their content doesn't matter until being saved
+			expect($scope.widget.wordPairs.length).toBe(9);
+			$scope.addWordPair(null, null, [0,0]);
+			$scope.addWordPair(null, "abc", [0,0]);
+			$scope.addWordPair("abc", null, [0,0]);
+			expect($scope.widget.wordPairs.length).toBe(12);
+
+			// Only one of the three (last one) should be valid
+			var successReport = $scope.onSaveClicked();
+			expect(successReport.qset.items[0].items.length).toBe(10);
+			expect(successReport.qset.items[0].items[9].answers[0].text).toBe("");
+
+			// check that the null questions were removed, but the valid ones remain
+			expect($scope.widget.wordPairs.length).toBe(10);
+			$scope.removeWordPair(9);
+			expect($scope.widget.wordPairs.length).toBe(9);
+			var successReport = $scope.onSaveClicked();
+			expect(successReport.qset.items[0].items.length).toBe(9);
 		});
 
-		it('should cancel saving if question text and question audio are blank', function(){
+		it('should not save questions that have no text and no audio', function() {
+			// There should be 7 items in the qset so far
+			var successReport = $scope.onSaveClicked();
+			expect(successReport.qset.items[0].items.length).toBe(9);
+
+			// Add two regular question/answer pairs, total number will be 11
+			$scope.addWordPair("question1", "answer1", [0,0]);
+			$scope.addWordPair("question2", "answer2", [0,0]);
+			var successReport = $scope.onSaveClicked();
+			expect(successReport.qset.items[0].items.length).toBe(11);
+
+			// Add a wordpair that has no question and no media, total should stay at 11
+			$scope.addWordPair("", "answer", [0,0]);
+			var successReport = $scope.onSaveClicked();
+			expect(successReport.qset.items[0].items.length).toBe(11);
+		});
+
+		it('should trim whitespace on an otherwise blank answer', function() {
+			$scope.addWordPair("question3", "      ", [0,0]);
+			var successReport = $scope.onSaveClicked();
+			expect(successReport.qset.items[0].items[11].answers[0].text).toBe("");
+		});
+
+		it('should generate an id for audio without a description', function() {
 			//Add wordpair that has no answer text but has answer audio (this covers assignString function)
 			$scope.addWordPair("question", "", [0,"answer.mp3"]);
 			//Add wordpair that has no answer/question text but has answer/question audio (this covers assignString function)
 			$scope.addWordPair("", "", ["question.mp3","answer.mp3"]);
-			//set title again so that the widget fails saving because of
-			//question or answer text and audio being blank
-			$scope.widget.title = 'Widget Title';
-			//add wordpair that has blank question text and no question audio 
-			$scope.addWordPair("", "answer", [0,0]);
-			//the error message should be what we expect it to be
-			expect(function(){
-				$scope.onSaveClicked();
-			}).toThrow(new Error('Widget not ready to save.'));
-		});
-
-		it('should cancel saving if answer text and answer audio are blank', function(){
-			//Add wordpair that has no question text but has question audio (this covers assignString function)
-			$scope.addWordPair("", "answer", ["question.mp3",0]);
-			//remove previously added wordPair so that the widget fails saving on
-			//the new wordPair we create that has no answer text/audio
-			$scope.widget.wordPairs.splice(11, 1);
-			//add wordpair that has blank answer text and no answer audio 
-			$scope.addWordPair("question", "", [0,0]);
-			//the error message should be what we expect it to be
-			expect(function(){
-				$scope.onSaveClicked();
-			}).toThrow(new Error('Widget not ready to save.'));
+			var successReport = $scope.onSaveClicked();
+			// Make sure the blank descriptions are set to be "Audio"
+			expect(successReport.qset.items[0].items[12].answers[0].text).toBe("Audio");
+			expect(successReport.qset.items[0].items[13].questions[0].text).toBe("Audio");
+			expect(successReport.qset.items[0].items[13].answers[0].text).toBe("Audio");
+			// Make sure there is some id for these
+			expect(successReport.qset.items[0].items[12].assets[2]).toBeDefined();
+			expect(successReport.qset.items[0].items[13].assets[2]).toBeDefined();
 		});
 
 		it('should properly remove word pair', function(){
@@ -209,6 +229,24 @@ describe('Matching', function(){
 			expect($scope.autoSize({question: '', answer: ''}, true)).toEqual({height: '85px'});
 			//test if audio is true and there are more than 15 characters
 			expect($scope.autoSize({question: 'thisIsNineteenChars', answer: 'thisIsNineteenChars'}, true)).toEqual({height: 85 + greaterThan15chars.length * 1.1 + 'px'});
+		});
+
+		it('should display and hide the info dots correctly', function() {
+			// Add some wordpairs to test
+			expect($scope.widget.wordPairs.length).toBe(9);
+			$scope.addWordPair('', '', [0,0]);                  // at index 9 (show, show)
+			$scope.addWordPair('not blank', "not blank", [0,0]);        // 10 (hide, hide)
+			$scope.addWordPair('', '', ["question.mp3", "answer.mp3"]); // 11 (hide, hide)
+
+			// undefined -> show
+			// {display: 'none'} -> hide
+			wordPairs = $scope.widget.wordPairs;
+			expect($scope.displayInfoDot(wordPairs[9], true, 9)).toBeUndefined();
+			expect($scope.displayInfoDot(wordPairs[9], false, 9)).toBeUndefined();
+			expect($scope.displayInfoDot(wordPairs[10], true, 10)).toEqual({display: 'none'});
+			expect($scope.displayInfoDot(wordPairs[10], false, 10)).toEqual({display: 'none'});
+			expect($scope.displayInfoDot(wordPairs[11], true, 11)).toEqual({display: 'none'});
+			expect($scope.displayInfoDot(wordPairs[11], false, 11)).toEqual({display: 'none'});
 		});
 	});
 });
