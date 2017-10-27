@@ -260,14 +260,7 @@ body {
 					background-color: darken(lightgoldenrodyellow, 10%);
 				}
 			}
-		}
-		.popup {
-			opacity: 0;
-			position: absolute;
-			right: 0;
-			z-index: -1;
-			transition: 200ms;
-			&.shown {
+			&:hover + .wrap > .popup{
 				clear: both;
 				z-index: 1;
 				opacity: .95;
@@ -275,6 +268,13 @@ body {
 				transition: 300ms;
 				display: block;
 			}
+		}
+		.popup {
+			opacity: 0;
+			position: absolute;
+			right: 0;
+			z-index: -1;
+			transition: 200ms;
 			.popup-text {
 				position         : relative;
 				height           : 40px;
