@@ -17,7 +17,6 @@
     "no-empty": "warn",
     "no-console": "warn",
     "no-unused-vars": "warn",
-    "no-extra-parens": "error",
     "curly": "error",
     "no-empty-function": "error",
     "no-magic-numbers": ["warn",
