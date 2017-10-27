@@ -190,10 +190,12 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			items: []
 		wordPairs = $scope.widget.wordPairs
 
+		toRemove = []
 		for i in [0..wordPairs.length-1]
 			pair = wordPairs[i]
 			# Don't allow any with blank questions (left side)
 			if (not pair.question? or pair.question.trim() == '') and not wordPairs[i].media[0]
+				toRemove.push(i);
 				continue
 
 			# Blank answers (right side) are allowed, they just won't show up when playing
@@ -202,7 +204,9 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 
 			pairData = _process wordPairs[i], unwrapQuestionValue(i), unwrapAnswerValue(i), assignString(i)
 			_qset.items[0].items.push(pairData)
-		true
+
+		for i, index in toRemove
+			$scope.removeWordPair(i - index);
 
 	# Get each pair's data from the controller and organize it into Qset form.
 	_process = (wordPair, questionMedia, answerMedia, audioString) ->
