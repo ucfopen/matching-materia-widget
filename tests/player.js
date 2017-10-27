@@ -76,22 +76,32 @@ describe('Matching', function() {
 			expect($scope.pages.length).toBe(2);
 		});
 
-		it('should change to the previous page', function () {
+		it('should change to the previous page', inject(function ($timeout) {
 			$scope.currentPage = 1;
 			$scope.changePage('previous');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(0);
+
 			//make sure you can't go below 0
 			$scope.changePage('previous');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(0);
-		});
+		}));
 
-		it('should change to the next page', function () {
+		it('should change to the next page', inject(function ($timeout) {
 			$scope.changePage('next');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(1);
-			$scope.changePage('next');
+
 			//make sure you can't go above the highest page
+			$scope.changePage('next');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(1);
-		});
+		}));
 
 		it('should animate on page change', inject(function ($timeout) {
 			$scope.changePage('next');
@@ -99,6 +109,11 @@ describe('Matching', function() {
 			$timeout.verifyNoPendingTasks();
 			expect($scope.pageAnimate).toBe(false);
 		}));
+
+		it('should not allow page switches before the animation completes', function() {
+			$scope.pageAnimate = true;
+			expect($scope.changePage('previous')).toBe(false);
+		});
 
 		it('make a match -- start from empty matches', function () {
 			setupQA();
@@ -301,7 +316,8 @@ describe('Matching', function() {
 			$scope.matches = [];
 			$scope.matches.push({questionId:1, answerId: 1});
 
-			//change the qset to only have 1 item
+			// temporarily change the qset to only have 1 item
+			temp = angular.copy(qset);
 			qset.data.items[0].items = [
 			{
 			  "id": 1,
@@ -315,12 +331,13 @@ describe('Matching', function() {
 				  "text": "to change"
 				}
 			  ],
-			   "assets":[  
+			   "assets":[
 				  0,
 				  0,
 				  null
 			   ]
 			}];
+			qset = temp;
 
 			$scope.submit();
 			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, 'to change', null);
@@ -352,6 +369,26 @@ describe('Matching', function() {
 			expect($scope.answerCircles[0][0].isHover).toBe(false);
 		});
 
+		it('should split the last items over the last two pages', function() {
+			// with 9 items, split should be 5/4
+			expect($scope.pages[0].questions.length).toBe(5);
+			expect($scope.pages[1].questions.length).toBe(4);
+
+			// create a new set with 6 pairs and the last answer is blank
+			var sixSet = {};
+			sixSet = angular.copy(qset);
+			sixSet.data.items[0].items = sixSet.data.items[0].items.slice(0,6);
+			sixSet.data.items[0].items[5].answers[0].text = ''
+			$scope.pages = [];
+			$scope.start(widgetInfo, sixSet.data);
+
+			// now there should be a single full page
+			expect($scope.pages.length).toBe(1);
+			expect($scope.pages[0].questions.length).toBe(6);
+			expect($scope.pages[0].answers.length).toBe(5);
+
+		});
+
 		it('should not shuffle if only 1 item', function () {
 			var smallQset={};
 			angular.copy(qset, smallQset);
@@ -363,5 +400,6 @@ describe('Matching', function() {
 			expect($scope.pages[0].answers[0].text).toEqual(
 					'to change');
 		});
+
 	});
 });
