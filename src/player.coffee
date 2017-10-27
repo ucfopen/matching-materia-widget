@@ -140,7 +140,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.$apply()
 
 	$scope.changePage = (direction) ->
-		return if $scope.pageAnimate
+		return false if $scope.pageAnimate
 		_clearSelections()
 
 		# pageAnimate is used by the li elements and the rotating circle, also sets footer onTop
