@@ -173,6 +173,16 @@ describe('Matching', function(){
 			expect($scope.widget.wordPairs).toEqual(initialwordPairs);
 		});
 
+		it('should handle no media imports', function () {
+			//create fake media object
+			var media = [{id: "audioTest"}];
+			//check if media exists and begin import
+			$scope.checkMedia(0,0);
+			$scope.beginMediaImport(0,0);
+			expect(	$scope.onMediaImportComplete(media)).toBe(true);
+
+		});
+
 		it('should import media properly', function(){
 			//create fake media object
 			var media = [{id: "audioTest"}];
@@ -206,6 +216,7 @@ describe('Matching', function(){
 			expect(audioSpy.calls.any()).toEqual(true);
 			expect(audioSpyTwo.calls.any()).toEqual(true);
 		});
+
 
 		it('should autosize correctly', function () {
 			var lessThan15chars = 'small';
