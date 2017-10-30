@@ -75,8 +75,9 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, wrapInitMedia(i), _items[i].id ) for i in [0.._items.length-1]
 
 	$scope.onSaveClicked = ->
-		_buildSaveData()
-		Materia.CreatorCore.save $scope.widget.title, _qset
+		# don't allow empty sets to be saved.
+		if _buildSaveData()
+			Materia.CreatorCore.save $scope.widget.title, _qset
 
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
@@ -104,7 +105,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			# if statement used here to only load the audio tags that have a src
 			if audioTags[count] != undefined
 				audioTags[count].load()
-		return;
+		return true
 
 	$scope.checkMedia = (index, which) ->
 		return $scope.widget.wordPairs[index].media[which] != 0
@@ -190,12 +191,14 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			items: []
 		wordPairs = $scope.widget.wordPairs
 
+		return false if not wordPairs.length
+
 		toRemove = []
 		for i in [0..wordPairs.length-1]
 			pair = wordPairs[i]
 			# Don't allow any with blank questions (left side)
 			if (not pair.question? or pair.question.trim() == '') and not wordPairs[i].media[0]
-				toRemove.push(i);
+				toRemove.push(i)
 				continue
 
 			# Blank answers (right side) are allowed, they just won't show up when playing
@@ -206,7 +209,10 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			_qset.items[0].items.push(pairData)
 
 		for i, index in toRemove
-			$scope.removeWordPair(i - index);
+			$scope.removeWordPair(i - index)
+		$scope.$apply()
+
+		return $scope.widget.wordPairs.length > 0
 
 	# Get each pair's data from the controller and organize it into Qset form.
 	_process = (wordPair, questionMedia, answerMedia, audioString) ->
