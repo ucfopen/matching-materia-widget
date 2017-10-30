@@ -259,5 +259,15 @@ describe('Matching', function(){
 			expect($scope.displayInfoDot(wordPairs[11], true, 11)).toEqual({display: 'none'});
 			expect($scope.displayInfoDot(wordPairs[11], false, 11)).toEqual({display: 'none'});
 		});
+
+		it('should not save a blank qset', function() {
+			// Remove all of the word pairs
+			while ($scope.widget.wordPairs.length)
+				$scope.removeWordPair(0);
+
+			// Try saving, we should not be able to
+			var successReport = $scope.onSaveClicked();
+			expect(successReport).toBeUndefined();
+		});
 	});
 });
