@@ -10,7 +10,6 @@
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="materia.enginecore.js"></script>
-		<script src="materia.score.js"></script>
 
 		<!-- OPTIONAL MATERIA JAVASCRIPT -->
 		<!-- <script src="materia.storage.manager.js"></script> -->
@@ -28,132 +27,190 @@
 			<h1>{{ title }}</h1>
 		</header>
 
-			<section class="gameboard"
-								ng-class="{'pageAnimate': pageAnimate}">
-				<ul class="column column1">
-					<li class="word"
-							ng-repeat="question in pages[currentPage].questions"
-							ng-click="selectQuestion(question)"
-							ng-mouseover="drawPrelineToLeft(question)"
-							ng-mouseleave="unapplyHoverSelections()"
-							ng-class="{'matched' : isInMatch(question)}">
+		<section class="gameboard"
+			ng-class="{'pageAnimate': pageAnimate}">
+			<ul class="column column1">
+				<li class="word"
+					ng-repeat="question in pages[currentPage].questions"
+					ng-click="selectQuestion(question)"
+					ng-mouseover="drawPrelineToLeft(question)"
+					ng-mouseleave="unapplyHoverSelections()"
+					ng-class="{'matched' : isInMatch(question)}">
 
-						<div class="word-text">
-							<span class="text-wrapper" ng-class="{'long': (question.text.length > 17)}">{{checkForQuestionAudio($index) ? "" : question.text}}</span>
-							<span ng-class="{'expand': (question.text.length > 61), 'noExpand': (question.text.length <= 61 || checkForQuestionAudio($index))}" data-icon="&#xe000;" aria-hidden="true"></span>
-						</div>
-						<audio controls controlsList="nodownload" class="audio" preload="none" ng-show="{{checkForQuestionAudio($index)}}">
-							<source ng-src="{{question.asset}}" type="audio/mpeg">
-						</audio>
-
-						<div class="wrap">
-							<div class="popup" ng-hide="checkForQuestionAudio($index)" ng-class="{'shown': (question.text.length > 61)}">
-								<div class="popup-text left">{{question.text}}</div>
-								<div class="popup-arrow" ng-class="{'left': (question.text.length > 61)}"></div>
-							</div>
-						</div>
-
-					</li>
-				</ul>
-
-				<div class="column svg-column">
-					<svg id="holder" style="height:400px">
-
-						<line ng-repeat="line in lines[currentPage]"
-						      class="linePlaced"
-						      ng-attr-x1="{{line.startX}}"
-						      ng-attr-y1="{{line.startY}}"
-						      ng-attr-x2="{{line.endX}}"
-						      ng-attr-y2="{{line.endY}}"/>
-
-						<line ng-repeat="line in prelines"
-						      ng-attr-x1="{{line.linex1}}"
-						      ng-attr-x2="{{line.linex2}}"
-						      ng-attr-y1="{{line.liney1}}"
-						      ng-attr-y2="{{line.liney2}}"/>
-
-						<circle class="hollows"
-										ng-repeat="circle in questionCircles[currentPage]"
-										ng-attr-r="{{circle.r}}"
-										ng-attr-cx="{{circle.cx}}"
-										ng-attr-cy="{{circle.cy}}"
-										ng-class="{'hollows-selected' : questionCircles[currentPage][$index].isHover}">
-						</circle>
-
-						<circle
-										class = "{{circle.color}}"
-										ng-repeat="circle in questionCircles[currentPage]"
-										ng-class="{'selected' : applyCircleClass(circle),
-															'circleHover' : questionCircles[currentPage][$index].isHover}"
-										ng-attr-r="{{circle.r/2}}"
-										ng-attr-cx="{{circle.cx}}"
-										ng-attr-cy="{{circle.cy}}">
-						</circle>
-
-						<circle class="hollows"
-										ng-repeat="circle in answerCircles[currentPage]"
-										ng-attr-r="{{circle.r}}"
-										ng-attr-cx="{{circle.cx}}"
-										ng-attr-cy="{{circle.cy}}"
-										ng-class="{'hollows-selected' : answerCircles[currentPage][$index].isHover}">
-						</circle>
-
-						<circle
-								class = "{{circle.color}}"
-								ng-repeat="circle in answerCircles[currentPage]"
-								ng-class="{'selected' : applyCircleClass(circle),
-													'circleHover': answerCircles[currentPage][$index].isHover}"
-								ng-attr-r="{{circle.r/2}}"
-								ng-attr-cx="{{circle.cx}}"
-								ng-attr-cy="{{circle.cy}}">
-						</circle>
-
-					</svg>
-				</div>
-
-			<ul class="column column2">
-					<li class="word"
-						ng-repeat="answer in pages[currentPage].answers"
-						ng-click="selectAnswer(answer)"
-						ng-mouseover="drawPrelineToRight(answer)"
-						ng-mouseleave="unapplyHoverSelections()"
-						ng-class="{matched : isInMatch(answer)}">
 					<div class="word-text">
-						<span class="text-wrapper" ng-class="{'long': (answer.text.length > 17)}">{{checkForAnswerAudio($index) ? "" : answer.text}}</span>
-						<span ng-class="{'expand': (answer.text.length > 61), 'noExpand': (answer.text.length <= 61 || checkForAnswerAudio($index))}" data-icon="&#xe000;" aria-hidden="true"></span>
+						<span class="text-wrapper" ng-class="{'long': (question.text.length > 17)}">
+							{{checkForQuestionAudio($index) ? "" : question.text}}
+						</span>
+						<span ng-class="{'expand': (question.text.length > 61),
+							'noExpand': (question.text.length <= 61 || checkForQuestionAudio($index))}"
+							data-icon="&#xe000;"
+							aria-hidden="true">
+						</span>
 					</div>
-					<audio controls controlsList="nodownload" class="audio" preload="none" ng-show="{{checkForAnswerAudio($index)}}">
-						<source ng-src="{{answer.asset}}" type="audio/mpeg">
+					<audio controls
+						controlsList="nodownload"
+						class="audio"
+						preload="none"
+						ng-show="{{checkForQuestionAudio($index)}}">
+						<source ng-src="{{question.asset}}" type="audio/mpeg">
 					</audio>
 
 					<div class="wrap">
-							<div class="popup" ng-hide="checkForAnswerAudio($index)" ng-class="{'shown': (answer.text.length > 61)}">
-								<div class="popup-text right">{{answer.text}}</div>
-								<div class="popup-arrow" ng-class="{'right': (answer.text.length > 61)}"></div>
+						<div class="popup"
+							ng-hide="checkForQuestionAudio($index)"
+							ng-class="{'shown': (question.text.length > 61)}">
+							<div class="popup-text left">
+								{{question.text}}
+							</div>
+							<div class="popup-arrow"
+								ng-class="{'left': (question.text.length > 61)}">
 							</div>
 						</div>
+					</div>
+
+					<div class="wrap">
+						<div class="popup" ng-class="{'shown': (question.text.length > 61)}">
+							<div class="popup-text left">{{question.text}}</div>
+							<div class="popup-arrow" ng-class="{'left': (question.text.length > 61)}"></div>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+			<div class="column svg-column">
+				<svg id="holder" style="height:400px">
+
+					<line ng-repeat="line in lines[currentPage]"
+						class="linePlaced"
+						ng-attr-x1="{{line.startX}}"
+						ng-attr-y1="{{line.startY}}"
+						ng-attr-x2="{{line.endX}}"
+						ng-attr-y2="{{line.endY}}"/>
+
+					<line ng-repeat="line in prelines"
+						ng-attr-x1="{{line.linex1}}"
+						ng-attr-x2="{{line.linex2}}"
+						ng-attr-y1="{{line.liney1}}"
+						ng-attr-y2="{{line.liney2}}"/>
+
+					<circle class="hollows"
+						ng-repeat="circle in questionCircles[currentPage]"
+						ng-attr-r="{{circle.r}}"
+						ng-attr-cx="{{circle.cx}}"
+						ng-attr-cy="{{circle.cy}}"
+						ng-class="{'hollows-selected' : questionCircles[currentPage][$index].isHover}">
+					</circle>
+
+					<circle
+						class = "{{circle.color}}"
+						ng-repeat="circle in questionCircles[currentPage]"
+						ng-class="{'selected' : applyCircleClass(circle),
+							'circleHover' : questionCircles[currentPage][$index].isHover}"
+						ng-attr-r="{{circle.r/2}}"
+						ng-attr-cx="{{circle.cx}}"
+						ng-attr-cy="{{circle.cy}}">
+					</circle>
+
+					<circle class="hollows"
+						ng-repeat="circle in answerCircles[currentPage]"
+						ng-attr-r="{{circle.r}}"
+						ng-attr-cx="{{circle.cx}}"
+						ng-attr-cy="{{circle.cy}}"
+						ng-class="{'hollows-selected' : answerCircles[currentPage][$index].isHover}">
+					</circle>
+
+					<circle
+						class = "{{circle.color}}"
+						ng-repeat="circle in answerCircles[currentPage]"
+						ng-class="{'selected' : applyCircleClass(circle),
+							'circleHover': answerCircles[currentPage][$index].isHover}"
+						ng-attr-r="{{circle.r/2}}"
+						ng-attr-cx="{{circle.cx}}"
+						ng-attr-cy="{{circle.cy}}">
+					</circle>
+
+				</svg>
+			</div>
+
+			<ul class="column column2">
+				<li class="word"
+					ng-repeat="answer in pages[currentPage].answers"
+					ng-click="selectAnswer(answer)"
+					ng-mouseover="drawPrelineToRight(answer)"
+					ng-mouseleave="unapplyHoverSelections()"
+					ng-class="{matched : isInMatch(answer)}">
+					<div class="word-text">
+						<span class="text-wrapper"
+							ng-class="{'long': (answer.text.length > 17)}">
+							{{checkForAnswerAudio($index) ? "" : answer.text}}
+						</span>
+						<span ng-class="{'expand': (answer.text.length > 61),
+							'noExpand': (answer.text.length <= 61 || checkForAnswerAudio($index))}"
+							data-icon="&#xe000;"
+							aria-hidden="true">
+						</span>
+					</div>
+					<audio controls
+						controlsList="nodownload"
+						class="audio"
+						preload="none"
+						ng-show="{{checkForAnswerAudio($index)}}">
+						<source ng-src="{{answer.asset}}"
+							type="audio/mpeg">
+					</audio>
+
+					<div class="wrap">
+						<div class="popup"
+							ng-hide="checkForAnswerAudio($index)"
+							ng-class="{'shown': (answer.text.length > 61)}">
+							<div class="popup-text right">
+								{{answer.text}}
+							</div>
+							<div class="popup-arrow"
+								ng-class="{'right': (answer.text.length > 61)}">
+							</div>
+						</div>
+					</div>
 				</li>
 			</ul>
 		</section>
 
 		<footer>
 			<section id="page-selector">
-				<span class="button" id="prev-button" ng-click="changePage('previous')" ng-class="{'shown': currentPage >= 1}">Previous Page</span>
-				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext, 'animateRotationLeft': pageAnimate && !pageNext}">
+				<span class="button" id="prev-button"
+					ng-click="changePage('previous')"
+					ng-class="{'shown': currentPage >= 1}">
+					Previous Page
+				</span>
+				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
+					'animateRotationLeft': pageAnimate && !pageNext}">
 					Page <span>{{currentPage+1}}</span>/<span>{{totalPages}}</span>
 				</span>
-				<span class="button" id="next-button" ng-click="changePage('next')" ng-class="{'shown': currentPage+1 < totalPages}">Next Page</span>
+				<span class="button" id="next-button"
+					ng-click="changePage('next')"
+					ng-class="{'shown': currentPage+1 < totalPages}">
+					Next Page
+				</span>
 			</section>
 
 			<section id="submit">
 				<div id="progress-bar">
 					<svg xmlns="http://www.w3.org/2000/svg">
-						<rect id="bar" x="0" y="0" ng-attr-width="{{getProgressAmount()}}" height="10" rx="5" ry="5" style="stroke-width: 1px; stroke: rgb(189, 195, 199); fill: rgb(189, 195, 199); opacity: 1;"></rect>
-					</svg></div>
+						<rect id="bar"
+							x="0" y="0" rx="5" ry="5"
+							ng-attr-width="{{getProgressAmount()}}" height="10"
+							style="stroke-width: 1px;
+								stroke: rgb(189, 195, 199);
+								fill: rgb(189, 195, 199);
+								opacity: 1;">
+						</rect>
+					</svg>
+				</div>
 				<div class="button" id="submit-button" ng-click="submit()"
-				     ng-class="{'glowing': matches.length == totalItems && totalItems != 0}">Done</div>
+					ng-class="{'glowing': matches.length == totalItems && totalItems != 0}">
+					Done
+				</div>
 			</section>
 		</footer>
-
 	</body>
 </html>
