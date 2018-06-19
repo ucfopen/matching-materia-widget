@@ -34,7 +34,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	$scope.pageNext = false
 	ANIMATION_DURATION = 600
 
-	colorNumber=0
+	colorNumber = 0
 
 	ITEMS_PER_PAGE = 5
 	NUM_OF_COLORS = 7
