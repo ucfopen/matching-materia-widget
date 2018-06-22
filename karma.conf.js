@@ -20,6 +20,7 @@ module.exports = function(config) {
 			'src/devmateria_demo.json',
 			'build/creator.js',
 			'build/player.js',
+			'build/directives/*.js',
 			'tests/*.js'
 		],
 

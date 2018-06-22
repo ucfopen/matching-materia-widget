@@ -9,6 +9,7 @@
 
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="creator.css">
+		<link rel="stylesheet" type="text/css" href="audioControls.css">
 		<link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
@@ -21,8 +22,11 @@
 
 		<!-- MAIN CREATOR SCRIPT -->
 		<script src="creator.js"></script>
+		<script src="directives/audioControls.js"></script>
+		<script src="directives/focusMe.js"></script>
+		<script src="directives/ngEnter.js"></script>
 	</head>
-	<body ng-app='matchingCreator' ng-controller="matchingCreatorCtrl">
+	<body ng-app='matching' ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>
 		<div id='header'>
 			<div class='logo'></div>
@@ -38,7 +42,8 @@
 				<div class='pair-count'>{{widget.wordPairs.length}} Pairs</div>
 			</div>
 			<div id='question-container'>
-				<div class='question' ng-repeat="pair in widget.wordPairs">
+				<div class='question'
+					ng-repeat="pair in widget.wordPairs">
 					<textarea class='question-text'
 						ng-hide="checkMedia($index, 0)"
 						ng-model="pair.question"
@@ -49,11 +54,11 @@
 					<div class="audio-display"
 						ng-show="checkMedia($index, 0)"
 						ng-style='autoSize(pair, true)'>
-						<audio id="audio" controls="controls" preload="none">
-							<source id="audio-source"
-								ng-src="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}"
-								type="audio/mpeg">
-						</audio>
+						<div ng-audio-controls
+							audio-source="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}"
+							pair-index="{{$index}}"
+							ng-if="checkMedia($index, 0)">
+						</div>
 						<textarea type="text"
 							class="desc-input"
 							placeholder="Audio Description"
@@ -105,13 +110,11 @@
 					<div class="audio-display"
 						ng-show="checkMedia($index, 1)"
 						ng-style='autoSize(pair, true)'>
-						<audio id="audio"
-							controls="controls"
-							preload="none">
-							<source id="audio-source"
-								ng-src="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}"
-								type="audio/mpeg">
-						</audio>
+						<div ng-audio-controls
+							audio-source="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}"
+							pair-index="{{$index}}"
+							ng-if="checkMedia($index, 1)">
+						</div>
 						<textarea type="text"
 							class="desc-input"
 							placeholder="Audio Description"
@@ -123,7 +126,10 @@
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
 			</div>
-			<button id='add-new' class='icon-plus' ng-click="addWordPair()" tabindex='{{widget.wordPairs.length + 1}}'>
+			<button id='add-new'
+				class='icon-plus'
+				ng-click="addWordPair()"
+				tabindex='{{widget.wordPairs.length + 1}}'>
 				Add Pair
 			</button>
 		</section>

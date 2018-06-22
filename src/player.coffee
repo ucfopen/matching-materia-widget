@@ -8,7 +8,7 @@ Widget  : Matching, Engine
 use devmateria_demo.json for devmateria
 item ids are filled in
 ###
-Matching= angular.module 'matchingPlayer', []
+Matching = angular.module 'matching', []
 
 Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
 	$scope.title = ''
