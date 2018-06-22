@@ -1,34 +1,5 @@
-###
-
-Materia
-It's a thing
-
-Widget  : Matching, Creator
-Authors : Jonathan Warner, Micheal Parks
-Updated : 2/16
-###
-
 # Create an angular module to import the animation module and house our controller.
-MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
-
-MatchingCreator.directive('ngEnter', ->
-	return (scope, element, attrs) ->
-		element.bind("keydown keypress", (event) ->
-			if(event.which == 13)
-				scope.$apply ->
-					scope.$eval(attrs.ngEnter)
-				event.preventDefault()
-		)
-)
-MatchingCreator.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
-	link: (scope, element, attrs) ->
-		model = $parse(attrs.focusMe)
-		scope.$watch model, (value) ->
-			if value
-				$timeout ->
-					element[0].focus()
-			value
-])
+MatchingCreator = angular.module( 'matching', ['ngAnimate'] )
 
 # Set the controller for the scope of the document body.
 MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->

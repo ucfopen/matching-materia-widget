@@ -6,6 +6,7 @@
 
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="player.css">
+		<link rel="stylesheet" type="text/css" href="audioControls.css">
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -20,8 +21,9 @@
 
 		<!-- MAIN PLAYER SCRIPT -->
 		<script src="player.js"></script>
+		<script src="directives/audioControls.js"></script>
 	</head>
-	<body ng-app='matchingPlayer' ng-controller='matchingPlayerCtrl'>
+	<body ng-app='matching' ng-controller='matchingPlayerCtrl'>
 
 		<header id="header">
 			<h1>{{ title }}</h1>
@@ -47,13 +49,11 @@
 							aria-hidden="true">
 						</span>
 					</div>
-					<audio controls
-						controlsList="nodownload"
-						class="audio"
-						preload="none"
-						ng-show="{{checkForQuestionAudio($index)}}">
-						<source ng-src="{{question.asset}}" type="audio/mpeg">
-					</audio>
+
+					<div ng-audio-controls
+						audio-source="{{question.asset}}"
+						ng-if="checkForQuestionAudio($index)">
+					</div>
 
 					<div class="wrap">
 						<div class="popup"
@@ -150,14 +150,11 @@
 							aria-hidden="true">
 						</span>
 					</div>
-					<audio controls
-						controlsList="nodownload"
-						class="audio"
-						preload="none"
-						ng-show="{{checkForAnswerAudio($index)}}">
-						<source ng-src="{{answer.asset}}"
-							type="audio/mpeg">
-					</audio>
+
+					<div ng-audio-controls
+						audio-source="{{answer.asset}}"
+						ng-if="checkForAnswerAudio($index)">
+					</div>
 
 					<div class="wrap">
 						<div class="popup"
