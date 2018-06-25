@@ -139,6 +139,7 @@
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}">
+					<span class='clickable'></span>
 					<div class="word-text">
 						<span class="text-wrapper"
 							ng-class="{'long': (answer.text.length > 17)}">

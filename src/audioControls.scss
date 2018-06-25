@@ -1,3 +1,7 @@
+/*
+https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
+*/
+
 @font-face {
   font-family: 'CorbelBold';
   src: url('assets/font/corbelb-webfont.eot');
@@ -26,19 +30,30 @@
 	font-weight: normal;
 	font-variant: normal;
 	text-transform: none;
-	line-height: 1;
 	-webkit-font-smoothing: antialiased;
 	vertical-align: middle;
 }
 
 .play-btn, .volume-btn {
 	width: 25px;
-	font-size: 1.5em;
+	font-size: 1em;
+
+	border-radius: 5px;
+	background-color: #2d896a;
+	color: #fff;
+	width: 36px;
+	height: 36px;
+	line-height: 36px;
+	display: inline-block;
+
+	position: relative;
+
+	&:hover {
+		color: #fff;
+	}
 }
 
 .audio-controls {
-	// background-color: #EAECEE;
-	// color: #000;
 	display: block;
 	padding: 0 0 5px;
 	width: 220px;
@@ -47,7 +62,6 @@
 .audio-controls > span {
 	display: inline-block;
 	vertical-align: middle;
-	height: 100%;
 }
 
 .duration {
@@ -56,8 +70,15 @@
 	font-size: .6em;
 }
 
-.play-btn:before {
+.play-btn {
 	cursor: pointer;
+}
+
+.play-btn:hover {
+	background-color: #194c3b;
+}
+
+.play-btn:before {
 	content: "\ea1d";
 }
 .play-btn.paused:before {
@@ -68,15 +89,20 @@
 	display: block;
 }
 
-.seek-bar input, .seek-bar input::-ms-track {
+.seek-bar, .seek-bar input {
+	vertical-align: bottom;
+}
+
+.seek-bar input {
 	-moz-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
 	height: 4px;
-	width: 100px;
+	width: 150px;
 	background-color: #2d896a;
 	outline: none;
 }
+
 .seek-bar input::-ms-tooltip {
 	display: none;
 	background: none;
@@ -85,13 +111,27 @@
 /*Have to define these separately because comma-separating them doesn't work for some reason*/
 .seek-bar input::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	-ms-appearance: none;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	background-color: #98e2d3;
+}
+.seek-bar input::-moz-range-thumb {
 	appearance: none;
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
 	cursor: pointer;
-	background-color: #fff;
+	background-color: #98e2d3;
+}
+.seek-bar input::-ms-range-thumb {
+	appearance: none;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	background-color: #98e2d3;
 }
 
 .volume-btn:before {
