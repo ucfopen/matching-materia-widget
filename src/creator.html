@@ -34,7 +34,6 @@
 			<div class='link' ng-click='showTitleDialog = true'>Edit...</div>
 			<div class='bottom'></div>
 		</div>
-		<center>
 		<section class='main-area'>
 			<div class='titles' ng-show='widget.wordPairs.length'>
 				<h1>Left Side</h1>
@@ -44,84 +43,76 @@
 			<div id='question-container'>
 				<div class='question'
 					ng-repeat="pair in widget.wordPairs">
-					<textarea class='question-text'
-						ng-hide="checkMedia($index, 0)"
-						ng-model="pair.question"
-						ng-style='autoSize(pair, false)'
-						focus-me='true'
-						tabindex='{{$index+1}}'>
-					</textarea>
-					<div class="audio-display"
-						ng-show="checkMedia($index, 0)"
-						ng-style='autoSize(pair, true)'>
-						<div ng-audio-controls
-							audio-source="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}"
-							pair-index="{{$index}}"
-							ng-if="checkMedia($index, 0)">
-						</div>
-						<textarea type="text"
-							class="desc-input"
-							placeholder="Audio Description"
+					<div class='green-box left-side'>
+						<textarea class='question-text'
+							ng-hide="checkMedia($index, 0)"
 							ng-model="pair.question"
 							ng-style='autoSize(pair, false)'
-							focus-me="checkMedia($index, 0)">
+							focus-me='true'
+							tabindex='{{$index+1}}'>
 						</textarea>
-					</div>
-					<div class="audio-image"
-						ng-init="imgQ='assets/add_audio.svg'"
-						ng-mouseover="imgQ='assets/add_audio_hover.svg'"
-						ng-mouseout="imgQ='assets/add_audio.svg'">
-						<img class="add-audio"
-							ng-hide="checkMedia($index, 0)"
-							ng-src="{{imgQ}}"
-							ng-click="beginMediaImport($index, 0); checkMedia($index, 0)">
-						<img class="add-audio"
-							ng-init="removeImgQ='assets/remove_audio.svg'"
-							ng-mouseover="removeImgQ='assets/remove_audio_hover.svg'"
-							ng-mouseout="removeImgQ='assets/remove_audio.svg'"
+						<div class="audio-display"
 							ng-show="checkMedia($index, 0)"
-							ng-src="{{removeImgQ}}"
-							ng-click="removeAudio($index, 0)">
+							ng-style='autoSize(pair, true)'>
+							<div ng-audio-controls
+								audio-source="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}"
+								pair-index="{{$index}}"
+								ng-if="checkMedia($index, 0)">
+							</div>
+							<textarea type="text"
+								class="desc-input"
+								placeholder="Audio Description"
+								ng-model="pair.question"
+								ng-style='autoSize(pair, false)'
+								focus-me="checkMedia($index, 0)">
+							</textarea>
+						</div>
+						<div class='audio-image'>
+							<span class="add-audio"
+								ng-hide="checkMedia($index, 0)"
+								ng-click="beginMediaImport($index, 0); checkMedia($index, 0)">
+							</span>
+							<span class="remove-audio"
+								ng-show="checkMedia($index, 0)"
+								ng-click="removeAudio($index, 0)">
+							</span>
+						</div>
 					</div>
 					<div class='separate'></div>
-					<div class="audio-image"
-						ng-init="imgA='assets/add_audio.svg'"
-						ng-mouseover="imgA='assets/add_audio_hover.svg'"
-						ng-mouseout="imgA='assets/add_audio.svg'">
-						<img class="add-audio"
+					<div class='green-box right-side'>
+						<textarea class='answer-text'
 							ng-hide="checkMedia($index, 1)"
-							ng-src="{{imgA}}"
-							ng-click="beginMediaImport($index, 1); checkMedia($index, 1)">
-						<img class="add-audio"
-							ng-init="removeImgA='assets/remove_audio.svg'"
-							ng-mouseover="removeImgA='assets/remove_audio_hover.svg'"
-							ng-mouseout="removeImgA='assets/remove_audio.svg'"
-							ng-show="checkMedia($index, 1)"
-							ng-src="{{removeImgA}}"
-							ng-click="removeAudio($index, 1)">
-					</div>
-					<textarea class='answer-text'
-						ng-hide="checkMedia($index, 1)"
-						ng-enter="addWordPair()"
-						ng-style='autoSize(pair, false)'
-						ng-model="pair.answer"
-						tabindex='{{$index+2}}'>
-					</textarea>
-					<div class="audio-display"
-						ng-show="checkMedia($index, 1)"
-						ng-style='autoSize(pair, true)'>
-						<div ng-audio-controls
-							audio-source="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}"
-							pair-index="{{$index}}"
-							ng-if="checkMedia($index, 1)">
-						</div>
-						<textarea type="text"
-							class="desc-input"
-							placeholder="Audio Description"
-							ng-model="pair.answer"
+							ng-enter="addWordPair()"
 							ng-style='autoSize(pair, false)'
-							focus-me="checkMedia($index, 1)">
+							ng-model="pair.answer"
+							tabindex='{{$index+2}}'>
 						</textarea>
+						<div class="audio-display"
+							ng-show="checkMedia($index, 1)"
+							ng-style='autoSize(pair, true)'>
+							<div ng-audio-controls
+								audio-source="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}"
+								pair-index="{{$index}}"
+								ng-if="checkMedia($index, 1)">
+							</div>
+							<textarea type="text"
+								class="desc-input"
+								placeholder="Audio Description"
+								ng-model="pair.answer"
+								ng-style='autoSize(pair, false)'
+								focus-me="checkMedia($index, 1)">
+							</textarea>
+						</div>
+						<div class='audio-image'>
+							<span class="add-audio"
+								ng-hide="checkMedia($index, 1)"
+								ng-click="beginMediaImport($index, 1); checkMedia($index, 1)">
+							</span>
+							<span class="remove-audio"
+								ng-show="checkMedia($index, 1)"
+								ng-click="removeAudio($index, 1)">
+							</span>
+						</div>
 					</div>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
@@ -133,10 +124,13 @@
 				Add Pair
 			</button>
 		</section>
-		</center>
 
-		<div id='backgroundcover' ng-click='hideCover()' ng-class='{ show: showTitleDialog || showIntroDialog }'></div>
-		<div class='box intro' ng-class='{ show: showIntroDialog }'>
+		<div id='backgroundcover'
+			ng-click='hideCover()'
+			ng-class='{ show: showTitleDialog || showIntroDialog }'>
+		</div>
+		<div class='box intro'
+			ng-class='{ show: showIntroDialog }'>
 			<img src='assets/creator_example.png'>
 			<h1>Matching</h1>
 			<p>Create matching pairs of items that students connect.</p>
@@ -154,7 +148,8 @@
 				value='Get Started'
 				ng-click='setTitle()'>
 		</div>
-		<div class='box title' ng-class='{ show: showTitleDialog }'>
+		<div class='box title'
+			ng-class='{ show: showTitleDialog }'>
 			<b>Give your Matching widget a title</b><br>
 			<input type='text'
 				placeholder='My Matching widget'
