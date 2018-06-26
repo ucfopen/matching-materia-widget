@@ -99,14 +99,59 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 	appearance: none;
 	height: 4px;
 	width: 150px;
+	margin: 0;
+	padding: 0;
 	background-color: #2d896a;
 	outline: none;
 }
 
-.seek-bar input::-ms-tooltip {
-	display: none;
-	background: none;
+/*IE11 hack because range thumbs can't be larger than their tracks*/
+@media all and (-ms-high-contrast:none) {
+	.seek-bar input {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 12px;
+		width: 150px;
+		margin: 0;
+		padding: 0;
+		background-color: #2d896a;
+		outline: none;
+	}
+	.seek-bar input::-ms-track {
+		height: 12px;
+	}
+	.seek-bar input::-ms-fill-lower, .seek-bar input::-ms-fill-upper {
+		background-color: #2d896a;
+	}
+
+	.seek-bar input::-ms-tooltip {
+		display: none;
+		background: none;
+	}
+	::-ms-ticks,
+	::-ms-ticks-before,
+	::-ms-ticks-after {
+		visibility: hidden;
+		display: none;
+	}
 }
+
+/*Edge hack because see above IE11 hack*/
+@supports (-ms-ime-align: auto) {
+	.seek-bar input {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 12px;
+		width: 150px;
+		margin: 0;
+		padding: 0;
+		background-color: #2d896a;
+		outline: none;
+	}
+}
+
 
 /*Have to define these separately because comma-separating them doesn't work for some reason*/
 .seek-bar input::-webkit-slider-thumb {
@@ -125,8 +170,7 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 	cursor: pointer;
 	background-color: #98e2d3;
 }
-.seek-bar input::-ms-range-thumb {
-	appearance: none;
+.seek-bar input::-ms-thumb {
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
