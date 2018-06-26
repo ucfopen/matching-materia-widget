@@ -48,7 +48,10 @@ input:focus,
 select:focus,
 textarea:focus,
 button:focus { outline: none;}
-textarea { resize: none; }
+textarea {
+	resize: none;
+	overflow: hidden;
+}
 html, body {
 	-webkit-user-select : none;
 	   -moz-user-select : none;
