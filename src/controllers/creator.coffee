@@ -1,8 +1,6 @@
-# Create an angular module to import the animation module and house our controller.
-MatchingCreator = angular.module( 'matching', ['ngAnimate'] )
+Matching = angular.module 'matching'
 
-# Set the controller for the scope of the document body.
-MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
+Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	_qset = {}
 	# Stores data to be gathered on save.
 	$scope.widget =

@@ -43,7 +43,7 @@ describe('Matching', function() {
 	describe('Player Controller', function () {
 
 		module.sharedInjector();
-		beforeAll(module('matchingPlayer'));
+		beforeAll(module('matching'));
 
 		beforeAll(inject(function (_$compile_, $rootScope, $controller) {
 			$scope = $rootScope.$new();
@@ -304,22 +304,22 @@ describe('Matching', function() {
 			//change the qset to only have 1 item
 			qset.data.items[0].items = [
 			{
-			  "id": 1,
-			  "questions": [
-				{
-				  "text": "cambiar"
-				}
-			  ],
-			  "answers": [
-				{
-				  "text": "to change"
-				}
-			  ],
-			   "assets":[  
-				  0,
-				  0,
-				  null
-			   ]
+				"id": 1,
+				"questions": [
+					{
+						"text": "cambiar"
+					}
+				],
+				"answers": [
+					{
+						"text": "to change"
+					}
+				],
+				"assets":[
+					0,
+					0,
+					null
+				]
 			}];
 
 			$scope.submit();

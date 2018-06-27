@@ -9,9 +9,8 @@
     "_": false,
     "window": false,
     "Namespace": true,
-    "Materia": true
-//    "Matching": true,
-//    "navigator": true
+    "Materia": true,
+    "Audio": false
   },
   "rules": {
     "no-empty": "warn",

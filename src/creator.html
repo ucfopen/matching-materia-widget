@@ -21,7 +21,8 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-animate.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
-		<script src="creator.js"></script>
+		<script src="modules/matching.js"></script>
+		<script src="controllers/creator.js"></script>
 		<script src="directives/audioControls.js"></script>
 		<script src="directives/focusMe.js"></script>
 		<script src="directives/ngEnter.js"></script>
@@ -56,7 +57,6 @@
 							ng-style='autoSize(pair, true)'>
 							<div ng-audio-controls
 								audio-source="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}"
-								pair-index="{{$index}}"
 								ng-if="checkMedia($index, 0)">
 							</div>
 							<textarea type="text"
@@ -92,7 +92,6 @@
 							ng-style='autoSize(pair, true)'>
 							<div ng-audio-controls
 								audio-source="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}"
-								pair-index="{{$index}}"
 								ng-if="checkMedia($index, 1)">
 							</div>
 							<textarea type="text"

@@ -5,7 +5,6 @@ Matching.directive 'ngAudioControls', ->
 	scope:
 		audioSource: '@audioSource'
 	templateUrl: 'audioControls.html'
-	# link: ['$scope', ($scope, element, attrs) -> {}]
 	controller: ['$scope', '$sce', ($scope, $sce) ->
 		$scope.audio = null
 		$scope.currentTime = 0
@@ -13,14 +12,13 @@ Matching.directive 'ngAudioControls', ->
 
 		if typeof $scope.audioSource == "string"
 			$scope.audio = new Audio()
-			trustedSource = $sce.trustAsResourceUrl($scope.audioSource)
-			$scope.audio.src = trustedSource
+			$scope.audio.src = $sce.trustAsResourceUrl($scope.audioSource)
+		else
+			throw 'Invalid source!'
 
 		$scope.play = ->
 			if $scope.audio.paused then $scope.audio.play()
 			else $scope.audio.pause()
-		$scope.mute = ->
-			$scope.audio.volume = $scope.audio.volume < 1 ? 1 : 0
 
 		$scope.toMinutes = (time) ->
 			minutes = parseInt Math.floor(time / 60), 10
@@ -39,6 +37,5 @@ Matching.directive 'ngAudioControls', ->
 
 		$scope.audio.ontimeupdate = () ->
 			$scope.currentTime = $scope.audio.currentTime
-			$scope.duration = $scope.audio.duration
 			$scope.$apply()
 	]
