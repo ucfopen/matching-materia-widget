@@ -11,7 +11,7 @@ describe('Matching', function(){
 	describe('Creator Controller', function() {
 
 		module.sharedInjector();
-		beforeAll(module('matchingCreator'));
+		beforeAll(module('matching'));
 
 		beforeAll(inject(function(_$compile_, $rootScope, $controller){
 			$scope = $rootScope.$new();
@@ -94,7 +94,7 @@ describe('Matching', function(){
 			//set title again so that the widget fails saving because of
 			//question or answer text and audio being blank
 			$scope.widget.title = 'Widget Title';
-			//add wordpair that has blank question text and no question audio 
+			//add wordpair that has blank question text and no question audio
 			$scope.addWordPair("", "answer", [0,0]);
 			//the error message should be what we expect it to be
 			expect(function(){
@@ -108,7 +108,7 @@ describe('Matching', function(){
 			//remove previously added wordPair so that the widget fails saving on
 			//the new wordPair we create that has no answer text/audio
 			$scope.widget.wordPairs.splice(11, 1);
-			//add wordpair that has blank answer text and no answer audio 
+			//add wordpair that has blank answer text and no answer audio
 			$scope.addWordPair("question", "", [0,0]);
 			//the error message should be what we expect it to be
 			expect(function(){

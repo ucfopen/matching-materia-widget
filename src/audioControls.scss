@@ -23,7 +23,11 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 	font-style: normal;
 }
 
-.audio-controls, .play-btn, .volume-btn {
+.audio-controls {
+	cursor: default;
+}
+
+.audio-controls, .play-btn {
 	font-family: 'icomoon';
 	speak: none;
 	font-style: normal;
@@ -34,7 +38,7 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 	vertical-align: middle;
 }
 
-.play-btn, .volume-btn {
+.play-btn {
 	width: 25px;
 	font-size: 1em;
 
@@ -103,13 +107,12 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 	padding: 0;
 	background-color: #2d896a;
 	outline: none;
+	cursor: pointer;
 }
 
 /*IE11 hack because range thumbs can't be larger than their tracks*/
 @media all and (-ms-high-contrast:none) {
 	.seek-bar input {
-		-moz-appearance: none;
-		-webkit-appearance: none;
 		appearance: none;
 		height: 12px;
 		width: 150px;
@@ -117,6 +120,7 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 		padding: 0;
 		background-color: #2d896a;
 		outline: none;
+		cursor: pointer;
 	}
 	.seek-bar input::-ms-track {
 		height: 12px;
@@ -176,12 +180,4 @@ https://stackoverflow.com/questions/20541306/how-to-write-a-css-hack-for-ie-11
 	border-radius: 50%;
 	cursor: pointer;
 	background-color: #98e2d3;
-}
-
-.volume-btn:before {
-	cursor: pointer;
-	content: "\ea26";
-}
-.volume-btn.muted:before {
-	content: "\ea2a"
 }
