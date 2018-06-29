@@ -108,12 +108,18 @@ describe('Matching', function(){
 			//remove previously added wordPair so that the widget fails saving on
 			//the new wordPair we create that has no answer text/audio
 			$scope.widget.wordPairs.splice(11, 1);
+
+			var holdem = $scope.widget.wordPairs;
+			$scope.widget.wordPairs = [];
+
 			//add wordpair that has blank answer text and no answer audio
 			$scope.addWordPair("question", "", [0,0]);
+
 			//the error message should be what we expect it to be
 			expect(function(){
 				$scope.onSaveClicked();
 			}).toThrow(new Error('Widget not ready to save.'));
+			$scope.widget.wordPairs = holdem;
 		});
 
 		it('should properly remove word pair', function(){
@@ -124,6 +130,17 @@ describe('Matching', function(){
 		it('should properly remove audio', function(){
 			$scope.removeAudio(0,0);
 			expect($scope.widget.wordPairs[0].media[0]).toEqual(0);
+		});
+
+		it('should generate an audio url based on an asset id', function(){
+			spyOn(Materia.CreatorCore, 'getMediaUrl').and.callFake(function(assetId){
+				return 'http://test/'+assetId;
+			});
+			//angular's $sce does some weird un/wrapping, usually it would handle this
+			var url = $scope.audioUrl('audioId').$$unwrapTrustedValue();
+
+			expect(Materia.CreatorCore.getMediaUrl).toHaveBeenCalledWith('audioId.mp3');
+			expect(url).toBe('http://test/audioId.mp3');
 		});
 
 		it('should properly add word pairs', function(){
@@ -150,41 +167,43 @@ describe('Matching', function(){
 			//verify we have a clean slate to test this function
 			expect($scope.widget.wordPairs).toEqual([]);
 			$scope.onQuestionImportComplete(importing);
+
 			expect($scope.widget.wordPairs).toEqual(initialwordPairs);
+
+			var lengthBefore = $scope.widget.wordPairs.length;
+
+			//make sure the import process reacts properly to questions without assets
+			importing = [{
+				questions: [{
+					text: 'question'
+				}],
+				answers: [{
+					text: 'answer'
+				}],
+				id: 11
+			}];
+			$scope.onQuestionImportComplete(importing);
+			expect($scope.widget.wordPairs.length).toBe(lengthBefore + 1);
+			//make sure the latest question looks how it should
+			expect($scope.widget.wordPairs[lengthBefore]).toEqual({question: "question", answer: "answer", media: [0,0], id: 11});
 		});
 
 		it('should import media properly', function(){
 			//create fake media object
-			var media = [{id: "audioTest"}];
+			var media = [{id: 'testId1'}];
+
 			//check if media exists and begin import
-			$scope.checkMedia(0,0);
+			expect($scope.checkMedia(0,0)).toBe(false);
+
 			$scope.beginMediaImport(0,0);
-
-			//create and audio tag with a src
-			var newAudio = document.createElement("AUDIO");
-			var newSource = document.createElement("SOURCE");
-			//attach load function to audio tag
-			newAudio.load = function() {};
-			newAudio.appendChild(newSource);
-			newSource.setAttribute("ng-src", "test.mp3");
-			document.body.appendChild(newAudio);
-
-			var newAudioTwo = document.createElement("AUDIO");
-			var newSourceTwo = document.createElement("SOURCE");
-			//attach load function to audio tag
-			newAudioTwo.load = function() {};
-			newAudioTwo.appendChild(newSourceTwo);
-			newSourceTwo.setAttribute("ng-src", "test2.mp3");
-			document.body.appendChild(newAudioTwo);
-			//create spies to ensure the load function is being called
-			audioSpy = spyOn(newAudio, 'load').and.callThrough();
-			audioSpyTwo = spyOn(newAudioTwo, 'load').and.callThrough();
-
-			//complete the media import
 			$scope.onMediaImportComplete(media);
 
-			expect(audioSpy.calls.any()).toEqual(true);
-			expect(audioSpyTwo.calls.any()).toEqual(true);
+			media = [{id: 'testId2'}];
+			$scope.beginMediaImport(2,1);
+			$scope.onMediaImportComplete(media);
+
+			expect($scope.widget.wordPairs[0].media[0]).toBe('testId1');
+			expect($scope.widget.wordPairs[2].media[1]).toBe('testId2');
 		});
 
 		it('should autosize correctly', function () {

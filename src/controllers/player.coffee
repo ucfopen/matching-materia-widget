@@ -60,7 +60,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 			wrapQuestionUrl = ->
 				if item.assets[0] != 0
-					return $sce.trustAsResourceUrl(item.assets[0])
+					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[0])
 
 			$scope.pages[_pageIndex].questions.push {
 				text: item.questions[0].text
@@ -82,7 +82,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 			wrapAnswerUrl = ->
 				if item.assets[1] != 0
-					return $sce.trustAsResourceUrl(item.assets[1])
+					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[1])
 
 			$scope.pages[_pageIndex].answers.push {
 				text: item.answers[0].text

@@ -13,7 +13,7 @@
               "type": "QA",
               "questions": [
                 {
-                  "text": "arearaeraerararaeraeraereararerarerarararaeraraeraeraerraeraeraerearaereraerearaerearaerearearearearaerearaerearearearaereareraererarearaerearearaerar"
+                  "text": "cambiar"
                 }
               ],
               "answers": [
@@ -24,8 +24,8 @@
               ],
                "assets":[
                   0,
-                  "http://localhost:8118/mdk/media/84j.4eo64jk.mp3",
-                  "0"
+                  0,
+                  null
                ]
             },
             {
@@ -108,8 +108,8 @@
               ],
                "assets":[
                   0,
-                  0,
-                  null
+                  "<%MEDIA='assets/audio/demo/writing.mp3'%>",
+                  "to write"
                ]
             },
             {
@@ -139,19 +139,19 @@
               "type": "QA",
               "questions": [
                 {
-                  "text": "decir"
+                  "text": "digitar"
                 }
               ],
               "answers": [
                 {
                   "value": 100,
-                  "text": "to say, tell"
+                  "text": "to type"
                 }
               ],
                "assets":[
                   0,
-                  0,
-                  null
+                  "<%MEDIA='assets/audio/demo/typing.mp3'%>",
+                  "to type"
                ]
             },
             {
@@ -181,7 +181,6 @@
               "type": "QA",
               "questions": [
                 {
-                  "assets": null,
                   "text": "vender"
                 }
               ],
@@ -195,6 +194,27 @@
                   0,
                   0,
                   null
+               ]
+            },
+            {
+              "materiaType": "question",
+              "id": 10,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "verter"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to pour"
+                }
+              ],
+               "assets":[
+                  0,
+                  "<%MEDIA='assets/audio/demo/pouring.mp3'%>",
+                  "to pour"
                ]
             }
           ]

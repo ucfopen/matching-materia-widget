@@ -139,19 +139,19 @@
               "type": "QA",
               "questions": [
                 {
-                  "text": "decir"
+                  "text": "digitar"
                 }
               ],
               "answers": [
                 {
                   "value": 100,
-                  "text": "to say, tell"
+                  "text": "to type"
                 }
               ],
                "assets":[
                   0,
-                  0,
-                  null
+                  "<%MEDIA='assets/audio/demo/typing.mp3'%>",
+                  "to type"
                ]
             },
             {
@@ -181,7 +181,6 @@
               "type": "QA",
               "questions": [
                 {
-                  "assets": null,
                   "text": "vender"
                 }
               ],
@@ -195,6 +194,27 @@
                   0,
                   0,
                   null
+               ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "verter"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to pour"
+                }
+              ],
+               "assets":[
+                  0,
+                  "<%MEDIA='assets/audio/demo/pouring.mp3'%>",
+                  "to pour"
                ]
             }
           ]

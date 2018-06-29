@@ -207,8 +207,8 @@ describe('Matching', function() {
 		});
 
 		it('should return the the correct progress amount of completed questions', function () {
-			//at this point --- 1 match 9 total items 160 is progress bar length
-			expect($scope.getProgressAmount()).toBe((1/9) *160);
+			//at this point --- 1 match, 10 total items, 160 is progress bar length
+			expect($scope.getProgressAmount()).toBe((1/10) * 160);
 
 			//in case there are no items
 			$scope.totalItems = 0;

@@ -61,10 +61,39 @@ html, body {
 .audio-controls {
   margin-top: -5px;
 
+  .seek-bar {
+    position: relative;
+  }
+
+  .seek-bar:before {
+    content: 'Audio Clue';
+    font-family: 'CorbelBold', sans-serif;
+    font-size: .75em;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 25%;
+  }
+
   .play-btn:before {
     position: absolute;
     left: 6px;
     top: 1px;
+  }
+}
+
+/*IE11 hack because of course*/
+@media all and (-ms-high-contrast:none) {
+  .audio-controls .seek-bar:before {
+    font-size: .5em;
+    bottom: auto;
+  }
+}
+/*Edge hack also because of course*/
+@supports (-ms-ime-align: auto) {
+  .audio-controls .seek-bar:before {
+    font-size: .5em;
+    bottom: 50%;
   }
 }
 
