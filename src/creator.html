@@ -18,7 +18,6 @@
 
 		<!-- YOUR PREREQUISITES -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-animate.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
 		<script src="modules/matching.js"></script>
@@ -56,7 +55,8 @@
 							ng-show="checkMedia($index, 0)"
 							ng-style='autoSize(pair, true)'>
 							<div ng-audio-controls
-								audio-source="{{checkMedia($index, 0) && widget.wordPairs[$index].media[0] || ''}}"
+								audio-source="{{checkMedia($index, 0)
+									&& audioUrl(widget.wordPairs[$index].media[0]) || ''}}"
 								ng-if="checkMedia($index, 0)">
 							</div>
 							<textarea type="text"
@@ -91,7 +91,8 @@
 							ng-show="checkMedia($index, 1)"
 							ng-style='autoSize(pair, true)'>
 							<div ng-audio-controls
-								audio-source="{{checkMedia($index, 1) && widget.wordPairs[$index].media[1] || ''}}"
+								audio-source="{{checkMedia($index, 1)
+									&& audioUrl(widget.wordPairs[$index].media[1]) || ''}}"
 								ng-if="checkMedia($index, 1)">
 							</div>
 							<textarea type="text"

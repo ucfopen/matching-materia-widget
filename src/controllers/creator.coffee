@@ -27,21 +27,10 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.initExistingWidget = (title, widget, qset, version, baseUrl) ->
 		_items = qset.items[0].items
 
-		# wrapInitMedia used to avoid interpolation error
-		wrapInitMedia = (counter) ->
-			try
-				return [$sce.trustAsResourceUrl(_items[counter].assets[0]), $sce.trustAsResourceUrl(_items[counter].assets[1])]
-			try
-				return [0, $sce.trustAsResourceUrl(_items[counter].assets[1])]
-			try
-				return [$sce.trustAsResourceUrl(_items[counter].assets[0]), 0]
-			catch error
-				return [0,0]
-
 		$scope.$apply ->
-			$scope.widget.title     = title
+			$scope.widget.title = title
 			$scope.widget.wordPairs = []
-			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, wrapInitMedia(i), _items[i].id ) for i in [0.._items.length-1]
+			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, _checkAssets(_items[i]), _items[i].id ) for i in [0.._items.length-1]
 
 	$scope.onSaveClicked = ->
 		if _buildSaveData() && checkForEmptyInputs()
@@ -51,7 +40,16 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
 	$scope.onQuestionImportComplete = (questions) ->
-		$scope.$apply -> $scope.addWordPair(question.questions[0].text, question.answers[0].text, question.id) for question in questions
+		$scope.$apply ->
+			for question in questions
+				assets = _checkAssets question
+
+				$scope.addWordPair(
+					question.questions[0].text,
+					question.answers[0].text,
+					assets,
+					question.id
+				)
 
 	$scope.beginMediaImport = (index, which) ->
 		Materia.CreatorCore.showMediaImporter($scope.acceptedMediaTypes)
@@ -59,22 +57,9 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		audioRef[1] = which
 
 	$scope.onMediaImportComplete = (media) ->
-		# use $sce.trustAsResourceUrl to avoid interpolation error
-		url = $sce.trustAsResourceUrl(Materia.CreatorCore.getMediaUrl media[0].id + ".mp3")
-
-		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, url)
+		# $scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
+		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
 		$scope.$apply -> true
-
-		# load all audio tags
-		audioTags = document.getElementsByTagName("audio")
-		audioAmount = audioTags.length
-		count = 0
-
-		for count in [0..audioAmount-1]
-			# if statement used here to only load the audio tags that have a src
-			if audioTags[count] != undefined
-				audioTags[count].load()
-		return;
 
 	$scope.checkMedia = (index, which) ->
 		return $scope.widget.wordPairs[index].media[which] != 0
@@ -98,18 +83,9 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			size = if len > 15 then 25 + len * 1.1 else 25
 		height: size + 'px'
 
-	# safely unwraps media content to allow it to be pushed to the qset
-	unwrapQuestionValue = (counter) ->
-		try
-			return $scope.widget.wordPairs[counter].media[0].$$unwrapTrustedValue()
-		catch error
-			return 0
-
-	unwrapAnswerValue = (counter) ->
-		try
-			return $scope.widget.wordPairs[counter].media[1].$$unwrapTrustedValue()
-		catch error
-			return 0
+	$scope.audioUrl = (assetId) ->
+		# use $sce.trustAsResourceUrl to avoid interpolation error
+		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId + ".mp3")
 
 	checkIds = (currentId, idList) ->
 		# prevents duplicate ids
@@ -125,22 +101,22 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			return uniqueId.toString()
 
 	assignString = (counter) ->
-			answer = $scope.widget.wordPairs[counter].answer
-			question = $scope.widget.wordPairs[counter].question
-			questionAudio = $scope.widget.wordPairs[counter].media[0]
-			answerAudio = $scope.widget.wordPairs[counter].media[1]
+		answer = $scope.widget.wordPairs[counter].answer
+		question = $scope.widget.wordPairs[counter].question
+		questionAudio = $scope.widget.wordPairs[counter].media[0]
+		answerAudio = $scope.widget.wordPairs[counter].media[1]
 
-			# create unique id
-			uniqueId = Math.floor(Math.random() * 10000)
+		# create unique id
+		uniqueId = Math.floor(Math.random() * 10000)
 
-			# checks if there are wordpairs with audio that don't have a description
-			# if any exist the description placeholder is set to Audio
-			if questionAudio != 0 && (question == null || question == '')
-				$scope.widget.wordPairs[counter].question = 'Audio'
-			if answerAudio != 0 && (answer == null || answer == '')
-				$scope.widget.wordPairs[counter].answer = 'Audio'
+		# checks if there are wordpairs with audio that don't have a description
+		# if any exist the description placeholder is set to Audio
+		if questionAudio != 0 && (question == null || question == '')
+			$scope.widget.wordPairs[counter].question = 'Audio'
+		if answerAudio != 0 && (answer == null || answer == '')
+			$scope.widget.wordPairs[counter].answer = 'Audio'
 
-			return checkIds(uniqueId, $scope.widget.uniqueIds) if answerAudio
+		return checkIds(uniqueId, $scope.widget.uniqueIds) if answerAudio
 
 	# checks for any blank question/answer fields
 	# returns false if there are blanks so that the widget cannot be saved
@@ -154,6 +130,18 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		return true
 
 	# Private methods
+
+	# _used to set defaults if media is unset on either side
+	_checkAssets = (object) ->
+		try
+			return [object.assets[0],object.assets[1]]
+		try
+			return [0,object.assets[1]]
+		try
+			return [object.assets[0],0]
+		catch error
+			return [0,0]
+
 	_buildSaveData = ->
 		okToSave = true
 		_qset.items      = []
@@ -162,12 +150,14 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			items: []
 		wordPairs  = $scope.widget.wordPairs
 
-		_qset.items[0].items.push( _process wordPairs[i],unwrapQuestionValue(i),unwrapAnswerValue(i),assignString(i)) for i in [0..wordPairs.length-1]
+		for i in [0..wordPairs.length-1]
+			newItem = _process wordPairs[i],wordPairs[i].media[0],wordPairs[i].media[1],assignString(i)
+			_qset.items[0].items.push newItem
 		okToSave = false if $scope.widget.title is ''
 		okToSave
 
 	# Get each pair's data from the controller and organize it into Qset form.
-	_process = (wordPair, questionMedia, answerMedia, audioString) ->
+	_process = (wordPair, questionMediaId, answerMediaId, audioString) ->
 		questions: [
 			text: wordPair.question
 		]
@@ -178,7 +168,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		]
 		type: 'QA'
 		id: wordPair.id
-		assets: [questionMedia,answerMedia,audioString]
+		assets: [questionMediaId,answerMediaId,audioString]
 	Materia.CreatorCore.start $scope
 ]
 
