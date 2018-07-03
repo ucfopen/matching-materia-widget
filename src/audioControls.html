@@ -1,0 +1,18 @@
+<div class='audio-controls'>
+	<span class='play-btn'
+		ng-class="{'paused' : audio.paused}"
+		ng-click='$event.stopPropagation(); play()'>
+	</span>
+	<span class='time'>
+		<span class='seek-bar'>
+			<input type='range'
+				min='0.0'
+				max='{{ duration }}'
+				step='0.1'
+				ng-model='currentTime'
+				ng-click='$event.stopPropagation();'
+				ng-change='$event.stopPropagation(); changeTime()'>
+		</span>
+		<span class='duration'>{{ toMinutes(currentTime) }} / {{ toMinutes(duration) }}</span>
+	</span>
+</div>

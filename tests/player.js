@@ -16,11 +16,11 @@ describe('Matching', function() {
 		var i, testQIndex, testAIndex;
 		for (i = 1; i <= 5; i++) {
 			testQIndex = $scope.pages[0].questions.map(function (item) {
-				return item.id
+				return item.id;
 			}).indexOf(i);
 			$scope.test.questions.push($scope.pages[0].questions[i]);
 			testAIndex = $scope.pages[0].answers.map(function (item) {
-				return item.id
+				return item.id;
 			}).indexOf(i);
 			$scope.test.answers.push($scope.pages[0].answers[i]);
 		}
@@ -43,7 +43,7 @@ describe('Matching', function() {
 	describe('Player Controller', function () {
 
 		module.sharedInjector();
-		beforeAll(module('matchingPlayer'));
+		beforeAll(module('matching'));
 
 		beforeAll(inject(function (_$compile_, $rootScope, $controller) {
 			$scope = $rootScope.$new();
@@ -222,8 +222,8 @@ describe('Matching', function() {
 		});
 
 		it('should return the the correct progress amount of completed questions', function () {
-			//at this point --- 1 match 9 total items 160 is progress bar length
-			expect($scope.getProgressAmount()).toBe((1/9) *160);
+			//at this point --- 1 match, 10 total items, 160 is progress bar length
+			expect($scope.getProgressAmount()).toBe((1/10) * 160);
 
 			//in case there are no items
 			$scope.totalItems = 0;
@@ -320,22 +320,22 @@ describe('Matching', function() {
 			temp = angular.copy(qset);
 			qset.data.items[0].items = [
 			{
-			  "id": 1,
-			  "questions": [
-				{
-				  "text": "cambiar"
-				}
-			  ],
-			  "answers": [
-				{
-				  "text": "to change"
-				}
-			  ],
-			   "assets":[
-				  0,
-				  0,
-				  null
-			   ]
+				"id": 1,
+				"questions": [
+					{
+						"text": "cambiar"
+					}
+				],
+				"answers": [
+					{
+						"text": "to change"
+					}
+				],
+				"assets":[
+					0,
+					0,
+					null
+				]
 			}];
 			qset = temp;
 
@@ -370,15 +370,15 @@ describe('Matching', function() {
 		});
 
 		it('should split the last items over the last two pages', function() {
-			// with 9 items, split should be 5/4
+			// with 10 items, split should be 5/5
 			expect($scope.pages[0].questions.length).toBe(5);
-			expect($scope.pages[1].questions.length).toBe(4);
+			expect($scope.pages[1].questions.length).toBe(5);
 
 			// create a new set with 6 pairs and the last answer is blank
 			var sixSet = {};
 			sixSet = angular.copy(qset);
 			sixSet.data.items[0].items = sixSet.data.items[0].items.slice(0,6);
-			sixSet.data.items[0].items[5].answers[0].text = ''
+			sixSet.data.items[0].items[5].answers[0].text = '';
 			$scope.pages = [];
 			$scope.start(widgetInfo, sixSet.data);
 

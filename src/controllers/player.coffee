@@ -1,14 +1,4 @@
-###
-
-Materia
-It's a thing
-
-Widget  : Matching, Engine
-
-use devmateria_demo.json for devmateria
-item ids are filled in
-###
-Matching= angular.module 'matchingPlayer', []
+Matching = angular.module 'matching'
 
 Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
 	$scope.title = ''
@@ -35,7 +25,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	$scope.pageNext = false
 	ANIMATION_DURATION = 600
 
-	colorNumber=0
+	colorNumber = 0
 
 	ITEMS_PER_PAGE = 6
 	NUM_OF_COLORS = 7
@@ -78,7 +68,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 			wrapQuestionUrl = ->
 				if item.assets[0] != 0
-					return $sce.trustAsResourceUrl(item.assets[0])
+					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[0])
 
 			$scope.pages[_pageIndex].questions.push {
 				text: item.questions[0].text
@@ -108,7 +98,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 			wrapAnswerUrl = ->
 				if item.assets[1] != 0
-					return $sce.trustAsResourceUrl(item.assets[1])
+					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[1])
 
 			$scope.pages[_pageIndex].answers.push {
 				text: item.answers[0].text

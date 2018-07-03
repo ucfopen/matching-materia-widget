@@ -1,0 +1,179 @@
+@font-face {
+  font-family: 'CorbelBold';
+  src: url('assets/font/corbelb-webfont.eot');
+  src: url('assets/font/corbelb-webfont.eot?#iefix') format('embedded-opentype'),
+  url('assets/font/corbelb-webfont.woff') format('woff'),
+  url('assets/font/corbelb-webfont.ttf') format('truetype'),
+  url('assets/font/corbelb-webfont.svg#CorbelBold') format('svg');
+  font-weight : normal;
+  font-style  : normal;
+}
+@font-face {
+	font-family: 'icomoon';
+	src:url('assets/font/icomoon.eot');
+	src:url('assets/font/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('assets/font/icomoon.woff') format('woff'),
+		url('assets/font/icomoon.ttf') format('truetype'),
+		url('assets/font/icomoon.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.audio-controls {
+	cursor: default;
+}
+
+.audio-controls, .play-btn {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	-webkit-font-smoothing: antialiased;
+	vertical-align: middle;
+}
+
+.play-btn {
+	width: 25px;
+	font-size: 1em;
+
+	border-radius: 5px;
+	background-color: #2d896a;
+	color: #fff;
+	width: 36px;
+	height: 36px;
+	line-height: 36px;
+	display: inline-block;
+
+	position: relative;
+
+	&:hover {
+		color: #fff;
+	}
+}
+
+.audio-controls {
+	display: block;
+	padding: 0 0 5px;
+	width: 220px;
+}
+
+.audio-controls > span {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.duration {
+	font-family: 'CorbelBold', sans-serif;
+	font-weight: bold;
+	font-size: .6em;
+}
+
+.play-btn {
+	cursor: pointer;
+}
+
+.play-btn:hover {
+	background-color: #194c3b;
+}
+
+.play-btn:before {
+	content: "\ea1d";
+}
+.play-btn.paused:before {
+	content: "\ea1c"
+}
+
+.duration, .seek-bar {
+	display: block;
+}
+
+.seek-bar, .seek-bar input {
+	vertical-align: bottom;
+}
+
+.seek-bar input {
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 4px;
+	width: 150px;
+	margin: 0;
+	padding: 0;
+	background-color: #2d896a;
+	outline: none;
+	cursor: pointer;
+}
+
+/*IE11 hack because range thumbs can't be larger than their tracks*/
+@media all and (-ms-high-contrast:none) {
+	.seek-bar input {
+		appearance: none;
+		height: 12px;
+		width: 150px;
+		margin: 0;
+		padding: 0;
+		background-color: #2d896a;
+		outline: none;
+		cursor: pointer;
+	}
+	.seek-bar input::-ms-track {
+		height: 12px;
+	}
+	.seek-bar input::-ms-fill-lower, .seek-bar input::-ms-fill-upper {
+		background-color: #2d896a;
+	}
+
+	.seek-bar input::-ms-tooltip {
+		display: none;
+		background: none;
+	}
+	::-ms-ticks,
+	::-ms-ticks-before,
+	::-ms-ticks-after {
+		visibility: hidden;
+		display: none;
+	}
+}
+
+/*Edge hack because see above IE11 hack*/
+@supports (-ms-ime-align: auto) {
+	.seek-bar input {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 12px;
+		width: 150px;
+		margin: 0;
+		padding: 0;
+		background-color: #2d896a;
+		outline: none;
+	}
+}
+
+
+/*Have to define these separately because comma-separating them doesn't work for some reason*/
+.seek-bar input::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	background-color: #98e2d3;
+}
+.seek-bar input::-moz-range-thumb {
+	appearance: none;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	background-color: #98e2d3;
+}
+.seek-bar input::-ms-thumb {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	background-color: #98e2d3;
+}

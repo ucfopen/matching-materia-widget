@@ -8,15 +8,19 @@ module.exports = function(config) {
 		browsers: ['PhantomJS'],
 
 		files: [
-			'../../js/*.js',
 			'node_modules/angular/angular.js',
 			'node_modules/angular-animate/angular-animate.js',
 			'node_modules/angular-mocks/angular-mocks.js',
 			'node_modules/angular-sanitize/angular-sanitize.js',
+			'node_modules/materia-client-assets/dist/js/materia.js',
+			'node_modules/materia-client-assets/dist/js/materia.creatorcore.js',
+			'node_modules/materia-client-assets/dist/js/materia.enginecore.js',
+			'node_modules/materia-client-assets/dist/js/materia.scorecore.js',
 			'src/demo.json',
 			'src/devmateria_demo.json',
-			'build/creator.js',
-			'build/player.js',
+			'build/modules/matching.js',
+			'build/controllers/*.js',
+			'build/directives/*.js',
 			'tests/*.js'
 		],
 
@@ -32,7 +36,9 @@ module.exports = function(config) {
 		],
 
 		preprocessors: {
-			'build/*.js': ['coverage', 'eslint'],
+			'build/modules/*.js': ['coverage', 'eslint'],
+			'build/directives/*.js': ['coverage', 'eslint'],
+			'build/controllers/*.js': ['coverage', 'eslint'],
 			'src/demo.json': ['json_fixtures'],
 			'src/devmateria_demo.json': ['json_fixtures']
 		},
