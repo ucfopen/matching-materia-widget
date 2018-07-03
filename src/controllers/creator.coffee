@@ -1,37 +1,6 @@
-###
+Matching = angular.module 'matching'
 
-Materia
-It's a thing
-
-Widget  : Matching, Creator
-Authors : Jonathan Warner, Micheal Parks
-Updated : 2/16
-###
-
-# Create an angular module to import the animation module and house our controller.
-MatchingCreator = angular.module( 'matchingCreator', ['ngAnimate'] )
-
-MatchingCreator.directive('ngEnter', ->
-	return (scope, element, attrs) ->
-		element.bind("keydown keypress", (event) ->
-			if(event.which == 13)
-				scope.$apply ->
-					scope.$eval(attrs.ngEnter)
-				event.preventDefault()
-		)
-)
-MatchingCreator.directive('focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
-	link: (scope, element, attrs) ->
-		model = $parse(attrs.focusMe)
-		scope.$watch model, (value) ->
-			if value
-				$timeout ->
-					element[0].focus()
-			value
-])
-
-# Set the controller for the scope of the document body.
-MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
+Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	_qset = {}
 	# Stores data to be gathered on save.
 	$scope.widget =
@@ -58,31 +27,30 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 	$scope.initExistingWidget = (title, widget, qset, version, baseUrl) ->
 		_items = qset.items[0].items
 
-		# wrapInitMedia used to avoid interpolation error
-		wrapInitMedia = (counter) ->
-			try
-				return [$sce.trustAsResourceUrl(_items[counter].assets[0]), $sce.trustAsResourceUrl(_items[counter].assets[1])]
-			try
-				return [0, $sce.trustAsResourceUrl(_items[counter].assets[1])]
-			try
-				return [$sce.trustAsResourceUrl(_items[counter].assets[0]), 0]
-			catch error
-				return [0,0]
-
 		$scope.$apply ->
-			$scope.widget.title     = title
+			$scope.widget.title = title
 			$scope.widget.wordPairs = []
-			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, wrapInitMedia(i), _items[i].id ) for i in [0.._items.length-1]
+			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, _checkAssets(_items[i]), _items[i].id ) for i in [0.._items.length-1]
 
 	$scope.onSaveClicked = ->
 		# don't allow empty sets to be saved.
 		if _buildSaveData()
 			Materia.CreatorCore.save $scope.widget.title, _qset
+		else Materia.CreatorCore.cancelSave 'Widget not ready to save.'
 
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
 	$scope.onQuestionImportComplete = (questions) ->
-		$scope.$apply -> $scope.addWordPair(question.questions[0].text, question.answers[0].text, question.id) for question in questions
+		$scope.$apply ->
+			for question in questions
+				assets = _checkAssets question
+
+				$scope.addWordPair(
+					question.questions[0].text,
+					question.answers[0].text,
+					assets,
+					question.id
+				)
 
 	$scope.beginMediaImport = (index, which) ->
 		Materia.CreatorCore.showMediaImporter($scope.acceptedMediaTypes)
@@ -90,22 +58,9 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		audioRef[1] = which
 
 	$scope.onMediaImportComplete = (media) ->
-		# use $sce.trustAsResourceUrl to avoid interpolation error
-		url = $sce.trustAsResourceUrl(Materia.CreatorCore.getMediaUrl media[0].id + ".mp3")
-
-		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, url)
+		# $scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
+		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
 		$scope.$apply -> true
-
-		# load all audio tags
-		audioTags = document.getElementsByTagName("audio")
-		audioAmount = audioTags.length
-		count = 0
-
-		for count in [0..audioAmount-1]
-			# if statement used here to only load the audio tags that have a src
-			if audioTags[count] != undefined
-				audioTags[count].load()
-		return true
 
 	$scope.checkMedia = (index, which) ->
 		return $scope.widget.wordPairs[index].media[which] != 0
@@ -139,18 +94,9 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		else if not isQuestion and (answer.length or $scope.checkMedia(index, 1))
 			'display': 'none'
 
-	# safely unwraps media content to allow it to be pushed to the qset
-	unwrapQuestionValue = (counter) ->
-		try
-			return $scope.widget.wordPairs[counter].media[0].$$unwrapTrustedValue()
-		catch error
-			return 0
-
-	unwrapAnswerValue = (counter) ->
-		try
-			return $scope.widget.wordPairs[counter].media[1].$$unwrapTrustedValue()
-		catch error
-			return 0
+	$scope.audioUrl = (assetId) ->
+		# use $sce.trustAsResourceUrl to avoid interpolation error
+		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId + ".mp3")
 
 	checkIds = (currentId, idList) ->
 		# prevents duplicate ids
@@ -184,6 +130,18 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		return checkIds(uniqueId, $scope.widget.uniqueIds) if answerAudio
 
 	# Private methods
+
+	# _used to set defaults if media is unset on either side
+	_checkAssets = (object) ->
+		try
+			return [object.assets[0],object.assets[1]]
+		try
+			return [0,object.assets[1]]
+		try
+			return [object.assets[0],0]
+		catch error
+			return [0,0]
+
 	_buildSaveData = ->
 		_qset.items = []
 		_qset.items[0] =
@@ -205,7 +163,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 			if not pair.answer?
 				pair.answer = ''
 
-			pairData = _process wordPairs[i], unwrapQuestionValue(i), unwrapAnswerValue(i), assignString(i)
+			pairData = _process wordPairs[i], wordPairs[i].media[0], wordPairs[i].media[1], assignString(i)
 			_qset.items[0].items.push(pairData)
 
 		for i, index in toRemove
@@ -215,7 +173,7 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		return $scope.widget.wordPairs.length > 0
 
 	# Get each pair's data from the controller and organize it into Qset form.
-	_process = (wordPair, questionMedia, answerMedia, audioString) ->
+	_process = (wordPair, questionMediaId, answerMediaId, audioString) ->
 		questions: [
 			text: wordPair.question
 		]
@@ -226,7 +184,6 @@ MatchingCreator.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $s
 		]
 		type: 'QA'
 		id: wordPair.id
-		assets: [questionMedia,answerMedia,audioString]
-
+		assets: [questionMediaId,answerMediaId,audioString]
 	Materia.CreatorCore.start $scope
 ]
