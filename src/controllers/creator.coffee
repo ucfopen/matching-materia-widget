@@ -84,16 +84,6 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			size = if len > 15 then 25 + len * 1.1 else 25
 		height: size + 'px'
 
-	$scope.displayInfoDot = (pair, isQuestion, index) ->
-		question = pair.question or ''
-		answer = pair.answer or ''
-
-		# hide the empty info box if they're not empty
-		if isQuestion and (question.length or $scope.checkMedia(index, 0))
-			'display': 'none'
-		else if not isQuestion and (answer.length or $scope.checkMedia(index, 1))
-			'display': 'none'
-
 	$scope.audioUrl = (assetId) ->
 		# use $sce.trustAsResourceUrl to avoid interpolation error
 		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId + ".mp3")
@@ -187,3 +177,43 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		assets: [questionMediaId,answerMediaId,audioString]
 	Materia.CreatorCore.start $scope
 ]
+
+# Directive that watches question/answer inputs and manages error states
+Matching.directive 'inputStateManager', () ->
+	restrict: 'A',
+	link: ($scope, $element, $attrs) ->
+
+		$scope.FOCUS = "focus"
+		$scope.BLUR = "blur"
+
+		$scope.hasQuestionProblem = false
+		$scope.hasAnswerProblem = true
+
+		# Fired on focus/blur
+		$scope.updateInputState = (type, evt) ->
+			el = angular.element evt.target
+			switch type
+				when $scope.FOCUS
+					el.addClass 'focused'
+				when $scope.BLUR
+					el.removeClass 'focused'
+
+					# If question is empty AND there is no media, apply error visuals
+					if el[0].classList.contains('question-text')
+					
+						if ! ($scope.widget.wordPairs[$attrs.index].question or $scope.checkMedia($attrs.index, 0))
+							$scope.hasQuestionProblem = true
+						else
+							$scope.hasQuestionProblem = false
+					
+					# If answer is empty AND there is no media, apply error visuals
+					if el[0].classList.contains('answer-text')
+					
+						if ! ($scope.widget.wordPairs[$attrs.index].answer or $scope.checkMedia($attrs.index, 1))
+							$scope.hasAnswerProblem = true
+						else
+							$scope.hasAnswerProblem = false
+
+		# Hide error highlight as soon as question length > 0, as opposed to when blur happens
+		$scope.$watch "pair.question", (newVal, oldVal) ->
+			if (oldVal is null or oldVal.length < 1) and newVal isnt oldVal then $scope.hasQuestionProblem = false

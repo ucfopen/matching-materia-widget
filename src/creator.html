@@ -48,16 +48,19 @@
 			<div id='question-container'>
 				<div class='question'
 					ng-repeat="pair in widget.wordPairs">
-					<div class='green-box left-side'>
+					<div class='green-box left-side' data-index='{{$index}}' input-state-manager>
 						<textarea class='question-text'
+							ng-class="{'hasProblem' : hasQuestionProblem}"
 							ng-hide="checkMedia($index, 0)"
 							ng-model="pair.question"
 							ng-style='autoSize(pair, false)'
 							focus-me='true'
+							ng-focus="updateInputState(FOCUS, $event)"
+							ng-blur="updateInputState(BLUR, $event)"
 							tabindex='{{$index+1}}'>
 						</textarea>
 						<div class="emptyInfoDot left"
-							ng-style='displayInfoDot(pair, true, $index)'>
+							ng-show="hasQuestionProblem">
 							i
 						</div>
 						<div class="wrap">
@@ -95,16 +98,18 @@
 
 					<div class='separate'></div>
 
-					<div class='green-box right-side'>
+					<div class='green-box right-side' data-index='{{$index}}' input-state-manager>
 						<textarea class='answer-text'
 							ng-hide="checkMedia($index, 1)"
 							ng-enter="addWordPair()"
 							ng-style='autoSize(pair, false)'
 							ng-model="pair.answer"
+							ng-focus="updateInputState(FOCUS, $event)"
+							ng-blur="updateInputState(BLUR, $event)"
 							tabindex='{{$index+2}}'>
 						</textarea>
 						<div class="emptyInfoDot right"
-							ng-style='displayInfoDot(pair, false, $index)'>
+							ng-show="hasAnswerProblem">
 							i
 						</div>
 						<div class="wrap">

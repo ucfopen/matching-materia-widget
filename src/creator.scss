@@ -293,11 +293,13 @@ body {
 				vertical-align : middle;
 				background     : #1ABC9C;
 				padding        : 10px 0 0 25px;
-				border         : none;
+				border-width: 0px 0px 3px 0px;
+				border-bottom: solid 3px rgba(0,0,0,0);
 				width          : 200px;
 				max-width      : 390px;
 
-				&.ng-empty.question-text {
+				// &.ng-empty.question-text.ng-touched:not(:focus) {
+				&.hasProblem:not(.focused) {
 					background-color: #FFBA74;
 					border-bottom: 3px solid #FF9620;
 				}
