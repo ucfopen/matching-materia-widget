@@ -217,3 +217,12 @@ Matching.directive 'inputStateManager', () ->
 		# Hide error highlight as soon as question length > 0, as opposed to when blur happens
 		$scope.$watch "pair.question", (newVal, oldVal) ->
 			if (oldVal is null or oldVal.length < 1) and newVal isnt oldVal then $scope.hasQuestionProblem = false
+
+		# Hide error highlight as soon as answer length > 0, as opposed to when blur happens
+		$scope.$watch "pair.answer", (newVal, oldVal) ->
+			if (oldVal is null or oldVal.length < 1) and newVal isnt oldVal then $scope.hasAnswerProblem = false
+
+		$scope.$watch "pair.media", (newVal, oldVal) ->
+			if newVal[0] isnt 0 then $scope.hasQuestionProblem = false
+			if newVal[1] isnt 0 then $scope.hasAnswerProblem = false
+			# console.log newVal
