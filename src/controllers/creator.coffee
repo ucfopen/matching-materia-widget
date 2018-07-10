@@ -1,4 +1,4 @@
-Matching = angular.module 'matching'
+Matching = angular.module 'matching', ['ngAnimate']
 
 Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	_qset = {}
