@@ -20,6 +20,7 @@ webpackConfig.entry['controllers/player.js'] = [path.join(__dirname, 'src', 'con
 webpackConfig.entry['directives/audioControls.js'] = [path.join(__dirname, 'src', 'directives', 'audioControls.coffee')]
 webpackConfig.entry['directives/focusMe.js'] = [path.join(__dirname, 'src', 'directives', 'focusMe.coffee')]
 webpackConfig.entry['directives/ngEnter.js'] = [path.join(__dirname, 'src', 'directives', 'ngEnter.coffee')]
+webpackConfig.entry['directives/inputStateManager.js'] = [path.join(__dirname, 'src', 'directives', 'inputStateManager.coffee')]
 
 webpackConfig.entry['audioControls.css'] = [
 	path.join(__dirname, 'src', 'audioControls.scss'),
