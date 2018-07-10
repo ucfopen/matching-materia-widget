@@ -283,13 +283,15 @@ body {
 			border-radius  : 5px;
 			background     : #1ABC9C;
 			border-bottom  : 3px solid #15987e;
-			overflow       : auto;
+			overflow       : visible;
 			display        : inline-block;
+			position	   : relative;
 
 			textarea {
 				color          : #fff;
 				font-size      : 20px;
 				font-family    : "CorbelBold", sans-serif;
+				line-height: 1.2;
 				vertical-align : middle;
 				background     : #1ABC9C;
 				padding        : 10px 0 0 25px;
