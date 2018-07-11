@@ -202,3 +202,42 @@ describe('ngEnter Directive', function() {
 		expect($scope.enterEvent).toHaveBeenCalled();
 	});
 });
+
+describe('inputStateManager Directive', function() {
+	beforeEach(module('matching'));
+
+	beforeEach(inject(function(_$compile_, $rootScope, $controller) {
+		$scope = $rootScope.$new();
+		ctrl = $controller('matchingCreatorCtrl', { $scope: $scope });
+		$compile = _$compile_;
+
+		$scope.controller = ctrl;
+	}));
+
+	var createDirectiveInstance = inject(function($injector) {
+		var elementHtml = 
+			'<div><div class="green-box" data-index="0" ng-repeat="pair in widget.wordPairs" input-state-manager><textarea class="question-text" ng-class="{\'hasProblem\' : hasQuestionProblem}" ng-model="pair.question" ng-focus="updateInputState(FOCUS, $event)" ng-blur="updateInputState(BLUR, $event)"></textarea></div></div>';
+
+		element = $compile(elementHtml)($scope);
+		$scope.$digest();
+	});
+
+	it('should correctly indicate if a question input has a problem', function() {
+			
+		$scope.widget.wordPairs =[];
+
+		$scope.addWordPair("","butts",[0,0]);
+
+		createDirectiveInstance();
+
+		var questionElement = angular.element(element[0].querySelector('.question-text'));
+
+		expect(questionElement.hasClass('hasProblem')).toBe(false)
+		
+		questionElement.triggerHandler('focus');
+		questionElement.triggerHandler('blur');
+
+		expect(questionElement.hasClass('hasProblem')).toBe(true)
+	});
+
+});

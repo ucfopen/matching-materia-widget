@@ -17,6 +17,7 @@ Matching.directive 'inputStateManager', () ->
 			switch type
 				when $scope.FOCUS
 					el.addClass 'focused'
+					return
 				when $scope.BLUR
 					el.removeClass 'focused'
 
@@ -35,6 +36,8 @@ Matching.directive 'inputStateManager', () ->
 							$scope.hasAnswerProblem = true
 						else
 							$scope.hasAnswerProblem = false
+
+					return
 
 		# Hide error highlight as soon as question length > 0, as opposed to when blur happens
 		$scope.$watch "pair.question", (newVal, oldVal) ->
