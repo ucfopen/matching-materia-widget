@@ -246,23 +246,10 @@ describe('Matching', function(){
 			expect($scope.autoSize({question: 'thisIsNineteenChars', answer: 'thisIsNineteenChars'}, true)).toEqual({height: 85 + greaterThan15chars.length * 1.1 + 'px'});
 		});
 
-		it('should display and hide the info dots correctly', function() {
-			// Add some wordpairs to test
-			expect($scope.widget.wordPairs.length).toBe(11);
-			$scope.addWordPair('', '', [0,0]);                  // at index 11 (show, show)
-			$scope.addWordPair('not blank', "not blank", [0,0]);        // 12 (hide, hide)
-			$scope.addWordPair('', '', ["question.mp3", "answer.mp3"]); // 13 (hide, hide)
-
-			// undefined -> show
-			// {display: 'none'} -> hide
-			wordPairs = $scope.widget.wordPairs;
-			expect($scope.displayInfoDot(wordPairs[11], true, 11)).toBeUndefined();
-			expect($scope.displayInfoDot(wordPairs[11], false, 11)).toBeUndefined();
-			expect($scope.displayInfoDot(wordPairs[12], true, 12)).toEqual({display: 'none'});
-			expect($scope.displayInfoDot(wordPairs[12], false, 12)).toEqual({display: 'none'});
-			expect($scope.displayInfoDot(wordPairs[13], true, 13)).toEqual({display: 'none'});
-			expect($scope.displayInfoDot(wordPairs[13], false, 13)).toEqual({display: 'none'});
-		});
+		// it('should correctly indicate if a question input has a problem', function() {
+		// 	console.log('BUTTS');
+		// 	console.log($scope.widget.wordPairs[0].question);
+		// });
 
 		it('should not save a blank qset', function() {
 			// Remove all of the word pairs
