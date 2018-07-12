@@ -77,7 +77,7 @@ describe('Matching', function(){
 			expect(testQuestion.answers[0].text).toBe('to change');
 		});
 
-		it('should handle null question and answers', function() {
+		it('should fail to save with empty questions or answers', function() {
 			// When three rows are added, their content doesn't matter until being saved
 			expect($scope.widget.wordPairs.length).toBe(10);
 			$scope.addWordPair(null, null, [0,0]);
@@ -85,17 +85,15 @@ describe('Matching', function(){
 			$scope.addWordPair("abc", null, [0,0]);
 			expect($scope.widget.wordPairs.length).toBe(13);
 
-			// Only one of the three (last one) should be valid
-			var successReport = $scope.onSaveClicked();
-			expect(successReport.qset.items[0].items.length).toBe(11);
-			expect(successReport.qset.items[0].items[10].answers[0].text).toBe("");
+			// None of the three should be valid
+			expect(function(){
+				$scope.onSaveClicked();
+			}).toThrow(new Error('Widget not ready to save.'));
 
-			// check that the null questions were removed, but the valid ones remain
-			expect($scope.widget.wordPairs.length).toBe(11);
+			// remove those three invalid questions
 			$scope.removeWordPair(10);
-			expect($scope.widget.wordPairs.length).toBe(10);
-			successReport = $scope.onSaveClicked();
-			expect(successReport.qset.items[0].items.length).toBe(10);
+			$scope.removeWordPair(10);
+			$scope.removeWordPair(10);
 		});
 
 		it('should not save questions that have no text and no audio', function() {
@@ -111,14 +109,12 @@ describe('Matching', function(){
 
 			// Add a wordpair that has no question and no media, total should stay at 11
 			$scope.addWordPair("", "answer", [0,0]);
-			successReport = $scope.onSaveClicked();
-			expect(successReport.qset.items[0].items.length).toBe(12);
-		});
+			expect(function(){
+				$scope.onSaveClicked();
+			}).toThrow(new Error('Widget not ready to save.'));
 
-		it('should trim whitespace on an otherwise blank answer', function() {
-			$scope.addWordPair("question3", "      ", [0,0]);
-			var successReport = $scope.onSaveClicked();
-			expect(successReport.qset.items[0].items[12].answers[0].text).toBe("");
+			// remove that last invalid question
+			$scope.removeWordPair(12);
 		});
 
 		it('should generate an id for audio without a description', function() {
@@ -128,13 +124,10 @@ describe('Matching', function(){
 			$scope.addWordPair("", "", ["question.mp3","answer.mp3"]);
 
 			var successReport = $scope.onSaveClicked();
-			// Make sure the blank descriptions are set to be "Audio"
+			// Make sure the blank description is set to be "Audio"
 			expect(successReport.qset.items[0].items[13].answers[0].text).toBe("Audio");
-			expect(successReport.qset.items[0].items[14].questions[0].text).toBe("Audio");
-			expect(successReport.qset.items[0].items[14].answers[0].text).toBe("Audio");
 			// Make sure there is some id for these
 			expect(successReport.qset.items[0].items[13].assets[2]).toBeDefined();
-			expect(successReport.qset.items[0].items[14].assets[2]).toBeDefined();
 		});
 
 		it('should properly remove word pair', function(){
@@ -245,11 +238,6 @@ describe('Matching', function(){
 			//test if audio is true and there are more than 15 characters
 			expect($scope.autoSize({question: 'thisIsNineteenChars', answer: 'thisIsNineteenChars'}, true)).toEqual({height: 85 + greaterThan15chars.length * 1.1 + 'px'});
 		});
-
-		// it('should correctly indicate if a question input has a problem', function() {
-		// 	console.log('BUTTS');
-		// 	console.log($scope.widget.wordPairs[0].question);
-		// });
 
 		it('should not save a blank qset', function() {
 			// Remove all of the word pairs

@@ -214,30 +214,119 @@ describe('inputStateManager Directive', function() {
 		$scope.controller = ctrl;
 	}));
 
-	var createDirectiveInstance = inject(function($injector) {
-		var elementHtml = 
-			'<div><div class="green-box" data-index="0" ng-repeat="pair in widget.wordPairs" input-state-manager><textarea class="question-text" ng-class="{\'hasProblem\' : hasQuestionProblem}" ng-model="pair.question" ng-focus="updateInputState(FOCUS, $event)" ng-blur="updateInputState(BLUR, $event)"></textarea></div></div>';
+	var createQuestionDirectiveInstance = inject(function($injector) {
+		var elementHtml =
+			'<div>' +
+				'<div class="green-box"' +
+					'data-index="0"' +
+					'ng-repeat="pair in widget.wordPairs"' +
+					'input-state-manager>' +
+					'<textarea class="question-text"' +
+						'ng-class="{\'hasProblem\' : hasQuestionProblem}"' +
+						'ng-model="pair.question"' +
+						'ng-focus="updateInputState(FOCUS, $event)"' +
+						'ng-blur="updateInputState(BLUR, $event)">' +
+					'</textarea>' +
+				'</div>' +
+			'</div>';
+
+		element = $compile(elementHtml)($scope);
+		$scope.$digest();
+	});
+	var createAnswerDirectiveInstance = inject(function($injector) {
+		var elementHtml =
+			'<div>' +
+				'<div class="green-box"' +
+					'data-index="0"' +
+					'ng-repeat="pair in widget.wordPairs"' +
+					'input-state-manager>' +
+					'<textarea class="answer-text"' +
+						'ng-class="{\'hasProblem\' : hasAnswerProblem}"' +
+						'ng-model="pair.answer"' +
+						'ng-focus="updateInputState(FOCUS, $event)"' +
+						'ng-blur="updateInputState(BLUR, $event)">' +
+					'</textarea>' +
+				'</div>' +
+			'</div>';
 
 		element = $compile(elementHtml)($scope);
 		$scope.$digest();
 	});
 
-	it('should correctly indicate if a question input has a problem', function() {
-			
+	var refreshElement = function(element) {
+		element.triggerHandler('focus');
+		element.triggerHandler('blur');
+	};
+
+	it('should correctly indicate an empty question input has a problem', function() {
 		$scope.widget.wordPairs =[];
+		$scope.addWordPair('','',[0,0]);
 
-		$scope.addWordPair("","butts",[0,0]);
-
-		createDirectiveInstance();
-
+		createQuestionDirectiveInstance();
 		var questionElement = angular.element(element[0].querySelector('.question-text'));
 
-		expect(questionElement.hasClass('hasProblem')).toBe(false)
-		
-		questionElement.triggerHandler('focus');
-		questionElement.triggerHandler('blur');
-
-		expect(questionElement.hasClass('hasProblem')).toBe(true)
+		expect(questionElement.hasClass('hasProblem')).toBe(true);
+		refreshElement(questionElement);
+		expect(questionElement.hasClass('hasProblem')).toBe(true);
 	});
 
+	it('should correctly indicate a non-empty question input is valid', function() {
+		$scope.widget.wordPairs =[];
+		$scope.addWordPair('','',[0,0]);
+
+		createQuestionDirectiveInstance();
+		var questionElement = angular.element(element[0].querySelector('.question-text'));
+
+		//make sure a question with text is valid
+		$scope.widget.wordPairs[0].question = 'question';
+		expect(questionElement.hasClass('hasProblem')).toBe(true);
+		refreshElement(questionElement);
+		expect(questionElement.hasClass('hasProblem')).toBe(false);
+
+		//double-check that a question without text or media is invalid
+		$scope.widget.wordPairs[0].question = '';
+		refreshElement(questionElement);
+		expect(questionElement.hasClass('hasProblem')).toBe(true);
+
+		//make sure question with no text but media is valid
+		$scope.widget.wordPairs[0].media = [1,0];
+		refreshElement(questionElement);
+		expect(questionElement.hasClass('hasProblem')).toBe(false);
+	});
+
+	it('should correctly indicate an empty answer input has a problem', function() {
+		$scope.widget.wordPairs =[];
+		$scope.addWordPair('','',[0,0]);
+
+		createAnswerDirectiveInstance();
+		var answerElement = angular.element(element[0].querySelector('.answer-text'));
+
+		expect(answerElement.hasClass('hasProblem')).toBe(true);
+		refreshElement(answerElement);
+		expect(answerElement.hasClass('hasProblem')).toBe(true);
+	});
+
+	it('should correctly indicate a non-empty answer input is valid', function() {
+		$scope.widget.wordPairs =[];
+		$scope.addWordPair('','',[0,0]);
+
+		createAnswerDirectiveInstance();
+		var answerElement = angular.element(element[0].querySelector('.answer-text'));
+
+		//make sure a answer with text is valid
+		$scope.widget.wordPairs[0].answer = 'answer';
+		expect(answerElement.hasClass('hasProblem')).toBe(true);
+		refreshElement(answerElement);
+		expect(answerElement.hasClass('hasProblem')).toBe(false);
+
+		//double-check that a answer without text or media is invalid
+		$scope.widget.wordPairs[0].answer = '';
+		refreshElement(answerElement);
+		expect(answerElement.hasClass('hasProblem')).toBe(true);
+
+		//make sure answer with no text but media is valid
+		$scope.widget.wordPairs[0].media = [0,1];
+		refreshElement(answerElement);
+		expect(answerElement.hasClass('hasProblem')).toBe(false);
+	});
 });

@@ -61,15 +61,6 @@
 							ng-blur="updateInputState(BLUR, $event)"
 							tabindex='{{$index+1}}'>
 						</textarea>
-						<div class="emptyInfoDot left"
-							ng-show="hasQuestionProblem">
-							i
-						</div>
-						<div class="wrap">
-							<div class="popup">
-								<div class="popup-text left">Term can't be left blank.</div>
-							</div>
-						</div>
 						<div class="audio-display"
 							ng-show="checkMedia($index, 0)"
 							ng-style='autoSize(pair, true)'>
@@ -85,6 +76,25 @@
 								ng-style='autoSize(pair, false)'
 								focus-me="checkMedia($index, 0)">
 							</textarea>
+						</div>
+						<div class="emptyInfoDot"
+							ng-class="{'error': !checkMedia($index, 0),
+								'warning': checkMedia($index, 0)}"
+							ng-show="hasQuestionProblem ||
+								(checkMedia($index, 0) && (pair.question == '' || !pair.question))">
+							i
+						</div>
+						<div class="wrap">
+							<div class="popup">
+								<div class="popup-text error"
+									ng-hide="checkMedia($index, 0)">
+									Term can't be left blank.
+								</div>
+								<div class="popup-text error"
+									ng-show="checkMedia($index, 0) && (pair.question == '' || !pair.question)">
+									Audio description is recommended.
+								</div>
+							</div>
 						</div>
 						<div class='audio-image'>
 							<span class="add-audio"
@@ -102,6 +112,7 @@
 
 					<div class='green-box right-side' data-index='{{$index}}' input-state-manager>
 						<textarea class='answer-text'
+							ng-class="{'hasProblem' : hasAnswerProblem}"
 							ng-hide="checkMedia($index, 1)"
 							ng-enter="addWordPair()"
 							ng-style='autoSize(pair, false)'
@@ -110,17 +121,6 @@
 							ng-blur="updateInputState(BLUR, $event)"
 							tabindex='{{$index+2}}'>
 						</textarea>
-						<div class="emptyInfoDot right"
-							ng-show="hasAnswerProblem">
-							i
-						</div>
-						<div class="wrap">
-							<div class="popup">
-								<div class="popup-text right">
-									If you leave this side blank, it will not appear when playing.
-								</div>
-							</div>
-						</div>
 						<div class="audio-display"
 							ng-show="checkMedia($index, 1)"
 							ng-style='autoSize(pair, true)'>
@@ -136,6 +136,25 @@
 								ng-style='autoSize(pair, false)'
 								focus-me="checkMedia($index, 1)">
 							</textarea>
+						</div>
+						<div class="emptyInfoDot"
+							ng-class="{'error': !checkMedia($index, 1),
+								'warning': checkMedia($index, 1)}"
+							ng-show="hasAnswerProblem ||
+								(checkMedia($index, 1) && (pair.answer == '' || !pair.answer))">
+							i
+						</div>
+						<div class="wrap">
+							<div class="popup">
+								<div class="popup-text error"
+									ng-hide="checkMedia($index, 1)">
+									Term can't be left blank.
+								</div>
+								<div class="popup-text error"
+									ng-show="checkMedia($index, 1) && (pair.answer == '' || !pair.answer)">
+									Audio description is recommended.
+								</div>
+							</div>
 						</div>
 						<div class='audio-image'>
 							<span class="add-audio"

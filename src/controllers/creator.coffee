@@ -148,19 +148,29 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			if (not pair.question? or pair.question.trim() == '') and not wordPairs[i].media[0]
 				toRemove.push(i)
 				continue
-
+			# Don't allow any with blank answers (right side)
+			if (not pair.answer? or pair.answer.trim() == '') and not wordPairs[i].media[1]
+				toRemove.push(i)
+				continue
+			###
+			BRING THIS BACK WHEN WE'RE READY FOR FAKEOUT OPTIONS
 			# Blank answers (right side) are allowed, they just won't show up when playing
 			if not pair.answer?
 				pair.answer = ''
+			###
 
 			pairData = _process wordPairs[i], wordPairs[i].media[0], wordPairs[i].media[1], assignString(i)
 			_qset.items[0].items.push(pairData)
 
+		###
+		MAYBE DO THIS LATER, WITH AN EXTRA 'ARE YOU SURE?' STEP BEFORE MASS DELETING
 		for i, index in toRemove
 			$scope.removeWordPair(i - index)
 		$scope.$apply()
 
 		return $scope.widget.wordPairs.length > 0
+		###
+		toRemove.length is 0 and !($scope.widget.title is '' or $scope.widget.wordPairs.length < 1)
 
 	# Get each pair's data from the controller and organize it into Qset form.
 	_process = (wordPair, questionMediaId, answerMediaId, audioString) ->
