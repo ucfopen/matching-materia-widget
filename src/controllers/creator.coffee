@@ -37,7 +37,6 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		if _buildSaveData()
 			Materia.CreatorCore.save $scope.widget.title, _qset
 		else
-			console.log 'YA DUN FUCKED UP'
 			$scope.showErrorDialog = true
 			$scope.$apply()
 			Materia.CreatorCore.cancelSave 'Widget not ready to save.'
