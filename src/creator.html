@@ -180,7 +180,7 @@
 
 		<div id='backgroundcover'
 			ng-click='hideCover()'
-			ng-class='{ show: showTitleDialog || showIntroDialog }'>
+			ng-class='{ show: showTitleDialog || showIntroDialog || showErrorDialog }'>
 		</div>
 		<div class='box intro'
 			ng-class='{ show: showIntroDialog }'>
@@ -211,6 +211,13 @@
 				focus-me='showTitleDialog'>
 			<input type='submit'
 				value='Done'
+				ng-click='hideCover()'>
+		</div>
+		<div class='box error'
+			ng-class='{ show: showErrorDialog }'>
+			<b>Can't Save. Make sure your widget has a title and no invalid word pairs.</b><br>
+			<input type='submit'
+				value='Okay'
 				ng-click='hideCover()'>
 		</div>
 		<div class='arrow_box'

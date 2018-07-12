@@ -36,7 +36,11 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		# don't allow empty sets to be saved.
 		if _buildSaveData()
 			Materia.CreatorCore.save $scope.widget.title, _qset
-		else Materia.CreatorCore.cancelSave 'Widget not ready to save.'
+		else
+			console.log 'YA DUN FUCKED UP'
+			$scope.showErrorDialog = true
+			$scope.$apply()
+			Materia.CreatorCore.cancelSave 'Widget not ready to save.'
 
 	$scope.onSaveComplete = (title, widget, qset, version) -> true
 
@@ -72,7 +76,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		$scope.hideCover()
 
 	$scope.hideCover = ->
-		$scope.showTitleDialog = $scope.showIntroDialog = false
+		$scope.showTitleDialog = $scope.showIntroDialog = $scope.showErrorDialog = false
 
 	$scope.autoSize = (pair, audio) ->
 		question = pair.question or ''
