@@ -23,6 +23,7 @@ meta_data:
     - Customizable
     - Scorable
     - Mobile Friendly
+    - Media
   supported_data:
     - Question/Answer
   about: >

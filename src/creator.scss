@@ -228,13 +228,13 @@ body {
 			z-index: 2;
 			margin-left : -20px;
 			border-radius: 5px;
-			&.left {
+			&.error {
 				background-color: red;
 				&:hover {
 					background-color: lighten(red, 20%);
 				}
 			}
-			&.right {
+			&.warning {
 				color: black;
 				background-color: lightgoldenrodyellow;
 				&:hover {
@@ -305,9 +305,9 @@ body {
 					background-color: #FFBA74;
 					border-bottom: 3px solid #FF9620;
 				}
-				&.ng-empty.answer-text {
-					opacity: .4;
-				}
+				// &.ng-empty.answer-text {
+				// 	opacity: .4;
+				// }
 			}
 
 			.audio-display {
