@@ -7,8 +7,8 @@ Matching.directive 'inputStateManager', () ->
 		$scope.FOCUS = "focus"
 		$scope.BLUR = "blur"
 
-		$scope.hasQuestionProblem = !($scope.widget.wordPairs[$attrs.index].question or $scope.checkMedia($attrs.index, 0))
-		$scope.hasAnswerProblem = !($scope.widget.wordPairs[$attrs.index].answer or $scope.checkMedia($attrs.index, 1))
+		$scope.hasQuestionProblem = false
+		$scope.hasAnswerProblem = false
 
 		# Fired on focus/blur
 		$scope.updateInputState = (type, evt) ->
@@ -21,18 +21,10 @@ Matching.directive 'inputStateManager', () ->
 					el.removeClass 'focused'
 
 					# If question is empty AND there is no media, apply error visuals
-					if el[0].classList.contains('question-text')
-						if ! ($scope.widget.wordPairs[$attrs.index].question or $scope.checkMedia($attrs.index, 0))
-							$scope.hasQuestionProblem = true
-						else
-							$scope.hasQuestionProblem = false
+					if el[0].classList.contains('question-text') then $scope.hasQuestionProblem = !($scope.widget.wordPairs[$attrs.index].question or $scope.checkMedia($attrs.index, 0))
 
 					# If answer is empty AND there is no media, apply error visuals
-					if el[0].classList.contains('answer-text')
-						if ! ($scope.widget.wordPairs[$attrs.index].answer or $scope.checkMedia($attrs.index, 1))
-							$scope.hasAnswerProblem = true
-						else
-							$scope.hasAnswerProblem = false
+					if el[0].classList.contains('answer-text') then $scope.hasAnswerProblem = !($scope.widget.wordPairs[$attrs.index].answer or $scope.checkMedia($attrs.index, 1))
 
 					return
 
