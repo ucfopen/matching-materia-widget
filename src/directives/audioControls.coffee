@@ -9,6 +9,7 @@ Matching.directive 'ngAudioControls', ->
 		$scope.audio = null
 		$scope.currentTime = 0
 		$scope.duration = 0
+		$scope.selectingNewTime = false
 
 		if typeof $scope.audioSource == "string"
 			$scope.audio = new Audio()
@@ -26,7 +27,9 @@ Matching.directive 'ngAudioControls', ->
 			if seconds < 10 then seconds = '0' + seconds
 			return '' + minutes + ':' + seconds
 
-		$scope.changeTime = () ->
+		$scope.preChangeTime = -> $scope.selectingNewTime = true
+		$scope.changeTime = ->
+			$scope.selectingNewTime = false
 			$scope.audio.currentTime = $scope.currentTime
 
 		# should only occur once, when the file is done loading
@@ -36,6 +39,7 @@ Matching.directive 'ngAudioControls', ->
 			$scope.$apply()
 
 		$scope.audio.ontimeupdate = () ->
-			$scope.currentTime = $scope.audio.currentTime
-			$scope.$apply()
+			unless $scope.selectingNewTime
+				$scope.currentTime = $scope.audio.currentTime
+				$scope.$apply()
 	]

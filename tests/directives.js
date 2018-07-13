@@ -92,7 +92,26 @@ describe('audioControls Directive', function(){
 		expect(scope.currentTime).toBe(5);
 	});
 
-	it('should update audio time when the seek bar in the controls is moved', function(){
+	it('should not update audio time while the seek bar in the controls is being moved', function(){
+		createDirectiveInstance();
+		var scope = element.scope();
+
+		expect(scope.audio.currentTime).toBe(0);
+
+		expect(scope.selectingNewTime).toBe(false);
+		//normally this would be called any time the seek bar is clicked to select a new time
+		//we can call it by hand to test
+		scope.preChangeTime();
+		expect(scope.selectingNewTime).toBe(true);
+		//normally the Audio class handles this itself
+		//we're mocking it, so we have to update it by hand
+		scope.audio.currentTime = 5;
+		scope.audio.ontimeupdate();
+
+		expect(scope.currentTime).toBe(0);
+	});
+
+	it('should update audio time when the seek bar in the controls is released', function(){
 		createDirectiveInstance();
 		var scope = element.scope();
 
@@ -101,6 +120,7 @@ describe('audioControls Directive', function(){
 		//normally this would be bound to a position on the seek bar in the ui
 		//we can just change it by hand to test
 		scope.currentTime = 5;
+		expect(scope.selectingNewTime).toBe(false);
 		scope.changeTime();
 		expect(scope.audio.currentTime).toBe(5);
 	});
