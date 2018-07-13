@@ -10,8 +10,8 @@
 				max='{{ duration }}'
 				step='0.1'
 				ng-model='currentTime'
-				ng-click='$event.stopPropagation();'
-				ng-change='$event.stopPropagation(); changeTime()'>
+				ng-mousedown='$event.stopPropagation(); preChangeTime()'
+				ng-mouseup='$event.stopPropagation(); changeTime()'>
 		</span>
 		<span class='duration'>{{ toMinutes(currentTime) }} / {{ toMinutes(duration) }}</span>
 	</span>
