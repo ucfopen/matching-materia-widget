@@ -5420,9 +5420,9 @@ map-visit@^1.0.0:
     webpack-strip-block "^0.2.0"
     whatwg-fetch "^2.0.3"
 
-"materia-widget-development-kit@git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#~v1.1.0":
-  version "1.1.0"
-  resolved "git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#5fd8ed3fda997970c2e9b2175a8d0bd84153df4f"
+"materia-widget-development-kit@git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#~v1.2.0":
+  version "1.2.0"
+  resolved "git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#ccc1485f6ec148ec67563efe8cdb1fee111955d6"
   dependencies:
     autoprefixer "^7.1.2"
     clean-webpack-plugin "^0.1.16"
