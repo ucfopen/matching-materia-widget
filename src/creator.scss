@@ -2,23 +2,23 @@
 	font-family: 'CorbelBold';
 	src: url('assets/font/corbelb-webfont.eot');
 	src: url('assets/font/corbelb-webfont.eot?#iefix') format('embedded-opentype'),
-		 url('assets/font/corbelb-webfont.woff') format('woff'),
-		 url('assets/font/corbelb-webfont.ttf') format('truetype'),
-		 url('assets/font/corbelb-webfont.svg#CorbelBold') format('svg');
+		url('assets/font/corbelb-webfont.woff') format('woff'),
+		url('assets/font/corbelb-webfont.ttf') format('truetype'),
+		url('assets/font/corbelb-webfont.svg#CorbelBold') format('svg');
 	font-weight : normal;
 	font-style  : normal;
 }
 @font-face {
 	font-family: 'icomoon';
 	src:url('assets/font/icomoon.eot');
-	src:url('assets/font/icomoon.eot?#iefix') format('embedded-opentype'),
+	src: url('assets/font/icomoon.eot?#iefix') format('embedded-opentype'),
 		url('assets/font/icomoon.woff') format('woff'),
 		url('assets/font/icomoon.ttf') format('truetype'),
 		url('assets/font/icomoon.svg#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
-.icon-alert, .icon-plus, .icon-close {
+.icon-alert, .icon-plus, .icon-close, .audio-image {
 	font-family: 'icomoon';
 	speak: none;
 	font-style: normal;
@@ -48,12 +48,15 @@ input:focus,
 select:focus,
 textarea:focus,
 button:focus { outline: none;}
-textarea { resize: none; }
+textarea {
+	resize: none;
+	overflow: hidden;
+}
 html, body {
 	-webkit-user-select : none;
-	   -moz-user-select : none;
-	    -ms-user-select : none;
-	        user-select : none;
+	-moz-user-select : none;
+	-ms-user-select : none;
+	user-select : none;
 	cursor : default;
 }
 html, body, div {
@@ -67,6 +70,7 @@ body {
 	background-color : #2F3944;
 	color : #fff;
 	font-family : "Lato", "Arial", sans-serif;
+	overflow-x: hidden;
 }
 
 #header {
@@ -160,11 +164,13 @@ body {
 }
 .main-area {
 	position : relative;
+	display: block;
+	text-align: center;
 	width    : 80%;
-	margin   : 20px 0 70px 0;
+	margin   : 20px auto 70px;
 	perspective : 800px;
 	transform-origin : 50% 100%;
-	
+
 	.titles h1 {
 		display   : inline-block;
 		padding   : 10px 0 0 0;
@@ -172,7 +178,17 @@ body {
 		font-family: 'Lato', serif;
 		font-weight: 300;
 		font-size : 19px;
-		&:nth-child(1) { margin-right : 400px; }
+		width: 240px;
+		text-align: center;
+	}
+	.titles .separate {
+		display: inline-block;
+		opacity: 0;
+		vertical-align: middle;
+		min-width: 60px;
+		width: 25%;
+		position: relative;
+		margin: 2px 25px;
 	}
 
 	.pair-count {
@@ -185,51 +201,203 @@ body {
 		white-space    : nowrap;
 		margin         : 15px 0 0 0;
 		transform-style : preserve-3d;
-		&.ng-enter, 
-		&.ng-leave { 
-			transition : 1025ms cubic-bezier(0.190, 1.000, 0.220, 1.000) all;
+		&.ng-enter,
+		&.ng-leave {
+			transition : 625ms cubic-bezier(0.190, 1.000, 0.220, 1.000) all;
 		}
 		&.ng-leave.ng-leave-active,
 		&.ng-enter {
 			transform : rotateX(-180deg) translatez(50px);
-			opacity : 0;
-			height  : 0;
+			opacity   : 0;
+			height    : 0;
+			margin-top: 0;
 		}
 		&.ng-enter.ng-enter-active,
 		&.ng-leave {
 			transform : rotateX(0deg) translatez(0);
-			opacity : 1;
-			height  : 55px;
+			opacity   : 1;
+			height    : 48px;
+			margin-top: 15px;
 		}
-		textarea {
-			vertical-align: middle;
-			width         : 200px;
-			max-width     : 390px;
-			margin        : 0 5px 0 5px;
-			font-size     : 20px;
+		.emptyInfoDot {
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+			position: absolute;
+			top: -5px;
+			z-index: 2;
+			margin-left : -20px;
+			border-radius: 5px;
+			&.error {
+				background-color: red;
+				&:hover {
+					background-color: lighten(red, 20%);
+				}
+			}
+			&.warning {
+				color: black;
+				background-color: lightgoldenrodyellow;
+				&:hover {
+					background-color: darken(lightgoldenrodyellow, 10%);
+				}
+			}
+			&:hover + .wrap > .popup{
+				clear: both;
+				z-index: 1;
+				opacity: .95;
+				pointer-events: all;
+				transition: 300ms;
+				display: block;
+			}
+		}
+		.popup {
+			opacity: 0;
+			position: absolute;
+			right: 0;
+			z-index: -1;
+			transition: 200ms;
+			.popup-text {
+				position         : relative;
+				height           : 40px;
+				margin           : -5px 0 0 0;
+				width            : 250px;
+				padding          : 10px;
+				color            : #222;
+				background-color : #FFF;
+				font-size        : 15px;
+				white-space      : normal;
+				word-wrap        : break-word;
+				border-radius    : 10px;
+				border-bottom    : 3px solid #DDD;
+				overflow         : auto;
+				clear            : both;
+				pointer-events   : none;
+				left: -20px;
+			}
+		}
+
+		.green-box {
+			vertical-align : middle;
+			margin         : 0 5px 0 5px;
+			max-width      : 390px;
+			border-radius  : 5px;
+			background     : #1ABC9C;
+			border-bottom  : 3px solid #15987e;
+			overflow       : visible;
+			display        : inline-block;
+			position	   : relative;
+
+			textarea {
+				color          : #fff;
+				font-size      : 20px;
+				font-family    : "CorbelBold", sans-serif;
+				line-height: 1.2;
+				vertical-align : middle;
+				background     : #1ABC9C;
+				padding        : 10px 0 0 25px;
+				border-width: 0px 0px 3px 0px;
+				border-bottom: solid 3px rgba(0,0,0,0);
+				width          : 200px;
+				max-width      : 390px;
+
+				// &.ng-empty.question-text.ng-touched:not(:focus) {
+				&.hasProblem:not(.focused) {
+					background-color: #FFBA74;
+					border-bottom: 3px solid #FF9620;
+				}
+				// &.ng-empty.answer-text {
+				// 	opacity: .4;
+				// }
+			}
+
+			.audio-display {
+				vertical-align : middle;
+				padding-top    : 10px;
+				font-size      : 20px;
+				font-family    : "CorbelBold", sans-serif;
+				font-weight    : 300;
+				display        : inline-block;
+
+				.play-btn:before {
+					position: absolute;
+					left: 9px;
+
+				}
+			}
+			.audio-image {
+				color: #98e2d3;
+				display : inline-block;
+				cursor: pointer;
+				font-size: 1.5em;
+				padding: 0 8px;
+				width: 32px;
+				margin: 0;
+				vertical-align: middle;
+				border-left: 1px solid #15987e;
+
+				&:hover {
+					color: #fff;
+				}
+
+				.add-audio:before {
+					content: "\ea2b";
+				}
+				.remove-audio:before {
+					content: "\ea2a";
+				}
+			}
+		}
+
+		.add-desc {
+			margin-top    : 12px;
+			font-size     : 17px;
+			font-family   : Arial;
+			cursor        : pointer;
+		}
+		.desc-input {
+			width         : 190px;
 			height        : 25px;
 			border        : none;
-			padding       : 10px;
-			border-radius : 5px;
-			color         : #fff;
+			font-size     : 17px;
+			font-family   : CorbelBold, sans-serif;
 			background    : #1ABC9C;
-			border-bottom : 3px solid #15987E;
-			font-family   : "CorbelBold", sans-serif;
-			font-weight   : 300;
-			overflow      : auto;
+			color         : #fff;
+		}
+		/* Change Placeholder Text Color */
+		::-webkit-input-placeholder { /* Chrome */
+		  color: #fff;
+		}
+		:-ms-input-placeholder { /* IE 10+ */
+		  color: #fff;
+		}
+		::-moz-placeholder { /* Firefox 19+ */
+		  color: #fff;
+		  opacity: 1;
+		}
+		:-moz-placeholder { /* Firefox 4 - 18 */
+		  color: #fff;
+		  opacity: 1;
+		}
+		audio::-webkit-media-controls {
+			overflow : hidden !important
+		}
+		audio::-webkit-media-controls-enclosure {
+		    width       : calc(100% + 32px);
+		    margin-left : auto;
 		}
 		.separate {
 			display: inline-block;
 			vertical-align: middle;
 			background: #5d666f;
 			height: 5px;
-			width: 60px;
+			min-width: 60px;
+			width: 25%;
 			border-radius: 5px;
 			position: relative;
 			margin: 2px 20px;
 		}
 		.icon-close {
-			position  : absolute;
+			position  : relative;
 			margin    : 5px 0 0 16px;
 			font-size : 27px;
 			cursor: pointer;
@@ -239,11 +407,15 @@ body {
 				opacity: 1;
 			}
 		}
+		.wrap {
+			display: inline;
+			position: absolute;
+		}
 	}
 	#add-new {
 		display          : inline-block;
 		left             : 50%;
-		margin-top: 50px;
+		margin-top       : 50px;
 		bottom           : 0;
 		background-color : $green;
 		padding          : 10px 28px;
@@ -376,6 +548,7 @@ body {
 	margin-left: 140px;
 
 	animation: pounce 1s infinite;
+	&.ng-animate { -webkit-animation: none 0s; }
 
 	span {
 		display: inline-block;

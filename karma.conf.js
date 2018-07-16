@@ -18,8 +18,9 @@ module.exports = function(config) {
 			'node_modules/materia-client-assets/dist/js/materia.scorecore.js',
 			'src/demo.json',
 			'src/devmateria_demo.json',
-			'build/creator.js',
-			'build/player.js',
+			'build/modules/matching.js',
+			'build/controllers/*.js',
+			'build/directives/*.js',
 			'tests/*.js'
 		],
 
@@ -35,7 +36,9 @@ module.exports = function(config) {
 		],
 
 		preprocessors: {
-			'build/*.js': ['coverage', 'eslint'],
+			'build/modules/*.js': ['coverage', 'eslint'],
+			'build/directives/*.js': ['coverage', 'eslint'],
+			'build/controllers/*.js': ['coverage', 'eslint'],
 			'src/demo.json': ['json_fixtures'],
 			'src/devmateria_demo.json': ['json_fixtures']
 		},

@@ -1,6 +1,6 @@
 describe('Matching', function() {
 
-	var widgetInfo = window.__demo__['src/devmateria_demo'];
+	var widgetInfo = window.__demo__['src/demo'];
 	var qset = widgetInfo.qset;
 	var $scope = {};
 	var ctrl = {};
@@ -16,20 +16,34 @@ describe('Matching', function() {
 		var i, testQIndex, testAIndex;
 		for (i = 1; i <= 5; i++) {
 			testQIndex = $scope.pages[0].questions.map(function (item) {
-				return item.id
+				return item.id;
 			}).indexOf(i);
-			$scope.test.questions.push($scope.pages[0].questions[testQIndex]);
+			$scope.test.questions.push($scope.pages[0].questions[i]);
 			testAIndex = $scope.pages[0].answers.map(function (item) {
-				return item.id
+				return item.id;
 			}).indexOf(i);
-			$scope.test.answers.push($scope.pages[0].answers[testAIndex]);
+			$scope.test.answers.push($scope.pages[0].answers[i]);
+		}
+		//Add ids to the scope questions/answers
+		for(i = 1; i <= 4; i++) {
+			$scope.pages[0].answers[i].id = i;
+			$scope.pages[0].questions[i].id = i;
+		}
+	}
+
+	function setupQAIds() {
+		//Add ids to the qset
+		var i = 0;
+		for (var item in qset.data.items[0].items) {
+			qset.data.items[0].items[i].id = i;
+			i++;
 		}
 	}
 
 	describe('Player Controller', function () {
 
 		module.sharedInjector();
-		beforeAll(module('matchingPlayer'));
+		beforeAll(module('matching'));
 
 		beforeAll(inject(function (_$compile_, $rootScope, $controller) {
 			$scope = $rootScope.$new();
@@ -50,28 +64,44 @@ describe('Matching', function() {
 		});
 
 		it('should start properly', function () {
+			setupQAIds();
+
+			//add audio placeholder for an answer/question
+			qset.data.items[0].items[0].assets[0] = "test";
+			qset.data.items[0].items[0].assets[1] = "test";
+
 			$scope.start(widgetInfo, qset.data);
 			expect($scope.title).toBe('Spanish Verbs');
 			expect($scope.totalPages).toBe(2);
 			expect($scope.pages.length).toBe(2);
 		});
 
-		it('should change to the previous page', function () {
+		it('should change to the previous page', inject(function ($timeout) {
 			$scope.currentPage = 1;
 			$scope.changePage('previous');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(0);
+
 			//make sure you can't go below 0
 			$scope.changePage('previous');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(0);
-		});
+		}));
 
-		it('should change to the next page', function () {
+		it('should change to the next page', inject(function ($timeout) {
 			$scope.changePage('next');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(1);
-			$scope.changePage('next');
+
 			//make sure you can't go above the highest page
+			$scope.changePage('next');
+			$timeout.flush();
+			$timeout.verifyNoPendingTasks();
 			expect($scope.currentPage).toEqual(1);
-		});
+		}));
 
 		it('should animate on page change', inject(function ($timeout) {
 			$scope.changePage('next');
@@ -79,6 +109,11 @@ describe('Matching', function() {
 			$timeout.verifyNoPendingTasks();
 			expect($scope.pageAnimate).toBe(false);
 		}));
+
+		it('should not allow page switches before the animation completes', function() {
+			$scope.pageAnimate = true;
+			expect($scope.changePage('previous')).toBe(false);
+		});
 
 		it('make a match -- start from empty matches', function () {
 			setupQA();
@@ -176,9 +211,19 @@ describe('Matching', function() {
 			expect($scope.matches[0].answerId).toEqual(3);
 		});
 
+		it('should check for question/answer audio correctly', function() {
+			$scope.pages[0].questions[0].asset = "test";
+			$scope.pages[0].answers[0].asset = "test";
+
+			$scope.checkForQuestionAudio(0);
+			$scope.checkForQuestionAudio(2);
+			$scope.checkForAnswerAudio(0);
+			$scope.checkForAnswerAudio(2);
+		});
+
 		it('should return the the correct progress amount of completed questions', function () {
-			//at this point --- 1 match 9 total items 160 is progress bar length
-			expect($scope.getProgressAmount()).toBe((1/9) *160);
+			//at this point --- 1 match, 10 total items, 160 is progress bar length
+			expect($scope.getProgressAmount()).toBe((1/10) * 160);
 
 			//in case there are no items
 			$scope.totalItems = 0;
@@ -260,16 +305,46 @@ describe('Matching', function() {
 			$scope.selectedQA[0].answers = 0;
 			$scope.drawPrelineToLeft($scope.pages[0].questions[0]);
 			expect($scope.prelines.length).toBe(1);
+
+			//should only have 1 preline at a time
+			$scope.selectedQA[0].answers = 0;
+			$scope.drawPrelineToLeft($scope.pages[0].questions[0]);
+			expect($scope.prelines.length).toBe(1);
 		});
 
 		it('should submit questions correctly', function () {
 			$scope.matches = [];
 			$scope.matches.push({questionId:1, answerId: 1});
+
+			// temporarily change the qset to only have 1 item
+			temp = angular.copy(qset);
+			qset.data.items[0].items = [
+			{
+				"id": 1,
+				"questions": [
+					{
+						"text": "cambiar"
+					}
+				],
+				"answers": [
+					{
+						"text": "to change"
+					}
+				],
+				"assets":[
+					0,
+					0,
+					null
+				]
+			}];
+			qset = temp;
+
 			$scope.submit();
-			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, 'to change');
+			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, 'to change', null);
+
+			//cover the situation where qset item text = null
 			$scope.matches = [];
 			$scope.submit();
-			expect(Materia.Score.submitQuestionForScoring).toHaveBeenCalledWith(1, null);
 		});
 
 		it('should unapply hover selections', function () {
@@ -294,6 +369,26 @@ describe('Matching', function() {
 			expect($scope.answerCircles[0][0].isHover).toBe(false);
 		});
 
+		it('should split the last items over the last two pages', function() {
+			// with 10 items, split should be 5/5
+			expect($scope.pages[0].questions.length).toBe(5);
+			expect($scope.pages[1].questions.length).toBe(5);
+
+			// create a new set with 6 pairs and the last answer is blank
+			var sixSet = {};
+			sixSet = angular.copy(qset);
+			sixSet.data.items[0].items = sixSet.data.items[0].items.slice(0,6);
+			sixSet.data.items[0].items[5].answers[0].text = '';
+			$scope.pages = [];
+			$scope.start(widgetInfo, sixSet.data);
+
+			// now there should be a single full page
+			expect($scope.pages.length).toBe(1);
+			expect($scope.pages[0].questions.length).toBe(6);
+			expect($scope.pages[0].answers.length).toBe(5);
+
+		});
+
 		it('should not shuffle if only 1 item', function () {
 			var smallQset={};
 			angular.copy(qset, smallQset);
@@ -305,5 +400,6 @@ describe('Matching', function() {
 			expect($scope.pages[0].answers[0].text).toEqual(
 					'to change');
 		});
+
 	});
 });

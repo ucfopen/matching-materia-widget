@@ -21,7 +21,12 @@
                   "value": 100,
                   "text": "to change"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -37,7 +42,12 @@
                   "value": 100,
                   "text": "to prefer"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -53,7 +63,12 @@
                   "value": 100,
                   "text": "to put, place, set"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -69,7 +84,12 @@
                   "value": 100,
                   "text": "to need, require"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -85,7 +105,12 @@
                   "value": 100,
                   "text": "to write"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -101,7 +126,12 @@
                   "value": 100,
                   "text": "to send"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -109,15 +139,20 @@
               "type": "QA",
               "questions": [
                 {
-                  "text": "decir"
+                  "text": "digitar"
                 }
               ],
               "answers": [
                 {
                   "value": 100,
-                  "text": "to say, tell"
+                  "text": "to type"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  "<%MEDIA='assets/audio/demo/typing.mp3'%>",
+                  "to type"
+               ]
             },
             {
               "materiaType": "question",
@@ -133,7 +168,12 @@
                   "value": 100,
                   "text": "to come"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
             },
             {
               "materiaType": "question",
@@ -141,7 +181,6 @@
               "type": "QA",
               "questions": [
                 {
-                  "assets": null,
                   "text": "vender"
                 }
               ],
@@ -150,7 +189,33 @@
                   "value": 100,
                   "text": "to sell"
                 }
-              ]
+              ],
+               "assets":[
+                  0,
+                  0,
+                  null
+               ]
+            },
+            {
+              "materiaType": "question",
+              "id": null,
+              "type": "QA",
+              "questions": [
+                {
+                  "text": "verter"
+                }
+              ],
+              "answers": [
+                {
+                  "value": 100,
+                  "text": "to pour"
+                }
+              ],
+               "assets":[
+                  0,
+                  "<%MEDIA='assets/audio/demo/pouring.mp3'%>",
+                  "to pour"
+               ]
             }
           ]
         }

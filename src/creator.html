@@ -9,6 +9,7 @@
 
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="creator.css">
+		<link rel="stylesheet" type="text/css" href="audioControls.css">
 		<link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
@@ -16,13 +17,18 @@
 		<script src="materia.creatorcore.js"></script>
 
 		<!-- YOUR PREREQUISITES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-animate.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-animate.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
-		<script src="creator.js"></script>
+		<script src="modules/matching.js"></script>
+		<script src="controllers/creator.js"></script>
+		<script src="directives/audioControls.js"></script>
+		<script src="directives/focusMe.js"></script>
+		<script src="directives/ngEnter.js"></script>
+		<script src="directives/inputStateManager.js"></script>
 	</head>
-	<body ng-app='matchingCreator' ng-controller="matchingCreatorCtrl">
+	<body ng-app='matching' ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>
 		<div id='header'>
 			<div class='logo'></div>
@@ -30,29 +36,154 @@
 			<div class='link' ng-click='showTitleDialog = true'>Edit...</div>
 			<div class='bottom'></div>
 		</div>
-		<center>
 		<section class='main-area'>
 			<div class='titles' ng-show='widget.wordPairs.length'>
 				<h1>Left Side</h1>
+				<div class="separate"></div>
 				<h1>Right Side</h1>
-				<div class='pair-count'>{{widget.wordPairs.length}} Pairs</div>
+				<div class='pair-count'>
+					<ng-pluralize count="widget.wordPairs.length"
+						when="{'1': '1 Pair', 'other': '{} Pairs'}">
+					</ng-pluralize>
+				</div>
 			</div>
 			<div id='question-container'>
-				<div class='question' ng-repeat="pair in widget.wordPairs">
-					<textarea class='question-text' ng-model="pair.question" ng-style='autoSize(pair)' focus-me='true' tabindex='{{$index+1}}'></textarea>
+				<div class='question'
+					ng-repeat="pair in widget.wordPairs">
+					<div class='green-box left-side' data-index='{{$index}}' input-state-manager>
+						<textarea class='question-text'
+							ng-class="{'hasProblem' : hasQuestionProblem}"
+							ng-hide="checkMedia($index, 0)"
+							ng-model="pair.question"
+							ng-style='autoSize(pair, false)'
+							focus-me='true'
+							ng-focus="updateInputState(FOCUS, $event)"
+							ng-blur="updateInputState(BLUR, $event)"
+							tabindex='{{$index+1}}'>
+						</textarea>
+						<div class="audio-display"
+							ng-show="checkMedia($index, 0)"
+							ng-style='autoSize(pair, true)'>
+							<div ng-audio-controls
+								audio-source="{{checkMedia($index, 0)
+									&& audioUrl(widget.wordPairs[$index].media[0]) || ''}}"
+								ng-if="checkMedia($index, 0)">
+							</div>
+							<textarea type="text"
+								class="desc-input"
+								placeholder="Audio Description"
+								ng-model="pair.question"
+								ng-style='autoSize(pair, false)'
+								focus-me="checkMedia($index, 0)">
+							</textarea>
+						</div>
+						<div class="emptyInfoDot"
+							ng-class="{'error': !checkMedia($index, 0),
+								'warning': checkMedia($index, 0)}"
+							ng-show="hasQuestionProblem ||
+								(checkMedia($index, 0) && (pair.question == '' || !pair.question))">
+							i
+						</div>
+						<div class="wrap">
+							<div class="popup">
+								<div class="popup-text error"
+									ng-hide="checkMedia($index, 0)">
+									Term can't be left blank.
+								</div>
+								<div class="popup-text error"
+									ng-show="checkMedia($index, 0) && (pair.question == '' || !pair.question)">
+									Audio description is recommended.
+								</div>
+							</div>
+						</div>
+						<div class='audio-image'>
+							<span class="add-audio"
+								ng-hide="checkMedia($index, 0)"
+								ng-click="beginMediaImport($index, 0); checkMedia($index, 0)">
+							</span>
+							<span class="remove-audio"
+								ng-show="checkMedia($index, 0)"
+								ng-click="removeAudio($index, 0)">
+							</span>
+						</div>
+					</div>
+
 					<div class='separate'></div>
-					<textarea class='answer-text' ng-enter="addWordPair()" ng-style='autoSize(pair)' ng-model="pair.answer" tabindex='{{$index+2}}'></textarea>
+
+					<div class='green-box right-side' data-index='{{$index}}' input-state-manager>
+						<textarea class='answer-text'
+							ng-class="{'hasProblem' : hasAnswerProblem}"
+							ng-hide="checkMedia($index, 1)"
+							ng-enter="addWordPair()"
+							ng-style='autoSize(pair, false)'
+							ng-model="pair.answer"
+							ng-focus="updateInputState(FOCUS, $event)"
+							ng-blur="updateInputState(BLUR, $event)"
+							tabindex='{{$index+2}}'>
+						</textarea>
+						<div class="audio-display"
+							ng-show="checkMedia($index, 1)"
+							ng-style='autoSize(pair, true)'>
+							<div ng-audio-controls
+								audio-source="{{checkMedia($index, 1)
+									&& audioUrl(widget.wordPairs[$index].media[1]) || ''}}"
+								ng-if="checkMedia($index, 1)">
+							</div>
+							<textarea type="text"
+								class="desc-input"
+								placeholder="Audio Description"
+								ng-model="pair.answer"
+								ng-style='autoSize(pair, false)'
+								focus-me="checkMedia($index, 1)">
+							</textarea>
+						</div>
+						<div class="emptyInfoDot"
+							ng-class="{'error': !checkMedia($index, 1),
+								'warning': checkMedia($index, 1)}"
+							ng-show="hasAnswerProblem ||
+								(checkMedia($index, 1) && (pair.answer == '' || !pair.answer))">
+							i
+						</div>
+						<div class="wrap">
+							<div class="popup">
+								<div class="popup-text error"
+									ng-hide="checkMedia($index, 1)">
+									Term can't be left blank.
+								</div>
+								<div class="popup-text error"
+									ng-show="checkMedia($index, 1) && (pair.answer == '' || !pair.answer)">
+									Audio description is recommended.
+								</div>
+							</div>
+						</div>
+						<div class='audio-image'>
+							<span class="add-audio"
+								ng-hide="checkMedia($index, 1)"
+								ng-click="beginMediaImport($index, 1); checkMedia($index, 1)">
+							</span>
+							<span class="remove-audio"
+								ng-show="checkMedia($index, 1)"
+								ng-click="removeAudio($index, 1)">
+							</span>
+						</div>
+					</div>
 					<span class='icon-close' ng-click="removeWordPair($index)"></span>
 				</div>
 			</div>
-			<button id='add-new' class='icon-plus' ng-click="addWordPair()" tabindex='{{widget.wordPairs.length + 1}}'>
+			<button id='add-new'
+				class='icon-plus'
+				ng-click="addWordPair()"
+				tabindex='{{widget.wordPairs.length + 1}}'>
 				Add Pair
 			</button>
 		</section>
-		</center>
 
-		<div id='backgroundcover' ng-click='hideCover()' ng-class='{ show: showTitleDialog || showIntroDialog }'></div>
-		<div class='box intro' ng-class='{ show: showIntroDialog }'>
+		<div id='backgroundcover'
+			ng-click='hideCover()'
+			ng-class='{ show: showTitleDialog || showIntroDialog || showErrorDialog }'>
+		</div>
+		<div class='box intro'
+			ng-class='{ show: showIntroDialog }'>
 			<img src='assets/creator_example.png'>
 			<h1>Matching</h1>
 			<p>Create matching pairs of items that students connect.</p>
@@ -60,15 +191,37 @@
 			<p>Students receive credit equal to the percentage of pairs they match correctly.</p>
 			<hr>
 			<b>Start by giving your Matching widget a title</b><br>
-			<input type='text' placeholder='My Matching widget' ng-model='introTitle' autofocus='1' ng-enter='setTitle()' focus-me='showIntroDialog'>
-			<input type='button' value='Get Started' ng-click='setTitle()'>
+			<input type='text'
+				placeholder='My Matching widget'
+				ng-model='introTitle'
+				autofocus='1'
+				ng-enter='setTitle()'
+				focus-me='showIntroDialog'>
+			<input type='button'
+				value='Get Started'
+				ng-click='setTitle()'>
 		</div>
-		<div class='box title' ng-class='{ show: showTitleDialog }'>
+		<div class='box title'
+			ng-class='{ show: showTitleDialog }'>
 			<b>Give your Matching widget a title</b><br>
-			<input type='text' placeholder='My Matching widget' ng-model='widget.title' ng-enter='hideCover()' focus-me='showTitleDialog'>
-			<input type='submit' value='Done' ng-click='hideCover()'>
+			<input type='text'
+				placeholder='My Matching widget'
+				ng-model='widget.title'
+				ng-enter='hideCover()'
+				focus-me='showTitleDialog'>
+			<input type='submit'
+				value='Done'
+				ng-click='hideCover()'>
 		</div>
-		<div class='arrow_box' ng-show='!widget.wordPairs.length && step'>
+		<div class='box error'
+			ng-class='{ show: showErrorDialog }'>
+			<b>Can't Save. Make sure your widget has a title and no invalid word pairs.</b><br>
+			<input type='submit'
+				value='Okay'
+				ng-click='hideCover()'>
+		</div>
+		<div class='arrow_box'
+			ng-show='!widget.wordPairs.length && step'>
 			<span>Click here to add your first pair</span>
 		</div>
 	</body>
