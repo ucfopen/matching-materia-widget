@@ -61,12 +61,11 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		audioRef[1] = which
 
 	$scope.onMediaImportComplete = (media) ->
-		# $scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
 		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
 		$scope.$apply -> true
 
 	$scope.checkMedia = (index, which) ->
-		return $scope.widget.wordPairs[index].media[which] != 0
+		return $scope.widget.wordPairs[index].media[which] != 0 && $scope.widget.wordPairs[index].media[which] != undefined # value is undefined for older qsets
 
 	# View actions
 	$scope.setTitle = ->
