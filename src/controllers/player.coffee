@@ -71,7 +71,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[0])
 
 			$scope.pages[_pageIndex].questions.push {
-				text: item.questions[0].text
+				text: if item.questions[0].text then item.questions[0].text else '[No Text Provided!]'
 				id: item.id
 				pageId: _pageIndex
 				type: 'question'
@@ -101,7 +101,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[1])
 
 			$scope.pages[_pageIndex].answers.push {
-				text: item.answers[0].text
+				text: if item.answers[0].text then item.answers[0].text else '[No Text Provided!]'
 				id: item.id
 				pageId: _pageIndex
 				type: 'answer'
