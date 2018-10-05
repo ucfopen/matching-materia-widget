@@ -5393,9 +5393,9 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-"materia-client-assets@https://github.com/ucfcdl/materia-client-assets.git#v0.3.4":
-  version "0.3.3"
-  resolved "https://github.com/ucfcdl/materia-client-assets.git#fe328320e08b100c6868f9ee33c4701a3ce59747"
+materia-server-client-assets@0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/materia-server-client-assets/-/materia-server-client-assets-0.3.5.tgz#fc0f8daaff537b2c4279d54d9f9d98ca5dfd59b4"
   dependencies:
     angular "1.6.9"
     angular-mocks "1.6.9"
@@ -5420,9 +5420,9 @@ map-visit@^1.0.0:
     webpack-strip-block "^0.2.0"
     whatwg-fetch "^2.0.3"
 
-"materia-widget-development-kit@git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#~v1.2.0":
-  version "1.2.0"
-  resolved "git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#ccc1485f6ec148ec67563efe8cdb1fee111955d6"
+materia-widget-development-kit@v1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/materia-widget-development-kit/-/materia-widget-development-kit-1.2.2.tgz#7b3e35a9c2dba0e4ac0c9fdc212b704820cce6d6"
   dependencies:
     autoprefixer "^7.1.2"
     clean-webpack-plugin "^0.1.16"
@@ -5436,7 +5436,7 @@ map-visit@^1.0.0:
     hogan-express "^0.5.2"
     html-loader "^0.4.5"
     html-webpack-plugin "^2.29.0"
-    materia-client-assets "https://github.com/ucfcdl/materia-client-assets.git#v0.3.4"
+    materia-server-client-assets "0.3.5"
     node-sass "^4.5.3"
     postcss-loader "2.0.6"
     raw-loader "^0.5.1"
@@ -5779,7 +5779,7 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-ngmodal@ucfcdl/ngModal#v1.2.2:
+"ngmodal@github:ucfcdl/ngModal#v1.2.2":
   version "1.2.2"
   resolved "https://codeload.github.com/ucfcdl/ngModal/tar.gz/6abad982bdb8f258ffcdc20316a907c2292399d2"
 
