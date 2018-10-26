@@ -3,7 +3,7 @@
   "materia": {
     "cleanName": "matching"
   },
-  "version": "1.0.0",
+  "version": "v1.1.2",
   "dependencies": {
     "angular": "~1.5.0",
     "angular-animate": "~1.5.0",
@@ -11,7 +11,7 @@
     "angular-mocks": "~1.5.0",
     "angular-route": "~1.5.0",
     "angular-sanitize": "~1.5.0",
-    "materia-widget-development-kit":"2.0.0"
+    "materia-widget-development-kit": "2.0.0"
   },
   "devDependencies": {
     "jasmine-core": "^2.4.1",
