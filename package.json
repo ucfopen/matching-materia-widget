@@ -1,11 +1,9 @@
 {
-  "name": "Matching",
+  "name": "@ucfopen/matching",
   "materia": {
     "cleanName": "matching"
   },
   "version": "1.0.0",
-  "private": true,
-  "main": "app.js",
   "dependencies": {
     "angular": "~1.5.0",
     "angular-animate": "~1.5.0",
@@ -13,7 +11,7 @@
     "angular-mocks": "~1.5.0",
     "angular-route": "~1.5.0",
     "angular-sanitize": "~1.5.0",
-    "materia-widget-development-kit": "git+ssh://git@clu.cdl.ucf.edu:materia/materia-widget-development-kit.git#~v1.2.0"
+    "materia-widget-development-kit":"2.0.0"
   },
   "devDependencies": {
     "jasmine-core": "^2.4.1",
@@ -28,14 +26,12 @@
   },
   "scripts": {
     "start": "webpack-dev-server",
-    "buildDev": "webpack",
+    "build-dev": "webpack",
     "build": "webpack -p",
-    "pretest": "npm run buildDev",
+    "pretest": "npm run build-dev",
     "test": "karma start ./karma.conf.js --no-auto-watch --single-run",
-    "pretestFull": "npm run buildDev",
-    "testFull": "karma start ./karma-full.conf.js",
-    "clientAssets:link": "cd ../materia-client-assets && yarn link && cd - && yarn link materia-client-assets",
-    "devKit:link": "cd ../materia-widget-development-kit && yarn link && cd - && yarn link materia-widget-development-kit"
+    "pretestFull": "npm run build-dev",
+    "testFull": "karma start ./karma-full.conf.js"
   },
-  "author": "New Media"
+  "license": "AGPL-3.0"
 }
