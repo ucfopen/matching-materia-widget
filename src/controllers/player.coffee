@@ -1,6 +1,7 @@
 Matching = angular.module 'matching'
 
 Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
+	materiaCallbacks = {}
 	$scope.title = ''
 
 	$scope.items = []
@@ -36,7 +37,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	CIRCLE_OFFSET = 61
 	PROGRESS_BAR_LENGTH = 160
 
-	$scope.start = (instance, qset) ->
+	materiaCallbacks.start = (instance, qset) ->
 		$scope.qset = qset
 		$scope.title = instance.name
 		$scope.totalItems = qset.items[0].items.length
@@ -395,5 +396,5 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			randomIndex = Math.floor Math.random() * (index + 1)
 			[qsetItems[index], qsetItems[randomIndex]] = [qsetItems[randomIndex], qsetItems[index]]
 
-	Materia.Engine.start $scope
+	Materia.Engine.start materiaCallbacks
 ]

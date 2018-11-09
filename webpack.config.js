@@ -1,30 +1,36 @@
 const path = require('path')
+const srcPath = path.join(__dirname, 'src') + path.sep
+const outputPath = path.join(__dirname, 'build') + path.sep
+const widgetWebpack = require('materia-widget-development-kit/webpack-widget')
 
-let matchingConfig = {}
-//override the demo with a copy that assigns ids to each question for dev purposes
-if (process.env.npm_lifecycle_script == 'webpack-dev-server') {
-	matchingConfig.demoPath = 'devmateria_demo.json'
-}
+const entries = widgetWebpack.getDefaultEntries()
+const copyList = widgetWebpack.getDefaultCopyList()
 
-// load the reusable legacy webpack config from materia-widget-dev
-let webpackConfig = require('materia-widget-development-kit/webpack-widget').getLegacyWidgetBuildConfig(matchingConfig)
+// Append the new items we want copied
+copyList.push({
+	from: srcPath+'audioControls.html',
+	to: outputPath,
+})
 
-delete webpackConfig.entry['creator.js']
-delete webpackConfig.entry['player.js']
-
-webpackConfig.entry['modules/matching.js'] = [path.join(__dirname, 'src', 'modules', 'matching.coffee')]
-
-webpackConfig.entry['controllers/creator.js'] = [path.join(__dirname, 'src', 'controllers', 'creator.coffee')]
-webpackConfig.entry['controllers/player.js'] = [path.join(__dirname, 'src', 'controllers', 'player.coffee')]
-
-webpackConfig.entry['directives/audioControls.js'] = [path.join(__dirname, 'src', 'directives', 'audioControls.coffee')]
-webpackConfig.entry['directives/focusMe.js'] = [path.join(__dirname, 'src', 'directives', 'focusMe.coffee')]
-webpackConfig.entry['directives/ngEnter.js'] = [path.join(__dirname, 'src', 'directives', 'ngEnter.coffee')]
-webpackConfig.entry['directives/inputStateManager.js'] = [path.join(__dirname, 'src', 'directives', 'inputStateManager.coffee')]
-
-webpackConfig.entry['audioControls.css'] = [
-	path.join(__dirname, 'src', 'audioControls.scss'),
-	path.join(__dirname, 'src', 'audioControls.html')
+entries['creator.js'] = [
+	path.join(srcPath, 'modules', 'matching.coffee'),
+	path.join(srcPath, 'controllers', 'creator.coffee'),
+	path.join(srcPath, 'directives', 'audioControls.coffee'),
+	path.join(srcPath, 'directives', 'focusMe.coffee'),
+	path.join(srcPath, 'directives', 'ngEnter.coffee'),
+	path.join(srcPath, 'directives', 'inputStateManager.coffee')
 ]
 
-module.exports = webpackConfig
+entries['player.js'] = [
+	path.join(srcPath, 'modules', 'matching.coffee'),
+	path.join(srcPath, 'controllers', 'player.coffee'),
+	path.join(srcPath, 'directives', 'audioControls.coffee')
+]
+
+// options for the build
+let options = {
+	entries,
+	copyList
+}
+
+module.exports = widgetWebpack.getLegacyWidgetBuildConfig(options)

@@ -3,7 +3,7 @@
     Matching: A Materia Widget
 </h1>
 
-Students are provided two lists of terms or phrases and must match the item on the left with the corresponding item on the right. Matching is designed for use with [Materia](https://github.com/ucfopen/Materia), an open-source platform for interactive course content developed by the University of Central Florida.
+A matching game where students are provided two lists of terms, phrases, or audio to match. Matching is designed for use with [Materia](https://github.com/ucfopen/Materia), an open-source platform for interactive course content developed by the University of Central Florida.
 
 ![Matching Player](src/_screen-shots/3.png)
 

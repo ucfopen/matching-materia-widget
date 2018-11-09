@@ -1,32 +1,22 @@
 <!DOCTYPE html>
-<!-- INJECTS IE CLASSES ONTO HTML TAG -->
-<!--[if IE 8 ]>    <html class="IE8"> <![endif]-->
-<!--[if IE 9 ]>    <html class="IE9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class=""> <!--<![endif]-->
+<html>
 	<head>
 		<title>Matching Creator</title>
 		<meta charset="utf-8" />
 
 		<!-- STYLESHEETS -->
 		<link rel="stylesheet" type="text/css" href="creator.css">
-		<link rel="stylesheet" type="text/css" href="audioControls.css">
 		<link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
 
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="materia.creatorcore.js"></script>
 
 		<!-- YOUR PREREQUISITES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-animate.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
 
 		<!-- MAIN CREATOR SCRIPT -->
-		<script src="modules/matching.js"></script>
-		<script src="controllers/creator.js"></script>
-		<script src="directives/audioControls.js"></script>
-		<script src="directives/focusMe.js"></script>
-		<script src="directives/ngEnter.js"></script>
-		<script src="directives/inputStateManager.js"></script>
+		<script src="creator.js"></script>
 	</head>
 	<body ng-app='matching' ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>

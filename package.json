@@ -5,15 +5,10 @@
   },
   "version": "1.1.2",
   "dependencies": {
-    "angular": "~1.5.0",
-    "angular-animate": "~1.5.0",
-    "angular-loader": "~1.5.0",
-    "angular-mocks": "~1.5.0",
-    "angular-route": "~1.5.0",
-    "angular-sanitize": "~1.5.0",
-    "materia-widget-development-kit": "2.0.0"
+    "materia-widget-development-kit": "^2.0.0"
   },
   "devDependencies": {
+    "angular-mocks": "~1.5.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-coverage": "^0.5.5",
@@ -33,5 +28,7 @@
     "pretestFull": "npm run build-dev",
     "testFull": "karma start ./karma-full.conf.js"
   },
-  "license": "AGPL-3.0"
+  "license": "AGPL-3.0",
+  "description": "A matching game where students are provided two lists of terms, phrases, or audio to match. For use in Materia.",
+  "author": "University of Central Florida, Center for Distributed Learning"
 }

@@ -2,6 +2,7 @@ Matching = angular.module 'matching', ['ngAnimate']
 
 Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	_qset = {}
+	materiaCallbacks = {}
 	# Stores data to be gathered on save.
 	$scope.widget =
 		title     : "My Matching widget"
@@ -20,11 +21,11 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.removeAudio = (index, which) -> $scope.widget.wordPairs[index].media.splice(which, 1, 0)
 
 	# Public methods
-	$scope.initNewWidget = (widget, baseUrl) ->
+	materiaCallbacks.initNewWidget = (widget, baseUrl) ->
 		$scope.$apply ->
 			$scope.showIntroDialog = true
 
-	$scope.initExistingWidget = (title, widget, qset, version, baseUrl) ->
+	materiaCallbacks.initExistingWidget = (title, widget, qset, version, baseUrl) ->
 		_items = qset.items[0].items
 
 		$scope.$apply ->
@@ -32,7 +33,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			$scope.widget.wordPairs = []
 			$scope.addWordPair( _items[i].questions[0].text, _items[i].answers[0].text, _checkAssets(_items[i]), _items[i].id ) for i in [0.._items.length-1]
 
-	$scope.onSaveClicked = ->
+	materiaCallbacks.onSaveClicked = ->
 		# don't allow empty sets to be saved.
 		if _buildSaveData()
 			Materia.CreatorCore.save $scope.widget.title, _qset
@@ -41,9 +42,9 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 			$scope.$apply()
 			Materia.CreatorCore.cancelSave 'Widget not ready to save.'
 
-	$scope.onSaveComplete = (title, widget, qset, version) -> true
+	materiaCallbacks.onSaveComplete = (title, widget, qset, version) -> true
 
-	$scope.onQuestionImportComplete = (questions) ->
+	materiaCallbacks.onQuestionImportComplete = (questions) ->
 		$scope.$apply ->
 			for question in questions
 				assets = _checkAssets question
@@ -60,7 +61,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		audioRef[0] = index
 		audioRef[1] = which
 
-	$scope.onMediaImportComplete = (media) ->
+	materiaCallbacks.onMediaImportComplete = (media) ->
 		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id)
 		$scope.$apply -> true
 
@@ -187,5 +188,6 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		type: 'QA'
 		id: wordPair.id
 		assets: [questionMediaId,answerMediaId,audioString]
-	Materia.CreatorCore.start $scope
+
+	Materia.CreatorCore.start materiaCallbacks
 ]
