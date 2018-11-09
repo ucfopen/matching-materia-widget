@@ -21,10 +21,11 @@
   },
   "scripts": {
     "start": "webpack-dev-server",
-    "build-dev": "webpack",
     "build": "webpack -p",
-    "pretest": "npm run build-dev",
+    "build-dev": "webpack",
     "test": "karma start ./karma.conf.js --no-auto-watch --single-run",
+    "test-ci": "karma start ./karma.conf.js --no-auto-watch --single-run",
+    "pretest": "npm run build-dev",
     "pretestFull": "npm run build-dev",
     "testFull": "karma start ./karma-full.conf.js"
   },
