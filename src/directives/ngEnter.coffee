@@ -7,4 +7,5 @@ Matching.directive 'ngEnter', ->
 				scope.$apply ->
 					scope.$eval(attrs.ngEnter)
 				event.preventDefault()
+				element[0].blur()
 		)

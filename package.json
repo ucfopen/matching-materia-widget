@@ -8,27 +8,42 @@
     "materia-widget-development-kit": "^2.0.0"
   },
   "devDependencies": {
+    "jest-coffee-preprocessor": "^1.0.0",
     "angular-mocks": "~1.5.0",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^0.5.5",
-    "karma-eslint": "^2.1.0",
-    "karma-jasmine": "^0.3.8",
-    "karma-json-fixtures-preprocessor": "0.0.6",
-    "karma-junit-reporter": "^0.4.1",
-    "karma-mocha-reporter": "^2.1.0",
-    "karma-phantomjs-launcher": "^1.0.2"
+    "jest": "^23.6.0"
   },
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack -p",
     "build-dev": "webpack",
-    "test": "karma start ./karma.conf.js --no-auto-watch --single-run",
-    "test-ci": "karma start ./karma.conf.js --no-auto-watch --single-run",
-    "pretest": "npm run build-dev",
-    "pretestFull": "npm run build-dev",
-    "testFull": "karma start ./karma-full.conf.js"
+    "test": "TZ='America/New_York' jest --verbose",
+    "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage --coverageReporters text-summary cobertura"
   },
+  "jest": {
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ],
+    "verbose": false,
+    "transform": {
+      "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"
+    },
+    "moduleFileExtensions": [
+      "coffee",
+      "js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,coffee}"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 85,
+        "functions": 97,
+        "lines": 97
+      }
+    }
+  },
+
   "license": "AGPL-3.0",
   "description": "A matching game where students are provided two lists of terms, phrases, or audio to match. For use in Materia.",
   "author": "University of Central Florida, Center for Distributed Learning"

@@ -1,5 +1,4 @@
 Matching = angular.module 'matching'
-
 # Directive that watches question/answer inputs and manages error states
 Matching.directive 'inputStateManager', () ->
 	restrict: 'A',
@@ -16,17 +15,15 @@ Matching.directive 'inputStateManager', () ->
 			switch type
 				when $scope.FOCUS
 					el.addClass 'focused'
-					return
 				when $scope.BLUR
 					el.removeClass 'focused'
-
 					# If question is empty AND there is no media, apply error visuals
-					if el[0].classList.contains('question-text') then $scope.hasQuestionProblem = !($scope.widget.wordPairs[$attrs.index].question or $scope.checkMedia($attrs.index, 0))
+					if el[0].classList.contains('question-text')
+						$scope.hasQuestionProblem = !($scope.widget.wordPairs[$attrs.index].question or $scope.checkMedia($attrs.index, 0))
 
 					# If answer is empty AND there is no media, apply error visuals
-					if el[0].classList.contains('answer-text') then $scope.hasAnswerProblem = !($scope.widget.wordPairs[$attrs.index].answer or $scope.checkMedia($attrs.index, 1))
-
-					return
+					if el[0].classList.contains('answer-text')
+						$scope.hasAnswerProblem = !($scope.widget.wordPairs[$attrs.index].answer or $scope.checkMedia($attrs.index, 1))
 
 		# Hide error highlight as soon as question length > 0, as opposed to when blur happens
 		$scope.$watch "pair.question", (newVal, oldVal) ->

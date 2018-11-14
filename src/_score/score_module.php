@@ -1,29 +1,12 @@
 <?php
-/**
- * Materia
- * It's a thing
- *
- * @package	    Materia
- * @version    1.0
- * @author     UCF New Media
- * @copyright  2011 New Media
- * @link       http://kogneato.com
- */
-/**
- * NEEDS DOCUMENTATION
- *
- * The widget managers for the Materia package.
- *
- * @package	    Main
- * @subpackage  scoring
- * @category    Modules
- * @author      ADD NAME HERE
- */
+
 namespace Materia;
 class Score_Modules_Matching extends Score_Module
 {
-	/** @var unknown NEEDS DOCUMENTATION */
+
 	public $is_case_sensitive;
+	const VALID_CHARS = '/[^\w!@#$%^&*?=\-+<>,\.;:"\'\(\) \t|]/';
+
 	public function __construct($play_id, $inst, $play = null)
 	{
 		parent::__construct($play_id, $inst, $play);
@@ -37,45 +20,42 @@ class Score_Modules_Matching extends Score_Module
 			$this->is_case_sensitive = false;
 		}
 	}
-	/**
-	 * NEEDS DOCUMENTATION
-	 *
-	 * @param unknown NEEDS DOCUMENTATION
-	 */
+
 	public function check_answer($log)
 	{
 		if (isset($this->questions[$log->item_id]))
 		{
 			$question = $this->questions[$log->item_id];
-			// need to check if the qset allows for case sensitive answers
+
 			if($log->value != '')
 			{
-				$t1 = $log->value;
-				$t2 = $question->assets[2];
-			} else {
-				$t1 = $log->text;
-				$t2 = $question->answers[0]['text'];
+				// answer is an audio asset & id
+				$givenAnswer = $log->value;
+				$expectedAnswer = $question->assets[2];
+			}
+			else
+			{
+				// answer is a text answer
+				$givenAnswer = $log->text;
+				$expectedAnswer = $question->answers[0]['text'];
 			}
 
-			// remove weird characters to make sure we're matching on normal characters that wont get lost
-			$valid_characters = '/[^\w!@#$%^&*?=\-+<>,\.;:"\'\(\) \t|]/';
-
-			$t1 = preg_replace($valid_characters, '', $t1);
-			$t2 = preg_replace($valid_characters, '', $t2);
+			$givenAnswer = preg_replace(self::VALID_CHARS, '', $givenAnswer);
+			$expectedAnswer = preg_replace(self::VALID_CHARS, '', $expectedAnswer);
 
 			if ( ! $this->is_case_sensitive)
 			{
 				// we dont care about case, so just convert all to upper
-				$t1 = strtoupper($t1);
-				$t2 = strtoupper($t2);
+				$givenAnswer = strtoupper($givenAnswer);
+				$expectedAnswer = strtoupper($expectedAnswer);
 			}
 
 			// trim whitespace
-			$t1 = trim($t1);
-			$t2 = trim($t2);
+			$givenAnswer = trim($givenAnswer);
+			$expectedAnswer = trim($expectedAnswer);
 
 			// check answer
-			if ($t1 == $t2)
+			if ($givenAnswer == $expectedAnswer)
 			{
 				return 100;
 			}

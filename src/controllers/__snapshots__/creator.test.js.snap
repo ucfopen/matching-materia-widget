@@ -1,0 +1,238 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Matching Creator Controller addWordPair works with blank word pairs 1`] = `
+Array [
+  Object {
+    "answer": null,
+    "id": "",
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": null,
+  },
+]
+`;
+
+exports[`Matching Creator Controller addWordPair works with media 1`] = `
+Array [
+  Object {
+    "answer": "",
+    "id": "",
+    "media": Array [
+      "mock-question.mp3",
+      "mock-answer.mp3",
+    ],
+    "question": "",
+  },
+]
+`;
+
+exports[`Matching Creator Controller addWordPair works with text 1`] = `
+Array [
+  Object {
+    "answer": "answer1",
+    "id": "",
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": "question1",
+  },
+]
+`;
+
+exports[`Matching Creator Controller addWordPair works with text and an id 1`] = `
+Array [
+  Object {
+    "answer": "answer",
+    "id": 1,
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": "question",
+  },
+]
+`;
+
+exports[`Matching Creator Controller creates expected qset for a text question with audio answer 1`] = `
+Object {
+  "items": Array [
+    Object {
+      "items": Array [
+        Object {
+          "answers": Array [
+            Object {
+              "id": "",
+              "text": "Audio",
+              "value": "100",
+            },
+          ],
+          "assets": Array [
+            0,
+            "answer.mp3",
+            "0",
+          ],
+          "id": "",
+          "questions": Array [
+            Object {
+              "text": "question",
+            },
+          ],
+          "type": "QA",
+        },
+      ],
+      "name": "null",
+    },
+  ],
+}
+`;
+
+exports[`Matching Creator Controller creates expected qset for an audio question with audio answer 1`] = `
+Object {
+  "items": Array [
+    Object {
+      "items": Array [
+        Object {
+          "answers": Array [
+            Object {
+              "id": "",
+              "text": "Audio",
+              "value": "100",
+            },
+          ],
+          "assets": Array [
+            "question.mp3",
+            "answer.mp3",
+            "0",
+          ],
+          "id": "",
+          "questions": Array [
+            Object {
+              "text": "Audio",
+            },
+          ],
+          "type": "QA",
+        },
+      ],
+      "name": "null",
+    },
+  ],
+}
+`;
+
+exports[`Matching Creator Controller should import questions with assets 1`] = `
+Array [
+  Object {
+    "answer": "answer",
+    "id": 11,
+    "media": Array [
+      "mock-asset-1.mp3",
+      "mock-asset-2.mp3",
+    ],
+    "question": "question",
+  },
+  Object {
+    "answer": "answer2",
+    "id": 12,
+    "media": Array [
+      "mock-asset-3.mp3",
+      0,
+    ],
+    "question": "question2",
+  },
+  Object {
+    "answer": "answer3",
+    "id": 13,
+    "media": Array [
+      0,
+      "mock-asset-4.mp3",
+    ],
+    "question": "question3",
+  },
+  Object {
+    "answer": "answer4",
+    "id": 14,
+    "media": Array [
+      0,
+      "mock-asset-5.mp3",
+    ],
+    "question": "question4",
+  },
+  Object {
+    "answer": "answer5",
+    "id": 15,
+    "media": Array [
+      "mock-asset-6.mp3",
+      0,
+    ],
+    "question": "question5",
+  },
+]
+`;
+
+exports[`Matching Creator Controller should import questions without assets 1`] = `
+Array [
+  Object {
+    "answer": "answer",
+    "id": 11,
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": "question",
+  },
+]
+`;
+
+exports[`Matching Creator Controller should properly remove word pair 1`] = `
+Array [
+  Object {
+    "answer": "answer2",
+    "id": "",
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": "question2",
+  },
+  Object {
+    "answer": "answer3",
+    "id": "",
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": "question3",
+  },
+]
+`;
+
+exports[`Matching Creator Controller should properly remove word pair 2`] = `
+Array [
+  Object {
+    "answer": "answer2",
+    "id": "",
+    "media": Array [
+      0,
+      0,
+    ],
+    "question": "question2",
+  },
+]
+`;
+
+exports[`Matching Creator Controller should remove audio and leave question in place 1`] = `
+Array [
+  Object {
+    "answer": "",
+    "id": "",
+    "media": Array [
+      0,
+      "answer.mp3",
+    ],
+    "question": "question",
+  },
+]
+`;

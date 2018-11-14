@@ -281,12 +281,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	# truthiness evaluated from function return
 	$scope.isInMatch = (item) ->
 		if item.type == 'question'
-			matchedItem = $scope.matches.filter( (match) -> match.questionId == item.id).length
-		else if item.type == 'answer'
-			matchedItem = $scope.matches.filter( (match) -> match.answerId == item.id).length
-		else
-			matchedItem = 0
-		matchedItem
+			return $scope.matches.some( (match) -> match.questionId == item.id)
+
+		if item.type == 'answer'
+			return $scope.matches.some( (match) -> match.answerId == item.id)
+
+		return false
 
 	$scope.drawPrelineToRight = (hoverItem) ->
 		elementId = hoverItem.id

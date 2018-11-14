@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Matching Player Controller override a match with an existing question and answer 1`] = `
+Object {
+  "answerId": 3,
+  "answerIndex": Any<Number>,
+  "matchPageId": 0,
+  "questionId": 2,
+  "questionIndex": Any<Number>,
+}
+`;
+
+exports[`Matching Player Controller override a match with existing answer 1`] = `
+Object {
+  "answerId": 2,
+  "answerIndex": Any<Number>,
+  "matchPageId": 0,
+  "questionId": 2,
+  "questionIndex": Any<Number>,
+}
+`;
+
+exports[`Matching Player Controller override a match with existing question 1`] = `
+Object {
+  "answerId": 3,
+  "answerIndex": Any<Number>,
+  "matchPageId": 0,
+  "questionId": 2,
+  "questionIndex": Any<Number>,
+}
+`;
+
+exports[`Matching Player Controller selecting a question and answer backwards creates a match 1`] = `
+Object {
+  "answerId": 2,
+  "answerIndex": Any<Number>,
+  "matchPageId": 0,
+  "questionId": 1,
+  "questionIndex": Any<Number>,
+}
+`;
+
+exports[`Matching Player Controller selecting a question and answer creates a match 1`] = `
+Object {
+  "answerId": 2,
+  "answerIndex": Any<Number>,
+  "matchPageId": 0,
+  "questionId": 1,
+  "questionIndex": Any<Number>,
+}
+`;
