@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - '6'
+cache:
+  yarn: true
+  directories:
+    - node_modules
+before_install:
+  - npm config set spin false
+  - npm install -g npm@^5
+script:
+  - yarn test-ci
+  - yarn build
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: "H1vNbwB3QToK5teljWqgnRDagQ8DSNv8e0sqd3DYtNFngmG5A9fYzKcjfADwmY8sQLd2eQ8Gi9/dD8B1rFwJ3RjmGA0ZNjQytrUXw/LIwFy1a4LSZ/rST5gCff9+ZaUctNpqja/3Rqn/8sOOuzhxs5I8ArLMzMOYmbIEFJRdEAyHoOjyjR4seSde5u6FvjEVuvMnGZOmW0wmXujgxwC/578xdI97LWT1p88QBnAfnL1b49W7j6igaFKoocc8pso/sLwXnR0YNJiH9heNeLOUEDiL5cQ0C8y6HD/bqVS/1XCsfg5GsX8DFqa+JHjxKsdp5wvMyO63KLpbEed6aBl1pBf8rfK5T75ogBs/X0ZX7NsffkpmtxEt0U0QYcUY/TYGX8q1B2feaxOkyCLo0tZO8Lx0MFtSO5Ex7c+J2bEf3OBcns7yJ0DHq1T/bvatriyz+9GsZnZQYcGHrh3rmHuuKplI++Cmgrum/Ke7N9r5OFzaOcNdu/UpcZFOYfjL8LYyXCuNfHE3iNtpnCAo7L9dFmfxfkmWuiI2GR//ZDc5HMebDyJv6shkUJ0fcFxr5PZN9HqYt0vwxjXkk3U3fZqClvP7NhVd8kB6M1gU0j7XvLciZJYMCrRFJ5CxdfQ3dbUJNPWE/DK7s3OBjq2dQanhju1EAnUzkGsBt2Gt3JHfxhM="
+  file:
+    - build/_output/matching.wigt
+    - build/_output/matching-build-info.yml
+  on:
+    tags: true
+    repo: ucfopen/matching-materia-widget
+notifications:
+  slack:
+    secure: "cH+VYTxpAvdZONq7YMu2abW4WGH8SgJYwewdshldfhwE//Q/D+QeryyfVgHbIOlPdYSxDYPxcw854xw0pKfX8EW5UDwYJYEFNIN0RWUIBd21hBD1fzpSgYzJJN8U/kqmwcIiD0izpmDv5ONgZ/25koACZFTlMPwxs86q/i2HzuzKinxtDzDe8O0BEaNi6S7yR9W4qshRc7+ELCc6ma9oeNXFew6vrbRBslbYq919AuBlCQWPY+FRZv/Gv6PVt8Js6VqFWF0zIJWv0rIKDYPv0o1EoXtedhwqA2zgc+DIQUo2w97phU4IDz6p4XfBF1VvTTGdeDF2qAeEzM8MaFKY7Npdg4VYDgTvEd31qCWRszH36Oh3qlAdqI7hQT4U2NNMjlKzcic3K+DMq5kp7ov+eJR6x9h/g7w32eV5SacgKwI+7KQZJdF3fV7AjhlMUbyEwqVV50beJT3wk+ks/szBpuJ0hckUmZNVRJvtDyGjlibTPNhex4VTXm1FvBxaLrLMbk5/pulTGZpuB+42+UTDEPJR8ocbPrXqKpnCCoLDCOgkFBPZA2pxy1FZlGosI3IO07LzgoB84UheE5Jf3y7rK24UhyuDmRbuxCSz9U3KDYsU6euLvdbo8ZpD1b0oloCW1yeyjZwgv1YiRIaF2twO1j0Byh5CO57J35NjbtqSb2U="
