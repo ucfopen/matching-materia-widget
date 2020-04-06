@@ -17,6 +17,10 @@ Matching.directive 'ngAudioControls', ->
 		else
 			throw 'Invalid source!'
 
+		$scope.checkKey = (e, id) ->
+			if e == 13 || e == 32
+				console.log id
+
 		$scope.play = ->
 			if $scope.audio.paused then $scope.audio.play()
 			else $scope.audio.pause()

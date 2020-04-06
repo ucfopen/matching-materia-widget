@@ -1,7 +1,7 @@
 <div class='audio-controls'>
-	<span class='play-btn'
+	<span id="playbtn" class='play-btn'
 		ng-class="{'paused' : audio.paused}"
-		ng-click='$event.stopPropagation(); play()'>
+		ng-click='$event.stopPropagation(); play()' ng-keyup='checkKey($event.keyCode, this.id)' tabindex="0">
 	</span>
 	<span class='time'>
 		<span class='seek-bar'>

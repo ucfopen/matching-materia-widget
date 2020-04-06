@@ -27,10 +27,10 @@
 			<ul class="column column1">
 				<li class="word"
 					ng-repeat="question in pages[currentPage].questions"
-					ng-click="selectQuestion(question)"
+					ng-click="selectQuestion(question)" ng-keyup="$event.keyCode == 13 ? selectQuestion(question) : null"
 					ng-mouseover="drawPrelineToLeft(question)"
 					ng-mouseleave="unapplyHoverSelections()"
-					ng-class="{'matched' : isInMatch(question)}">
+					ng-class="{'matched' : isInMatch(question)}" tabindex="0">
 
 					<div class="word-text">
 						<span class="text-wrapper"
@@ -131,10 +131,10 @@
 			<ul class="column column2">
 				<li class="word"
 					ng-repeat="answer in pages[currentPage].answers"
-					ng-click="selectAnswer(answer)"
+					ng-click="selectAnswer(answer)" ng-keyup="checkKeyAnswer($event.keyCode, answer)"
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
-					ng-class="{matched : isInMatch(answer)}">
+					ng-class="{matched : isInMatch(answer)}" tabindex="0">
 					<span class='clickable'></span>
 					<div class="word-text">
 						<span class="text-wrapper"
