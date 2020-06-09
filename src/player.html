@@ -24,7 +24,7 @@
 
 		<section class="gameboard"
 			ng-class="{'pageAnimate': pageAnimate}">
-			<ul class="column column1">
+			<ul aria-label="Column 1: Words." class="column column1">
 				<li class="word"
 					ng-repeat="question in pages[currentPage].questions"
 					ng-click="selectQuestion(question)" ng-keyup="$event.keyCode == 13 ? selectQuestion(question) : null"
@@ -32,7 +32,7 @@
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{'matched' : isInMatch(question)}" tabindex="0">
 
-					<div class="word-text">
+					<div aria-hidden="true" class="word-text">
 						<span class="text-wrapper"
 							ng-class="{'long': (question.text.length > 17)}">
 							{{checkForQuestionAudio($index) ? "" : question.text}}
@@ -62,7 +62,7 @@
 						</div>
 					</div>
 
-					<div class="wrap">
+					<div aria-hidden="true" class="wrap">
 						<div class="popup" ng-class="{'shown': (question.text.length > 61)}">
 							<div class="popup-text left">{{question.text}}</div>
 							<div class="popup-arrow" ng-class="{'left': (question.text.length > 61)}"></div>
@@ -128,15 +128,15 @@
 				</svg>
 			</div>
 
-			<ul class="column column2">
+			<ul id="column2" aria-label="Column 2: Definitions." class="column column2">
 				<li class="word"
 					ng-repeat="answer in pages[currentPage].answers"
-					ng-click="selectAnswer(answer)" ng-keyup="checkKeyAnswer($event.keyCode, answer)"
+					ng-click="selectAnswer(answer)" ng-keyup="$event.keyCode == 13 ? selectAnswer(answer) : null"
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}" tabindex="0">
 					<span class='clickable'></span>
-					<div class="word-text">
+					<div aria-hidden="true" class="word-text">
 						<span class="text-wrapper"
 							ng-class="{'long': (answer.text.length > 17)}">
 							{{checkForAnswerAudio($index) ? "" : answer.text}}
@@ -150,7 +150,7 @@
 
 					<div ng-audio-controls
 						audio-source="{{answer.asset}}"
-						ng-if="checkForAnswerAudio($index)">
+						ng-if="checkForAnswerAudio($index)" tabindex="0">
 					</div>
 
 					<div class="wrap">
@@ -172,17 +172,17 @@
 		<footer ng-class="{'onTop': pageAnimate}">
 			<section id="page-selector">
 				<span class="button" id="prev-button"
-					ng-click="changePage('previous')"
-					ng-class="{'shown': currentPage >= 1}">
+					ng-click="changePage('previous')" ng-keyup="$event.keyCode == 13 ? changePage('previous') : null"
+					ng-class="{'shown': currentPage >= 1}" aria-hidden="" tabindex="0">
 					Previous Page
 				</span>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
 					'animateRotationLeft': pageAnimate && !pageNext}">
 					Page <span>{{currentPage+1}}</span>/<span>{{totalPages}}</span>
 				</span>
-				<span class="button" id="next-button"
-					ng-click="changePage('next')"
-					ng-class="{'shown': currentPage+1 < totalPages}">
+				<span class="button" id="next-button" title="THE Next Page"
+					ng-click="changePage('next')" ng-keyup="$event.keyCode == 13 ? changePage('next') : null"
+					ng-class="{'shown': currentPage+1 < totalPages}" tabindex="0">
 					Next Page
 				</span>
 			</section>
@@ -200,8 +200,8 @@
 						</rect>
 					</svg>
 				</div>
-				<div class="button" id="submit-button" ng-click="submit()"
-					ng-class="{'glowing': matches.length == totalItems && setCreated}">
+				<div class="button" id="submit-button" title="Done" ng-click="submit()" ng-keyup="$event.keyCode == 13 ? submit() : null"
+					ng-class="{'glowing': matches.length == totalItems && setCreated}" ng-show="checkEnd ? true : false" tabindex="0">
 					Done
 				</div>
 			</section>

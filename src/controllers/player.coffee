@@ -21,6 +21,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.qset = {}
 
+	$scope.checkEnd = false
+
 	# these are used for animation
 	$scope.pageAnimate = false
 	$scope.pageNext = false
@@ -142,7 +144,9 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.currentPage-- unless $scope.currentPage <= 0
 			if direction == 'next'
 				$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
+				document.getElementById('column2').focus()
 		, ANIMATION_DURATION/3
+
 
 		$timeout ->
 			$scope.pageAnimate = false
@@ -350,14 +354,6 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		}
 		$scope.questionCircles[$scope.currentPage][endIndex].isHover = true
 
-	### $scope.checkKey = (e, question) ->
-		if e == 13 || e == 32
-			$scope.selectQuestion(question) ###
-
-	$scope.checkKey = (e, id) ->
-			if e == 13 || e == 32
-				console.log id
-
 	$scope.selectQuestion = (selectionItem) ->
 		elementId = selectionItem.id
 		# get the index of the item in the current page by finding it with its id
@@ -369,9 +365,9 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.selectedQA[$scope.currentPage].question = indexId
 		_checkForMatches()
 
-	$scope.checkKeyAnswer = (e, answer) ->
-		if e == 13 || e == 32
-			$scope.selectAnswer(answer)
+		if $scope.matches.length == $scope.totalItems && $scope.setCreated
+			$scope.checkEnd = true
+		console.log $scope.checkEnd
 
 	$scope.selectAnswer = (selectionItem) ->
 		elementId = selectionItem.id
@@ -383,6 +379,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].answer = indexId
 		_checkForMatches()
+
+		if $scope.matches.length == $scope.totalItems && $scope.setCreated
+			$scope.checkEnd = true
+		console.log $scope.checkEnd
 
 	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items

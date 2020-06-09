@@ -1,9 +1,9 @@
-<div class='audio-controls'>
-	<span id="playbtn" class='play-btn'
+<div aria-label="This element has an audio clue." class='audio-controls' tabindex="0">
+	<span aria-label="Audio Clue Button: {{ toMinutes(duration) }} seconds long. Click to play." id="playbtn" class='play-btn'
 		ng-class="{'paused' : audio.paused}"
-		ng-click='$event.stopPropagation(); play()' ng-keyup='checkKey($event.keyCode, this.id)' tabindex="0">
+		ng-click='$event.stopPropagation(); play()' ng-keyup="$event.keyCode == 13 || $event.keyCode == 32 ? play() : null" tabindex="0">
 	</span>
-	<span class='time'>
+	<span aria-hidden="true" class='time'>
 		<span class='seek-bar'>
 			<input type='range'
 				min='0.0'
@@ -13,6 +13,6 @@
 				ng-mousedown='$event.stopPropagation(); preChangeTime()'
 				ng-mouseup='$event.stopPropagation(); changeTime()'>
 		</span>
-		<span class='duration'>{{ toMinutes(currentTime) }} / {{ toMinutes(duration) }}</span>
+		<span aria-hidden="true" class='duration'>{{ toMinutes(currentTime) }} / {{ toMinutes(duration) }}</span>
 	</span>
 </div>
