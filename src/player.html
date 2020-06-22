@@ -20,11 +20,12 @@
 
 		<header id="header">
 			<h1>{{ title }}</h1>
+			<span class="clip" aria-label="Select a term and then match it with the correct definition. Match all terms to complete the widget."></span>
 		</header>
 
 		<section class="gameboard"
 			ng-class="{'pageAnimate': pageAnimate}">
-			<ul aria-label="Column 1: Words." class="column column1">
+			<ul id="column1" aria-label="Column 1: Terms." class="column column1" tabindex="0">
 				<li class="word"
 					ng-repeat="question in pages[currentPage].questions"
 					ng-click="selectQuestion(question)" ng-keyup="$event.keyCode == 13 ? selectQuestion(question) : null"
@@ -53,8 +54,7 @@
 						<div class="popup"
 							ng-hide="checkForQuestionAudio($index)"
 							ng-class="{'shown': (question.text.length > 61)}">
-							<div class="popup-text left">
-								{{question.text}}
+							<div class="popup-text left question-item" aria-label="{{ question.text }}. Currently unmatched">
 							</div>
 							<div class="popup-arrow"
 								ng-class="{'left': (question.text.length > 61)}">
@@ -128,7 +128,7 @@
 				</svg>
 			</div>
 
-			<ul id="column2" aria-label="Column 2: Definitions." class="column column2">
+			<ul id="column2" aria-label="Column 2: Definitions." class="column column2" tabindex="0">
 				<li class="word"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)" ng-keyup="$event.keyCode == 13 ? selectAnswer(answer) : null"
@@ -157,8 +157,8 @@
 						<div class="popup"
 							ng-hide="checkForAnswerAudio($index)"
 							ng-class="{'shown': (answer.text.length > 61)}">
-							<div class="popup-text right">
-								{{answer.text}}
+							<div class="popup-text right answer-item" aria-label="{{answer.text}}. Currently unmatched">
+								
 							</div>
 							<div class="popup-arrow"
 								ng-class="{'right': (answer.text.length > 61)}">
@@ -173,17 +173,17 @@
 			<section id="page-selector">
 				<span class="button" id="prev-button"
 					ng-click="changePage('previous')" ng-keyup="$event.keyCode == 13 ? changePage('previous') : null"
-					ng-class="{'shown': currentPage >= 1}" aria-hidden="" tabindex="0">
+					ng-class="{'shown': currentPage >= 1}" aria-hidden="true" tabindex="-1">
 					Previous Page
+				</span>
+				<span class="button" id="next-button" title="THE Next Page"
+					ng-click="changePage('next')" ng-keyup="$event.keyCode == 13 ? changePage('next') : null"
+					ng-class="{'shown': currentPage+1 < totalPages}" aria-hidden="false" tabindex="0">
+					Next Page
 				</span>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
 					'animateRotationLeft': pageAnimate && !pageNext}">
 					Page <span>{{currentPage+1}}</span>/<span>{{totalPages}}</span>
-				</span>
-				<span class="button" id="next-button" title="THE Next Page"
-					ng-click="changePage('next')" ng-keyup="$event.keyCode == 13 ? changePage('next') : null"
-					ng-class="{'shown': currentPage+1 < totalPages}" tabindex="0">
-					Next Page
 				</span>
 			</section>
 

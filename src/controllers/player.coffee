@@ -23,6 +23,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.checkEnd = false
 
+	$scope.questionNumId;
+
+	$scope.isQuestion = false
+
+	$scope.matchText
+
 	# these are used for animation
 	$scope.pageAnimate = false
 	$scope.pageNext = false
@@ -135,6 +141,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	$scope.changePage = (direction) ->
 		return false if $scope.pageAnimate
 		_clearSelections()
+		# document.getElementById('column1').focus()
 
 		# pageAnimate is used by the li elements and the rotating circle, also sets footer onTop
 		$scope.pageNext = (direction == 'next')
@@ -142,9 +149,18 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$timeout ->
 			if direction == 'previous'
 				$scope.currentPage-- unless $scope.currentPage <= 0
+				document.getElementById("prev-button").tabIndex = -1
+				document.getElementById("next-button").tabIndex = 0
+				document.getElementById('prev-button').setAttribute('aria-hidden', 'true');
+				document.getElementById('next-button').setAttribute('aria-hidden', 'false');
 			if direction == 'next'
 				$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
-				document.getElementById('column2').focus()
+				document.getElementById("next-button").tabIndex = -1
+				document.getElementById("prev-button").tabIndex = 0
+				document.getElementById('next-button').setAttribute('aria-hidden', 'true');
+				document.getElementById('prev-button').setAttribute('aria-hidden', 'false');
+			# console.log document.getElementById("next-button").getAttribute('aria-hidden');
+
 		, ANIMATION_DURATION/3
 
 
@@ -168,6 +184,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			matchPageId: $scope.currentPage
 		}
 
+
 	_applyCircleColor = () ->
 		# find appropriate circle
 		$scope.questionCircles[$scope.currentPage][$scope.selectedQA[$scope.currentPage].question].color = _getColor()
@@ -176,11 +193,26 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	_getColor = () ->
 		'c' + colorNumber
 
-	_checkForMatches = () ->
+	_checkForMatches = (selectionItem) ->
+		# debugger;
+		# console.log selectionItem
+
+		if selectionItem.type == "question"
+			theQuestionId = selectionItem.id
+		else if selectionItem.type == "answer"
+			theAnswerId = selectionItem.id
+
+		$scope.matchText = selectionItem.text
+
+
 		if $scope.selectedQA[$scope.currentPage].question != -1 and $scope.selectedQA[$scope.currentPage].answer != -1
 			# check if the id already exists in matches
+
 			clickQuestionId = $scope.selectedQuestion.id
 			clickAnswerId = $scope.selectedAnswer.id
+			# console.log $scope.selectedQuestion
+			# console.log $scope.selectedAnswer
+			
 
 			# increment color cycle
 			colorNumber = (colorNumber+1)%NUM_OF_COLORS
@@ -199,6 +231,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			if indexOfAnswer >= 0
 				match2_QIndex = $scope.matches[indexOfAnswer].questionIndex
 				match2_AIndex = $scope.matches[indexOfAnswer].answerIndex
+
 
 			# if both question and answer are in matches then take out where they exist in matches
 			if indexOfQuestion != -1 and indexOfAnswer != -1
@@ -230,6 +263,19 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
 				$scope.matches.splice indexOfAnswer, 1
 
+
+
+			for match in $scope.matches
+
+				#console.log "selection: " + selectionItem.id
+				#console.log "index: " + match.questionId
+				console.log match
+
+				# $scope.matchText = document.getElementsByClassName("question-item")[match.questionIndex].setAttribute('aria-label', $scope.pages[$scope.currentPage].questions[match.questionIndex].text + ". Matched with " + $scope.pages[$scope.currentPage].answers[match.answerIndex].text);
+				# $scope.matchText= document.getElementsByClassName("answer-item")[match.answerIndex].setAttribute('aria-label', $scope.pages[$scope.currentPage].answers[match.answerIndex].text + ". Matched with " + $scope.pages[$scope.currentPage].questions[match.questionIndex].text);
+
+				# $scope.matchText = $scope.pages[$scope.currentPage].questions[match.questionIndex].text + ". Matched with " + $scope.pages[$scope.currentPage].answers[match.answerIndex].text
+
 			_pushMatch()
 
 			_applyCircleColor()
@@ -239,6 +285,19 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			_updateLines()
 
 			$scope.unapplyHoverSelections()
+
+			### if match.questionId == selectionItem.id
+				# console.log "question ID"
+				theAnswer = match.answerIndex
+				document.getElementsByClassName("question-item")[match.questionIndex].setAttribute('aria-label', "Matched with " + $scope.pages[$scope.currentPage].answers[theAnswer].text);
+				console.log document.getElementsByClassName("question-item")[match.questionIndex].getAttribute('aria-label');
+			
+				#else if selectionItem.type == "answer"
+			else if match.answerId == selectionItem.id
+				# console.log "answer ID"
+				theQuestion = match.questionIndex
+				document.getElementsByClassName("answer-item")[match.answerIndex].setAttribute('aria-label', "Matched with " + $scope.pages[$scope.currentPage].questions[theQuestion].text);
+				console.log document.getElementsByClassName("answer-item")[match.answerIndex].getAttribute('aria-label'); ###
 
 	_clearSelections = () ->
 		$scope.selectedQA[$scope.currentPage].question = -1
@@ -356,6 +415,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.selectQuestion = (selectionItem) ->
 		elementId = selectionItem.id
+		console.log elementId
+		document.activeElement.setAttribute("id", elementId);
+		console.log document.activeElement.id;
+
 		# get the index of the item in the current page by finding it with its id
 		indexId = $scope.pages[$scope.currentPage].questions.map((element) -> element.id).indexOf elementId
 		# selectedQuestion allows us to find the item we want in our initialized question array at the specified index
@@ -363,11 +426,19 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.selectedQuestion = $scope.pages[$scope.currentPage].questions[indexId]
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].question = indexId
-		_checkForMatches()
+		# setTimeout (-> document.getElementById('column2').focus()), 50
+		$scope.isQuestion = true
+		_checkForMatches(selectionItem)
+		
+		# console.log selectionItem
+		# console.log $scope.pages[0].questions[2]
+
+		for item in $scope.pages[selectionItem.pageId].questions
+			if selectionItem.id == item.id
+				console.log item
 
 		if $scope.matches.length == $scope.totalItems && $scope.setCreated
 			$scope.checkEnd = true
-		console.log $scope.checkEnd
 
 	$scope.selectAnswer = (selectionItem) ->
 		elementId = selectionItem.id
@@ -378,11 +449,10 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.selectedAnswer = $scope.pages[$scope.currentPage].answers[indexId]
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].answer = indexId
-		_checkForMatches()
+		_checkForMatches(selectionItem)
 
 		if $scope.matches.length == $scope.totalItems && $scope.setCreated
 			$scope.checkEnd = true
-		console.log $scope.checkEnd
 
 	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items

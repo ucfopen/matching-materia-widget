@@ -711,3 +711,16 @@ and (-webkit-min-device-pixel-ratio: 2){
 .wrap {
 	position: relative;
 }
+
+/* this is a class created on webaim to hide content from sighted users while allowed
+ content to be seen by screen readers */
+.clip {
+clip: rect(1px, 1px, 1px, 1px);
+clip-path: inset(50%);
+height: 1px;
+width: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+}
