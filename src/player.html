@@ -54,7 +54,7 @@
 						<div class="popup"
 							ng-hide="checkForQuestionAudio($index)"
 							ng-class="{'shown': (question.text.length > 61)}">
-							<div class="popup-text left question-item" aria-label="{{ question.text }}. Currently unmatched">
+							<div class="popup-text left question-item" aria-label="{{ question.text }}. {{ question.matchedWith }}">
 							</div>
 							<div class="popup-arrow"
 								ng-class="{'left': (question.text.length > 61)}">
@@ -157,7 +157,7 @@
 						<div class="popup"
 							ng-hide="checkForAnswerAudio($index)"
 							ng-class="{'shown': (answer.text.length > 61)}">
-							<div class="popup-text right answer-item" aria-label="{{answer.text}}. Currently unmatched">
+							<div class="popup-text right answer-item" aria-label="{{ answer.text }}. {{ answer.matchedWith }}">
 								
 							</div>
 							<div class="popup-arrow"
