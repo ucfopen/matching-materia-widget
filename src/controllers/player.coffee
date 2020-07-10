@@ -268,6 +268,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				for item in $scope.pages[match.matchPageId].answers
 					if match.answerId == item.id
 						item.matchedWith = "Matched with " + $scope.pages[match.matchPageId].questions[match.questionIndex].text
+						# live update when user makes a match
+						document.getElementById('update').innerHTML = "You have matched " + $scope.pages[match.matchPageId].questions[match.questionIndex].text + " with " + $scope.pages[match.matchPageId].answers[match.answerIndex].text;
 
 			_applyCircleColor()
 

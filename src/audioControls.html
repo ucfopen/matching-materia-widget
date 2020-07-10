@@ -1,9 +1,9 @@
-<div aria-label="This element has an audio clue." class='audio-controls' tabindex="0">
+<div tabindex="-1" aria-label="{{ spokenLabel }} This element has an audio clue." class='audio-controls' tabindex="0">
 	<span aria-label="Audio Clue Button: {{ toMinutes(duration) }} seconds long. Click to play." id="playbtn" class='play-btn'
 		ng-class="{'paused' : audio.paused}"
 		ng-click='$event.stopPropagation(); play()' ng-keyup="$event.keyCode == 13 || $event.keyCode == 32 ? play() : null" tabindex="0">
 	</span>
-	<span aria-hidden="true" class='time'>
+	<span tabindex="-1" aria-hidden="true" class='time'>
 		<span class='seek-bar'>
 			<input type='range'
 				min='0.0'

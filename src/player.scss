@@ -202,7 +202,7 @@ html, body {
 					stroke       : #27AE60;
 					stroke-width : 4;
 					&.linePlaced{
-						stroke: gray;
+						stroke: #A1A1A1;
 					}
 				}
 			}
@@ -235,11 +235,14 @@ html, body {
 					display: block;
 				}
 			}
+			&:focus {
+				outline: 0;
+			}
 			.word-text {
 				cursor           : default;
 				z-index          : -3;
 				position         : absolute;
-				background-color : #1ABC9C;
+				background-color : #1CA68C;
 				margin-top       : -10px;
 				padding          : 5px 0px;
 				border-radius    : 10px;
@@ -400,14 +403,16 @@ html, body {
 				}
 				&:hover, &:focus {
 					.word-text {
+						color 				: white;
 						background-color    : #627D92;
 						border-bottom-color : #4F6576;
 					}
 				}
 			}
-
+/* hover normal */
 			&:hover, &:focus {
 				.word-text {
+					color	 			: #0A3D3D;
 					background-color    : #2ECC71;
 					border-bottom-color : #25A55B;
 				}
@@ -472,8 +477,9 @@ footer {
 			transition       : 0.4s;
 			opacity          : 0;
 			pointer-events   : none;
-			&:hover,  {
-				background-color : rgb(55,61,66);
+			&:hover, &:focus  {
+				background-color : white;
+				color: #34495E;
 				transition : 0.2s;
 			}
 			&.glowing {
@@ -509,6 +515,7 @@ footer {
 			width            : 140px;
 			transition       : 0.2s;
 			&:hover, &:focus {
+				color: #562B0B;
 				background-color    : #E2965A;
 				border-bottom-color : #D3843B;
 				transition : 0.2s;

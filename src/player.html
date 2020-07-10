@@ -21,12 +21,13 @@
 		<header id="header">
 			<h1>{{ title }}</h1>
 			<span class="clip" aria-label="Select a term and then match it with the correct definition. Match all terms to complete the widget."></span>
+			<div id="update" class="clip" aria-live="assertive" tabindex="-1"></div>
 		</header>
 
 		<section class="gameboard"
 			ng-class="{'pageAnimate': pageAnimate}">
-			<ul id="column1" aria-label="Column 1: Terms." class="column column1" tabindex="0">
-				<li class="word"
+			<ul id="column1" aria-label="Column 1: Terms" class="column column1">
+				<li class="word" 
 					ng-repeat="question in pages[currentPage].questions"
 					ng-click="selectQuestion(question)" ng-keyup="$event.keyCode == 13 ? selectQuestion(question) : null"
 					ng-mouseover="drawPrelineToLeft(question)"
@@ -128,7 +129,7 @@
 				</svg>
 			</div>
 
-			<ul id="column2" aria-label="Column 2: Definitions." class="column column2" tabindex="0">
+			<ul id="column2" aria-label="Column 2: Definitions." class="column column2">
 				<li class="word"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)" ng-keyup="$event.keyCode == 13 ? selectAnswer(answer) : null"
@@ -136,7 +137,7 @@
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}" tabindex="0">
 					<span class='clickable'></span>
-					<div aria-hidden="true" class="word-text">
+					<div tabindex="-1" aria-hidden="true" class="word-text">
 						<span class="text-wrapper"
 							ng-class="{'long': (answer.text.length > 17)}">
 							{{checkForAnswerAudio($index) ? "" : answer.text}}
@@ -148,12 +149,12 @@
 						</span>
 					</div>
 
-					<div ng-audio-controls
+					<div tabindex="-1" ng-audio-controls
 						audio-source="{{answer.asset}}"
-						ng-if="checkForAnswerAudio($index)" tabindex="0">
+						ng-if="checkForAnswerAudio($index)" tabindex="0" function-from-player="functionFromPlayer" spoken-label="{{answer.text + '. ' + answer.matchedWith}}">
 					</div>
 
-					<div class="wrap">
+					<div tabindex="-1" class="wrap">
 						<div class="popup"
 							ng-hide="checkForAnswerAudio($index)"
 							ng-class="{'shown': (answer.text.length > 61)}">

@@ -4,6 +4,7 @@ Matching.directive 'ngAudioControls', ->
 	restrict: 'EA'
 	scope:
 		audioSource: '@audioSource'
+		spokenLabel: '@spokenLabel'
 	templateUrl: 'audioControls.html'
 	controller: ['$scope', '$sce', ($scope, $sce) ->
 		$scope.audio = null
