@@ -34,8 +34,9 @@
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{'matched' : isInMatch(question)}" tabindex="0">
 
-					<div aria-hidden="true" class="word-text">
-						<span class="text-wrapper"
+					<div class="word-text">
+						<span aria-label="{{ question.text }}. {{ question.matchedWith }}"></span>
+						<span aria-hidden="true" class="text-wrapper"
 							ng-class="{'long': (question.text.length > 17)}">
 							{{checkForQuestionAudio($index) ? "" : question.text}}
 						</span>
@@ -46,25 +47,25 @@
 						</span>
 					</div>
 
-					<div ng-audio-controls
+					<div aria-hidden="true" ng-audio-controls
 						audio-source="{{question.asset}}"
 						ng-if="checkForQuestionAudio($index)">
 					</div>
 
-					<div class="wrap">
-						<div class="popup"
+					<div class="wrap" aria-hidden="true">
+						<div aria-hidden="true" class="popup"
 							ng-hide="checkForQuestionAudio($index)"
 							ng-class="{'shown': (question.text.length > 61)}">
-							<div class="popup-text left question-item" aria-label="{{ question.text }}. {{ question.matchedWith }}">
+							<div aria-hidden="true" class="popup-text left question-item" aria-label="{{ question.text }}. {{ question.matchedWith }}">
 							</div>
-							<div class="popup-arrow"
+							<div aria-hidden="true" class="popup-arrow"
 								ng-class="{'left': (question.text.length > 61)}">
 							</div>
 						</div>
 					</div>
 
 					<div aria-hidden="true" class="wrap">
-						<div class="popup" ng-class="{'shown': (question.text.length > 61)}">
+						<div aria-hidden="true" class="popup" ng-class="{'shown': (question.text.length > 61)}">
 							<div class="popup-text left">{{question.text}}</div>
 							<div class="popup-arrow" ng-class="{'left': (question.text.length > 61)}"></div>
 						</div>
@@ -138,7 +139,8 @@
 					ng-class="{matched : isInMatch(answer)}" tabindex="0">
 					<span class='clickable'></span>
 					<div tabindex="-1" aria-hidden="true" class="word-text">
-						<span class="text-wrapper"
+						<span tabindex="0" aria-label="{{ answer.text }}. {{ answer.matchedWith }}"></span>
+						<span aria-hidden="true" class="text-wrapper"
 							ng-class="{'long': (answer.text.length > 17)}">
 							{{checkForAnswerAudio($index) ? "" : answer.text}}
 						</span>
@@ -158,7 +160,7 @@
 						<div class="popup"
 							ng-hide="checkForAnswerAudio($index)"
 							ng-class="{'shown': (answer.text.length > 61)}">
-							<div class="popup-text right answer-item" aria-label="{{ answer.text }}. {{ answer.matchedWith }}">
+							<div aria-hidden="true" class="popup-text right answer-item" aria-label="{{ answer.text }}. {{ answer.matchedWith }}">
 								
 							</div>
 							<div class="popup-arrow"
