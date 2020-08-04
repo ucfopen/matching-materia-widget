@@ -138,8 +138,8 @@
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}" tabindex="0">
 					<span class='clickable'></span>
-					<div tabindex="-1" aria-hidden="true" class="word-text">
-						<span tabindex="0" aria-label="{{ answer.text }}. {{ answer.matchedWith }}"></span>
+					<div class="word-text">
+						<span aria-hidden="{{checkForAnswerAudio($index) ? true : false}}"  aria-label="{{ answer.text }}. {{ answer.matchedWith }}"></span>
 						<span aria-hidden="true" class="text-wrapper"
 							ng-class="{'long': (answer.text.length > 17)}">
 							{{checkForAnswerAudio($index) ? "" : answer.text}}
@@ -151,17 +151,16 @@
 						</span>
 					</div>
 
-					<div tabindex="-1" ng-audio-controls
+					<div ng-audio-controls
 						audio-source="{{answer.asset}}"
-						ng-if="checkForAnswerAudio($index)" tabindex="0" function-from-player="functionFromPlayer" spoken-label="{{answer.text + '. ' + answer.matchedWith}}">
+						ng-if="checkForAnswerAudio($index)" tabindex="-1" function-from-player="functionFromPlayer" spoken-label="{{answer.text + '. ' + answer.matchedWith}}">
 					</div>
 
-					<div tabindex="-1" class="wrap">
-						<div class="popup"
+					<div aria-hidden="true" tabindex="-1" class="wrap">
+						<div tabindex="-1" aria-hidden="true" class="popup"
 							ng-hide="checkForAnswerAudio($index)"
 							ng-class="{'shown': (answer.text.length > 61)}">
-							<div aria-hidden="true" class="popup-text right answer-item" aria-label="{{ answer.text }}. {{ answer.matchedWith }}">
-								
+							<div tabindex="-1" aria-hidden="true" class="popup-text right answer-item">	
 							</div>
 							<div class="popup-arrow"
 								ng-class="{'right': (answer.text.length > 61)}">
@@ -174,12 +173,12 @@
 
 		<footer ng-class="{'onTop': pageAnimate}">
 			<section id="page-selector">
-				<span class="button" id="prev-button"
+				<span class="button" role="button" id="prev-button"
 					ng-click="changePage('previous')" ng-keyup="$event.keyCode == 13 ? changePage('previous') : null"
 					ng-class="{'shown': currentPage >= 1}" aria-hidden="true" tabindex="-1">
 					Previous Page
 				</span>
-				<span class="button" id="next-button" title="THE Next Page"
+				<span class="button" role="button" id="next-button" title="THE Next Page"
 					ng-click="changePage('next')" ng-keyup="$event.keyCode == 13 ? changePage('next') : null"
 					ng-class="{'shown': currentPage+1 < totalPages}" aria-hidden="false" tabindex="0">
 					Next Page
