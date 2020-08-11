@@ -132,6 +132,11 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.setCreated = true
 
 		Materia.Engine.setHeight()
+
+		if $scope.totalPages > 0
+			document.getElementById("next-button").tabIndex = -1;
+			document.getElementById('next-button').setAttribute('aria-hidden', 'true');
+
 		$scope.$apply()
 
 	$scope.changePage = (direction) ->
@@ -405,6 +410,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.selectedQA[$scope.currentPage].question = indexId
 		# setTimeout (-> document.getElementById('column2').focus()), 50
 		_checkForMatches(selectionItem)
+
+		console.log($scope.selectedQuestion)
 
 		if $scope.matches.length == $scope.totalItems && $scope.setCreated
 			$scope.checkEnd = true
