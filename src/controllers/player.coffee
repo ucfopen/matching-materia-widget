@@ -68,7 +68,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				_pageIndex++
 
 			wrapQuestionUrl = ->
-				if item.assets[0] != 0 and item.assets[0] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined
+				if item.assets and item.assets[0] != 0 and item.assets[0] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined
 					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[0])
 
 			$scope.pages[_pageIndex].questions.push {
