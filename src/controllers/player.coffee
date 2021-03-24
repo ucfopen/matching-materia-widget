@@ -68,7 +68,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				_pageIndex++
 
 			wrapQuestionUrl = ->
-				if item.assets and item.assets[0] != 0 and item.assets[0] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined
+				if Array.isArray(item.assets) and item.assets[0] != 0 and item.assets[0] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined
 					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[0])
 
 			$scope.pages[_pageIndex].questions.push {
@@ -91,14 +91,14 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			}
 
 			# Adjust if this is a 'fakeout' answer option
-			if item.assets[1] == 0 and not item.answers[0].text.length
+			if Array.isArray(item.assets) and item.assets[1] == 0 and not item.answers[0].text.length
 				_itemIndex++
 				_indexShift++
 				$scope.totalItems--
 				continue
 
 			wrapAnswerUrl = ->
-				if item.assets[1] != 0 and item.assets[1] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined
+				if Array.isArray(item.assets) and item.assets[1] != 0 and item.assets[1] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined
 					return $sce.trustAsResourceUrl Materia.Engine.getImageAssetUrl(item.assets[1])
 
 			$scope.pages[_pageIndex].answers.push {
