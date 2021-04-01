@@ -387,7 +387,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				# get the answer of that match at that question id and use that as the 2nd argument
 				mappedQsetItemText = qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].answers[0].text
 				# the audioString should ONLY be provided if there is actually an audio asset present for the answer card - we check that by referencing assets[1]. Otherwise, pass null
-				mappedQsetAudioString = if qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets?[1] != 0 then qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets[2] else null
+				mappedQsetAudioString = if qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets and qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets[1] != 0 then qsetItems.filter( (item) -> item.id == matchedItemAnswerId)[0].assets[2] else null
 			else
 				mappedQsetItemText = null
 			Materia.Score.submitQuestionForScoring(qsetItems[i].id, mappedQsetItemText, mappedQsetAudioString)
