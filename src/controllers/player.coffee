@@ -90,12 +90,15 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				color: 'c0'
 			}
 
-			# Adjust if this is a 'fakeout' answer option
+			###
+			disabling this because fakeouts are not implemented
+			# adjust if this is a 'fakeout' answer option
 			if ( !Array.isArray(item.assets) or item.assets?[1] == 0) and not item.answers[0].text.length
 				_itemIndex++
 				_indexShift++
 				$scope.totalItems--
 				continue
+			###
 
 			wrapAnswerUrl = ->
 				if item.assets?[1] != 0 and item.assets?[1] != undefined # for qsets published after this commit, this value will be 0, for older qsets it's undefined

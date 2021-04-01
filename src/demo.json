@@ -190,11 +190,7 @@
                   "text": "to sell"
                 }
               ],
-               "assets":[
-                  0,
-                  0,
-                  null
-               ]
+               "assets": null
             },
             {
               "materiaType": "question",
