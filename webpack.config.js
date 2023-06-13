@@ -13,32 +13,26 @@ copy.push({
 })
 
 const entries = {
-	'creator.js': [
-			path.join(srcPath, 'modules', 'matching.coffee'),
+	'creator': [
+			path.join(srcPath, 'creator.html'),
 			path.join(srcPath, 'controllers', 'creator.coffee'),
+			path.join(srcPath, 'modules', 'matching.coffee'),
 			path.join(srcPath, 'directives', 'audioControls.coffee'),
 			path.join(srcPath, 'directives', 'focusMe.coffee'),
 			path.join(srcPath, 'directives', 'ngEnter.coffee'),
-			path.join(srcPath, 'directives', 'inputStateManager.coffee')
+			path.join(srcPath, 'directives', 'inputStateManager.coffee'),
+			path.join(srcPath, 'creator.scss'),
 	],
-	'player.js': [
-			path.join(srcPath, 'modules', 'matching.coffee'),
-			path.join(srcPath, 'controllers', 'player.coffee'),
-			path.join(srcPath, 'directives', 'audioControls.coffee')
-	],
-	'creator.css': [
-			path.join(srcPath, 'creator.html'),
-			path.join(srcPath, 'creator.scss')
-	],
-	'player.css': [
+	'player': [
 			path.join(srcPath, 'player.html'),
-			path.join(srcPath, 'player.scss')
+			path.join(srcPath, 'controllers', 'player.coffee'),
+			path.join(srcPath, 'modules', 'matching.coffee'),
+			path.join(srcPath, 'directives', 'audioControls.coffee'),
+			path.join(srcPath, 'player.scss'),
 	],
-	'guides/player.temp.html': [
-			path.join(srcPath, '_guides', 'player.md')
-	],
-	'guides/creator.temp.html': [
-			path.join(srcPath, '_guides', 'creator.md')
+	'audioControls': [
+			path.join(srcPath, 'audioControls.html'),
+			path.join(srcPath, 'audioControls.scss'),
 	]
 }
 
