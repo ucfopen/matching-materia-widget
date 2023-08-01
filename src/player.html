@@ -26,7 +26,9 @@
 			ng-class="{'pageAnimate': pageAnimate}">
 			<ul class="column column1">
 				<li class="word"
+					tabindex="0"
 					ng-repeat="question in pages[currentPage].questions"
+					ng-keyup="$event.key == 'Enter' ? selectQuestion(question) : null"
 					ng-click="selectQuestion(question)"
 					ng-mouseover="drawPrelineToLeft(question)"
 					ng-mouseleave="unapplyHoverSelections()"
@@ -130,8 +132,10 @@
 
 			<ul class="column column2">
 				<li class="word"
+					tabindex="0"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)"
+					ng-keyup="$event.key == 'Enter' ? selectAnswer(answer) : null"
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}">
@@ -171,20 +175,20 @@
 
 		<footer ng-class="{'onTop': pageAnimate}">
 			<section id="page-selector">
-				<span class="button" id="prev-button"
+				<button id="prev-button"
 					ng-click="changePage('previous')"
 					ng-class="{'shown': currentPage >= 1}">
 					Previous Page
-				</span>
+				</button>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
 					'animateRotationLeft': pageAnimate && !pageNext}">
 					Page <span>{{currentPage+1}}</span>/<span>{{totalPages}}</span>
 				</span>
-				<span class="button" id="next-button"
+				<button id="next-button"
 					ng-click="changePage('next')"
 					ng-class="{'shown': currentPage+1 < totalPages}">
 					Next Page
-				</span>
+				</button>
 			</section>
 
 			<section id="submit">
@@ -200,10 +204,10 @@
 						</rect>
 					</svg>
 				</div>
-				<div class="button" id="submit-button" ng-click="submit()"
+				<button id="submit-button" ng-click="submit()"
 					ng-class="{'glowing': matches.length == totalItems && setCreated}">
 					Done
-				</div>
+			</button>
 			</section>
 		</footer>
 	</body>

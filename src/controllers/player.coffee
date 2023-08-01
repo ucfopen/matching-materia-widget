@@ -354,6 +354,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.questionCircles[$scope.currentPage][endIndex].isHover = true
 
 	$scope.selectQuestion = (selectionItem) ->
+		console.log 'butts'
 		elementId = selectionItem.id
 		# get the index of the item in the current page by finding it with its id
 		indexId = $scope.pages[$scope.currentPage].questions.map((element) -> element.id).indexOf elementId

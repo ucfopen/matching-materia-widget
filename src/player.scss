@@ -398,7 +398,7 @@ html, body {
 					background-color    : #5B656D;
 					border-bottom-color : #444B51;
 				}
-				&:hover {
+				&:hover, &:focus {
 					.word-text {
 						background-color    : #627D92;
 						border-bottom-color : #4F6576;
@@ -406,7 +406,7 @@ html, body {
 				}
 			}
 
-			&:hover {
+			&:hover, &:focus {
 				.word-text {
 					background-color    : #2ECC71;
 					border-bottom-color : #25A55B;
@@ -415,10 +415,6 @@ html, body {
 			}
 		}
 	}
-}
-
-.button {
-	cursor: pointer;
 }
 
 footer {
@@ -497,17 +493,23 @@ footer {
 		margin-left                : -250px;
 		border-bottom-left-radius  : 10px;
 		border-bottom-right-radius : 10px;
-		.button {
+
+		button {
 			position         : absolute;
 			z-index          : 10;
+			color            : #FFFFFF;
 			background-color : #E58133;
 			text-align       : center;
+			border           : 0px;
 			border-radius    : 10px;
 			border-bottom    : 3px solid #BE712A;
+			font-family      : 'CorbelBold', sans-serif;
+			font-size        : 20px;
 			margin           : 5px;
 			padding          : 5px;
 			width            : 140px;
 			transition       : 0.2s;
+			cursor: pointer;
 			&:hover {
 				background-color    : #E2965A;
 				border-bottom-color : #D3843B;
