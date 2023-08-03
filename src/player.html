@@ -22,11 +22,27 @@
 			<h1>{{ title }}</h1>
 		</header>
 
-		<section class="gameboard"
-			ng-class="{'pageAnimate': pageAnimate}">
+		<div class="assistive-element" id="assistive-notification" aria-live="polite"></div>
+		<div class="assistive-element" id="assistive-alert" aria-live="assertive"></div>
+
+		<div class="assistive-element" id="screenreader-instructions">
+			Select a question from the question list by using space or enter. Match it to an answer by selecting
+			one from the answer list and using space or enter to confirm your choice. Use the left and right arrow keys to quickly switch
+			between the question and answer lists.
+		</div>
+		<section
+			id="gameboard"
+			class="gameboard"
+			ng-class="{'pageAnimate': pageAnimate}"
+			aria-label="Game board."
+			aria-describedby="screenreader-instructions"
+			role="application"
+			tabindex="0">
 			<ul class="column column1">
 				<li class="word"
 					tabindex="0"
+					role="term"
+					aria-label="{{'Question: ' + ($index+1) + ' of ' + pages[currentPage].questions.length + ': ' + question.text + ', ' + (isInMatch(question) ? 'Matched with: ' + getMatchWith(question) : 'Unmatched.')}}"
 					ng-repeat="question in pages[currentPage].questions"
 					ng-keyup="$event.key == 'Enter' ? selectQuestion(question) : null"
 					ng-click="selectQuestion(question)"
@@ -133,6 +149,8 @@
 			<ul class="column column2">
 				<li class="word"
 					tabindex="0"
+					role="definition"
+					aria-label="{{'Answer. ' + ($index+1) + ' of ' + pages[currentPage].answers.length + ': ' + answer.text + ', ' + (isInMatch(answer) ? 'Matched with: ' + getMatchWith(answer) : 'Unmatched.')}}"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)"
 					ng-keyup="$event.key == 'Enter' ? selectAnswer(answer) : null"
@@ -177,7 +195,9 @@
 			<section id="page-selector">
 				<button id="prev-button"
 					ng-click="changePage('previous')"
-					ng-class="{'shown': currentPage >= 1}">
+					ng-class="{'shown': currentPage >= 1}"
+					ng-disabled="currentPage < 1"
+					aria-label="{{'Return to page ' + currentPage + ' of ' + totalPages + '.'}}">
 					Previous Page
 				</button>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
@@ -186,7 +206,9 @@
 				</span>
 				<button id="next-button"
 					ng-click="changePage('next')"
-					ng-class="{'shown': currentPage+1 < totalPages}">
+					ng-class="{'shown': currentPage+1 < totalPages}"
+					ng-disabled="currentPage+1 >= totalPages"
+					aria-label="{{'Advance to page ' + (currentPage+2) + ' of ' + totalPages + '.'}}">
 					Next Page
 				</button>
 			</section>
@@ -205,7 +227,7 @@
 					</svg>
 				</div>
 				<button id="submit-button" ng-click="submit()"
-					ng-class="{'glowing': matches.length == totalItems && setCreated}">
+					ng-class="{'glowing': matches.length == totalItems && setCreated}" ng-disabled="matches.length != totalItems && setCreated">
 					Done
 			</button>
 			</section>

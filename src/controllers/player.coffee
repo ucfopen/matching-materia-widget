@@ -145,11 +145,16 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.currentPage-- unless $scope.currentPage <= 0
 			if direction == 'next'
 				$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
+
 		, ANIMATION_DURATION/3
 
 		$timeout ->
 			$scope.pageAnimate = false
 		, ANIMATION_DURATION*1.1
+
+		document.getElementById('gameboard').focus()
+		if direction == 'next' then _assistiveNotification 'Page incremented.'
+		else if direction == 'previous' then _assistiveNotification 'Page decremented.'
 
 
 	$scope.checkForQuestionAudio = (index) ->
@@ -166,6 +171,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			answerIndex: $scope.selectedQA[$scope.currentPage].answer
 			matchPageId: $scope.currentPage
 		}
+
+		if $scope.matches.length == $scope.totalItems then _assistiveAlert 'All matches complete. The done button is now available.'
 
 	_applyCircleColor = () ->
 		# find appropriate circle
@@ -229,6 +236,9 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
 				$scope.matches.splice indexOfAnswer, 1
 
+			_assistiveAlert $scope.pages[$scope.currentPage].questions[$scope.selectedQA[$scope.currentPage].question].text + ' matched with ' + 
+					$scope.pages[$scope.currentPage].answers[$scope.selectedQA[$scope.currentPage].answer].text
+
 			_pushMatch()
 
 			_applyCircleColor()
@@ -238,6 +248,9 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			_updateLines()
 
 			$scope.unapplyHoverSelections()
+
+		else if $scope.selectedQA[$scope.currentPage].question != -1 then _assistiveNotification $scope.selectedQuestion.text + ' selected.'
+		else if $scope.selectedQA[$scope.currentPage].answer != -1 then _assistiveNotification $scope.selectedAnswer.text + ' selected.'
 
 	_clearSelections = () ->
 		$scope.selectedQA[$scope.currentPage].question = -1
@@ -290,6 +303,15 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			return $scope.matches.some( (match) -> match.answerId == item.id)
 
 		return false
+
+	$scope.getMatchWith = (item) ->
+		if item.type == 'question'
+			a = $scope.matches.find( (match) -> match.questionId == item.id)
+			if a then return $scope.pages[a.matchPageId].answers[a.answerIndex].text
+
+		else if item.type == 'answer'
+			q = $scope.matches.find( (match) -> match.answerId == item.id)
+			if q then return $scope.pages[q.matchPageId].questions[q.questionIndex].text
 
 	$scope.drawPrelineToRight = (hoverItem) ->
 		elementId = hoverItem.id
@@ -354,7 +376,6 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.questionCircles[$scope.currentPage][endIndex].isHover = true
 
 	$scope.selectQuestion = (selectionItem) ->
-		console.log 'butts'
 		elementId = selectionItem.id
 		# get the index of the item in the current page by finding it with its id
 		indexId = $scope.pages[$scope.currentPage].questions.map((element) -> element.id).indexOf elementId
@@ -363,6 +384,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.selectedQuestion = $scope.pages[$scope.currentPage].questions[indexId]
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].question = indexId
+
+		console.log($scope.getMatchWith($scope.selectedQuestion))
 		_checkForMatches()
 
 	$scope.selectAnswer = (selectionItem) ->
@@ -400,6 +423,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		for index in [1..qsetItems.length-1]
 			randomIndex = Math.floor Math.random() * (index + 1)
 			[qsetItems[index], qsetItems[randomIndex]] = [qsetItems[randomIndex], qsetItems[index]]
+
+	_assistiveNotification = (msg) ->
+		document.getElementById('assistive-notification').innerHTML = msg
+
+	_assistiveAlert = (msg) ->
+		document.getElementById('assistive-alert').innerHTML = msg
 
 	Materia.Engine.start materiaCallbacks
 ]

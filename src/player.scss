@@ -53,6 +53,17 @@ html, body {
 		margin-top : 5px;
 	}
 }
+
+.assistive-element {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	top: 999px;
+	left: 999px;
+
+	overflow: hidden;
+}
+
 .unselectable {
 	opacity : 0.6;
 	-webkit-transition : 0.2s;
@@ -68,6 +79,12 @@ html, body {
 
 	.seek-bar {
 		position: relative;
+
+		input {
+			&:focus {
+				background-color: #c2ffe7;
+			}
+		}
 	}
 
 	.seek-bar:before {
@@ -80,10 +97,15 @@ html, body {
 		bottom: 25%;
 	}
 
-	.play-btn:before {
+	.play-btn {
+
+		border: none;
+
+		&:before {
 		position: absolute;
 		left: 6px;
 		top: 1px;
+		}
 	}
 }
 
