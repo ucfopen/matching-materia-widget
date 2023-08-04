@@ -21,6 +21,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 	$scope.qset = {}
 
+	$scope.showInstructions = false
+
 	# these are used for animation
 	$scope.pageAnimate = false
 	$scope.pageNext = false
@@ -398,6 +400,34 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].answer = indexId
 		_checkForMatches()
+
+	# toggle keyboard instructions modal
+	# certain actions have to be performed on the native dom element, not abstracted through angularjs
+	# ng-attr-inert would retain the attribute, which must be completely removed to make elements non-inert again
+	$scope.toggleInstructions = () ->
+		switch $scope.showInstructions
+			when false
+				$timeout ->
+					document.getElementById('dialog-dismiss').focus()
+					document.getElementById('gameboard').setAttribute('inert', true)
+
+			when true
+				$timeout ->
+					document.getElementById('gameboard').removeAttribute('inert')
+					document.getElementById('instructions-btn').focus()
+
+		$scope.showInstructions = !$scope.showInstructions
+
+	# manage keypress events when words are focused
+	$scope.handleBoardKeypress = (event, item = null) ->
+		switch event.key
+			when 'Enter'
+				if item and item.type == 'question' then $scope.selectQuestion item
+				if item and item.type == 'answer' then $scope.selectAnswer item
+			when 'ArrowLeft'
+				if item.type == 'answer' then document.getElementsByClassName('column1')[0].getElementsByClassName('word')[0].focus()
+			when 'ArrowRight'
+				if item.type == 'question' then document.getElementsByClassName('column2')[0].getElementsByClassName('word')[0].focus()
 
 	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items

@@ -20,6 +20,7 @@
 
 		<header id="header">
 			<h1>{{ title }}</h1>
+			<button id="instructions-btn" class="instructions-btn" ng-click="toggleInstructions()">Keyboard Instructions</button>
 		</header>
 
 		<div class="assistive-element" id="assistive-notification" aria-live="polite"></div>
@@ -44,7 +45,7 @@
 					role="term"
 					aria-label="{{'Question: ' + ($index+1) + ' of ' + pages[currentPage].questions.length + ': ' + question.text + ', ' + (isInMatch(question) ? 'Matched with: ' + getMatchWith(question) : 'Unmatched.')}}"
 					ng-repeat="question in pages[currentPage].questions"
-					ng-keyup="$event.key == 'Enter' ? selectQuestion(question) : null"
+					ng-keyup="handleBoardKeypress($event, question)"
 					ng-click="selectQuestion(question)"
 					ng-mouseover="drawPrelineToLeft(question)"
 					ng-mouseleave="unapplyHoverSelections()"
@@ -153,7 +154,7 @@
 					aria-label="{{'Answer. ' + ($index+1) + ' of ' + pages[currentPage].answers.length + ': ' + answer.text + ', ' + (isInMatch(answer) ? 'Matched with: ' + getMatchWith(answer) : 'Unmatched.')}}"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)"
-					ng-keyup="$event.key == 'Enter' ? selectAnswer(answer) : null"
+					ng-keyup="handleBoardKeypress($event, answer)"
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}">
@@ -226,11 +227,30 @@
 						</rect>
 					</svg>
 				</div>
-				<button id="submit-button" ng-click="submit()"
+				<button id="submit-button"
+					aria-label="Submit for scoring"
+					ng-click="submit()"
 					ng-class="{'glowing': matches.length == totalItems && setCreated}" ng-disabled="matches.length != totalItems && setCreated">
 					Done
 			</button>
 			</section>
 		</footer>
+		<dialog
+			class="instructions-dialog"
+			ng-class="{'show' : showInstructions }"
+			role="alertdialog"
+			aria-modal="true"
+			aria-describedby="instructions-dialog-caption"
+			tabindex="0">
+			<span id="instructions-dialog-caption">Use tab and shift-tab to move between items and buttons at the bottom.
+				Use enter or space to select an item to match. Use left arrow and right arrow to quickly switch between the left and right side.
+			</span>
+			<header>Keyboard Instructions</header>
+			<p>Use <span class="highlight">tab</span> and <span class="highlight">shift+tab</span> to move between items and buttons at the bottom.</p>
+			<p>Use <span class="highlight">enter</span> or <span class="highlight">space</span> to select an item to match.</p>
+			<p>Use <span class="highlight">left arrow</span> and <span class="highlight">right arrow</span> to quickly switch between the left and right side.</p>
+			<button id="dialog-dismiss" class="dismiss" ng-click="toggleInstructions()" tabindex="0" autofocus>Okay</button>
+		</dialog>
+		<div class="modal-cover" ng-class="{'show' : showInstructions }"></div>
 	</body>
 </html>
