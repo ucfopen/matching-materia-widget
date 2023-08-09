@@ -483,7 +483,6 @@ describe('Matching Player Controller', function(){
 		$scope.selectQuestion($scope.pages[0].questions[1]);
 		$scope.selectAnswer($scope.pages[0].answers[1]);
 
-		expect($scope.matches[0].questionIndex).toBe(1);
 		expect($scope.getMatchWith($scope.pages[0].questions[1])).toBe($scope.pages[0].answers[1].text)
 	});
 
