@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Materia Widget Player</title>
+		<title>Matching Materia Widget</title>
 		<meta charset="utf-8" />
 
 		<!-- STYLESHEETS -->
@@ -20,7 +20,7 @@
 
 		<header id="header">
 			<h1>{{ title }}</h1>
-			<button id="instructions-btn" class="instructions-btn" ng-click="toggleInstructions()">Keyboard Instructions</button>
+			<button id="instructions-btn" class="instructions-btn" ng-click="toggleInstructions()" aria-describedby="screenreader-instructions">Keyboard Instructions</button>
 		</header>
 
 		<div class="assistive-element" id="assistive-notification" aria-live="polite"></div>
@@ -36,14 +36,13 @@
 			class="gameboard"
 			ng-class="{'pageAnimate': pageAnimate}"
 			aria-label="Game board."
-			aria-describedby="screenreader-instructions"
 			role="application"
 			tabindex="0">
 			<ul class="column column1">
 				<li class="word"
 					tabindex="0"
 					role="term"
-					aria-label="{{'Question: ' + ($index+1) + ' of ' + pages[currentPage].questions.length + ': ' + question.text + ', ' + (isInMatch(question) ? 'Matched with: ' + getMatchWith(question) : 'Unmatched.')}}"
+					aria-label="{{'Question: ' + ($index+1) + ' of ' + pages[currentPage].questions.length + ': ' + question.text + ', ' + (isInMatch(question) ? 'Matched with: ' + getMatchWith(question) : 'Unmatched.') + (checkForQuestionAudio($index) ? ' This question has an audio clue.' : '')}}"
 					ng-repeat="question in pages[currentPage].questions"
 					ng-keyup="handleBoardKeypress($event, question)"
 					ng-click="selectQuestion(question)"
@@ -151,7 +150,7 @@
 				<li class="word"
 					tabindex="0"
 					role="definition"
-					aria-label="{{'Answer. ' + ($index+1) + ' of ' + pages[currentPage].answers.length + ': ' + answer.text + ', ' + (isInMatch(answer) ? 'Matched with: ' + getMatchWith(answer) : 'Unmatched.')}}"
+					aria-label="{{'Answer. ' + ($index+1) + ' of ' + pages[currentPage].answers.length + ': ' + answer.text + ', ' + (isInMatch(answer) ? 'Matched with: ' + getMatchWith(answer) : 'Unmatched.') + (checkForAnswerAudio($index) ? ' This answer has an audio clue.' : '')}}"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)"
 					ng-keyup="handleBoardKeypress($event, answer)"
@@ -198,7 +197,7 @@
 					ng-click="changePage('previous')"
 					ng-class="{'shown': currentPage >= 1}"
 					ng-disabled="currentPage < 1"
-					aria-label="{{'Return to page ' + currentPage + ' of ' + totalPages + '.'}}">
+					aria-label="{{'Return to page ' + currentPage + ' of ' + totalPages + '. ' + completePerPage[currentPage] + ' of ' + pages[currentPage].questions.length + ' matches complete for the current page.' }}">
 					Previous Page
 				</button>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
@@ -209,7 +208,7 @@
 					ng-click="changePage('next')"
 					ng-class="{'shown': currentPage+1 < totalPages}"
 					ng-disabled="currentPage+1 >= totalPages"
-					aria-label="{{'Advance to page ' + (currentPage+2) + ' of ' + totalPages + '.'}}">
+					aria-label="{{ 'Advance to page ' + (currentPage+2) + ' of ' + totalPages + '. ' + completePerPage[currentPage] + ' of ' + pages[currentPage].questions.length + ' matches complete for the current page.' }}">
 					Next Page
 				</button>
 			</section>

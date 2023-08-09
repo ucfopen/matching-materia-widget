@@ -19,6 +19,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	$scope.totalItems = 0
 	$scope.setCreated = false
 
+	$scope.completePerPage = []
+
 	$scope.qset = {}
 
 	$scope.showInstructions = false
@@ -39,11 +41,15 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	CIRCLE_OFFSET = 61
 	PROGRESS_BAR_LENGTH = 160
 
+	_boardElement = document.getElementById('gameboard')
+
 	materiaCallbacks.start = (instance, qset) ->
 		$scope.qset = qset
 		$scope.title = instance.name
 		$scope.totalItems = qset.items[0].items.length
 		$scope.totalPages = Math.ceil $scope.totalItems/ITEMS_PER_PAGE
+
+		document.title = instance.name + ' Materia widget'
 
 		# set up the pages
 		for [1..$scope.totalPages]
@@ -51,6 +57,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.selectedQA.push {question:-1, answer:-1}
 			$scope.questionCircles.push []
 			$scope.answerCircles.push []
+			$scope.completePerPage.push 0
 
 		_itemIndex = 0
 		_pageIndex = 0
@@ -154,7 +161,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.pageAnimate = false
 		, ANIMATION_DURATION*1.1
 
-		document.getElementById('gameboard').focus()
+		if _boardElement then _boardElement.focus()
 		if direction == 'next' then _assistiveNotification 'Page incremented.'
 		else if direction == 'previous' then _assistiveNotification 'Page decremented.'
 
@@ -243,6 +250,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 			_pushMatch()
 
+			_updateCompletionStatus()
+
 			_applyCircleColor()
 
 			_clearSelections()
@@ -257,6 +266,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	_clearSelections = () ->
 		$scope.selectedQA[$scope.currentPage].question = -1
 		$scope.selectedQA[$scope.currentPage].answer = -1
+
+	_updateCompletionStatus = () ->
+		$scope. completePerPage  = []
+		for match in $scope.matches
+			if !$scope.completePerPage[match.matchPageId] then $scope.completePerPage[match.matchPageId] = 1
+			else $scope.completePerPage[match.matchPageId]++
 
 	_updateLines = () ->
 		$scope.lines = []
@@ -387,7 +402,6 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].question = indexId
 
-		console.log($scope.getMatchWith($scope.selectedQuestion))
 		_checkForMatches()
 
 	$scope.selectAnswer = (selectionItem) ->
@@ -408,13 +422,15 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		switch $scope.showInstructions
 			when false
 				$timeout ->
-					document.getElementById('dialog-dismiss').focus()
-					document.getElementById('gameboard').setAttribute('inert', true)
+					dismissElement = document.getElementById('dialog-dismiss')
+					if dismissElement then dismissElement.focus()
+					if _boardElement then _boardElement.setAttribute('inert', true)
 
 			when true
 				$timeout ->
-					document.getElementById('gameboard').removeAttribute('inert')
-					document.getElementById('instructions-btn').focus()
+					if _boardElement then _boardElement.removeAttribute('inert')
+					instructionsElement = document.getElementById('instructions-btn')
+					if instructionsElement then instructionsElement.focus()
 
 		$scope.showInstructions = !$scope.showInstructions
 
@@ -425,9 +441,17 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				if item and item.type == 'question' then $scope.selectQuestion item
 				if item and item.type == 'answer' then $scope.selectAnswer item
 			when 'ArrowLeft'
-				if item.type == 'answer' then document.getElementsByClassName('column1')[0].getElementsByClassName('word')[0].focus()
+				try
+					if item.type == 'answer' then document.getElementsByClassName('column1')[0].getElementsByClassName('word')[0].focus()
+					event.preventDefault()
+				catch error
+					console.warn error
 			when 'ArrowRight'
-				if item.type == 'question' then document.getElementsByClassName('column2')[0].getElementsByClassName('word')[0].focus()
+				try
+					if item.type == 'question' then document.getElementsByClassName('column2')[0].getElementsByClassName('word')[0].focus()
+					event.preventDefault()
+				catch error
+					console.warn error
 
 	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items
@@ -455,10 +479,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			[qsetItems[index], qsetItems[randomIndex]] = [qsetItems[randomIndex], qsetItems[index]]
 
 	_assistiveNotification = (msg) ->
-		document.getElementById('assistive-notification').innerHTML = msg
+		notificationEl = document.getElementById('assistive-notification')
+		if notificationEl then notificationEl.innerHTML = msg
 
 	_assistiveAlert = (msg) ->
-		document.getElementById('assistive-alert').innerHTML = msg
+		alertEl = document.getElementById('assistive-alert')
+		if alertEl then alertEl.innerHTML = msg
 
 	Materia.Engine.start materiaCallbacks
 ]
