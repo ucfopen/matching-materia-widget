@@ -480,10 +480,10 @@ describe('Matching Player Controller', function(){
 		materiaCallbacks.start(widgetInfo, qset.data);
 		setupQA();
 
-		$scope.selectQuestion($scope.pages[0].questions[1]);
-		$scope.selectAnswer($scope.pages[0].answers[1]);
+		$scope.selectQuestion($scope.test.questions[1]);
+		$scope.selectAnswer($scope.test.answers[1]);
 
-		expect($scope.getMatchWith($scope.pages[0].questions[1])).toBe($scope.pages[0].answers[1].text)
+		expect($scope.getMatchWith($scope.test.questions[1])).toBe($scope.test.answers[1].text)
 	});
 
 });
