@@ -49,8 +49,13 @@ html, body {
 	height           : 50px;
 	background-color : #3498DB;
 	h1 {
-		text-align : center;
-		margin-top : 5px;
+		height: 45px;
+		width: 72%;
+		margin: 5px 0 0 0;
+		padding-left: 30px;
+		text-align : left;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 
 	.instructions-btn {
