@@ -480,12 +480,31 @@ describe('Matching Player Controller', function(){
 		materiaCallbacks.start(widgetInfo, qset.data);
 		setupQA();
 
-		$scope.test.answers[1].text = 'test';
+		questions = [{
+			text: 'test-question',
+			id: 0,
+			pageId: 0,
+			type: 'question',
+			asset: 'undefined'
+		}];
 
-		$scope.selectQuestion($scope.test.questions[1]);
-		$scope.selectAnswer($scope.test.answers[1]);
+		answers = [{
+			text: 'test-answer',
+			id: 0,
+			pageId: 0,
+			type: 'answer',
+			asset: 'undefined'
+		}];
 
-		expect($scope.getMatchWith($scope.test.questions[1])).toBe('test');
+		$scope.pages[0].questions = questions;
+		$scope.pages[0].answers = answers;
+
+		$scope.selectQuestion(questions[0]);
+		$scope.selectAnswer(answers[0]);
+
+		console.log($scope.matches);
+
+		expect($scope.getMatchWith($scope.pages[0].questions[0])).toBe($scope.pages[0].answers[0].text);
 	});
 
 });
