@@ -49,10 +49,48 @@ html, body {
 	height           : 50px;
 	background-color : #3498DB;
 	h1 {
-		text-align : center;
-		margin-top : 5px;
+		height: 45px;
+		width: 72%;
+		margin: 5px 0 0 0;
+		padding-left: 30px;
+		text-align : left;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.instructions-btn {
+		position: absolute;
+		right: 15px;
+		top: 13px;
+
+		padding: 2px 4px;
+
+		background: none;
+		border: none;
+		border-radius: 3px;
+
+		color: #fff;
+		font-size: 14px;
+		font-family: 'CorbelBold', sans-serif;
+
+		cursor: pointer;
+
+		&:hover, &:focus {
+			background: #6bc4ff;
+		}
 	}
 }
+
+.assistive-element {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	top: 999px;
+	left: 999px;
+
+	overflow: hidden;
+}
+
 .unselectable {
 	opacity : 0.6;
 	-webkit-transition : 0.2s;
@@ -68,6 +106,12 @@ html, body {
 
 	.seek-bar {
 		position: relative;
+
+		input {
+			&:focus {
+				background-color: #c2ffe7;
+			}
+		}
 	}
 
 	.seek-bar:before {
@@ -80,10 +124,15 @@ html, body {
 		bottom: 25%;
 	}
 
-	.play-btn:before {
+	.play-btn {
+
+		border: none;
+
+		&:before {
 		position: absolute;
 		left: 6px;
 		top: 1px;
+		}
 	}
 }
 
@@ -118,6 +167,94 @@ html, body {
 	}
 	.seek-bar input::-ms-range-thumb {
 		background-color: #2d896a;
+	}
+}
+
+.instructions-dialog {
+	position: absolute;
+	display: none;
+	z-index: 100;
+	top: 70px;
+	left: 50%;
+	width: 500px;
+	height: 225px;
+
+	margin-left: -250px;
+
+	border: none;
+	border-top: solid 3px #354c6c;
+	border-bottom: solid 3px #0c1522;
+	border-radius: 10px;
+	background: #1f2f46;
+	color: #fff;
+
+	text-align: center;
+
+	&.show {
+		display: block;
+	}
+
+	&:focus {
+		border-top: solid 3px #4c7bc2;
+	}
+
+	#instructions-dialog-caption {
+		display: none;
+	}
+
+	header {
+		font-size: 18px;
+		text-align: center;
+	}
+
+	p {
+		text-align: left;
+
+		span.highlight {
+			display: inline-block;
+			padding: 2px 4px;
+			
+			border-radius: 3px;
+			background: #1ABC9C;
+		}
+	}
+
+	button {
+		position: absolute;
+		bottom: 10px;
+		left: 50%;
+		width: 90px;
+		height: 35px;
+		margin-left: -45px;
+		padding: 5px 5px 10px 5px;
+		border: none;
+		border-bottom: solid 3px #BE712A;
+		border-radius: 10px;
+		color: #fff;
+		font-size: 18px;
+		font-family: 'CorbelBold', sans-serif;
+		background: #E58133;
+
+		cursor: pointer;
+
+		&:hover, &:focus {
+			background-color: #E2965A;
+			border-bottom-color: #D3843B;
+		}
+	}
+}
+
+.modal-cover {
+	position: absolute;
+	display: none;
+	z-index: 99;
+	width: 100%;
+	height: 100%;
+
+	background: rgba(0,0,0,.65);
+
+	&.show {
+		display: block;
 	}
 }
 
@@ -398,7 +535,7 @@ html, body {
 					background-color    : #5B656D;
 					border-bottom-color : #444B51;
 				}
-				&:hover {
+				&:hover, &:focus {
 					.word-text {
 						background-color    : #627D92;
 						border-bottom-color : #4F6576;
@@ -406,7 +543,7 @@ html, body {
 				}
 			}
 
-			&:hover {
+			&:hover, &:focus {
 				.word-text {
 					background-color    : #2ECC71;
 					border-bottom-color : #25A55B;
@@ -415,10 +552,6 @@ html, body {
 			}
 		}
 	}
-}
-
-.button {
-	cursor: pointer;
 }
 
 footer {
@@ -469,11 +602,15 @@ footer {
 			margin           : 0 0 0 -45px;
 			padding          : 5px;
 			border-radius    : 10px;
+			border           : none;
 			transition       : 0.4s;
 			opacity          : 0;
 			pointer-events   : none;
-			&:hover {
-				background-color : rgb(55,61,66);
+			font-family      : 'CorbelBold', sans-serif;
+			font-size        : 16px;
+			color            : #fff;
+			&:hover, &:focus {
+				background-color : #6E91B5;
 				transition : 0.2s;
 			}
 			&.glowing {
@@ -482,6 +619,7 @@ footer {
 				animation-name            : glowing;
 				animation-duration        : 1.5s;
 				animation-iteration-count : infinite;
+				cursor: pointer;
 			}
 		}
 	}
@@ -497,17 +635,23 @@ footer {
 		margin-left                : -250px;
 		border-bottom-left-radius  : 10px;
 		border-bottom-right-radius : 10px;
-		.button {
+
+		button {
 			position         : absolute;
 			z-index          : 10;
+			color            : #FFFFFF;
 			background-color : #E58133;
 			text-align       : center;
+			border           : 0px;
 			border-radius    : 10px;
 			border-bottom    : 3px solid #BE712A;
+			font-family      : 'CorbelBold', sans-serif;
+			font-size        : 20px;
 			margin           : 5px;
 			padding          : 5px;
 			width            : 140px;
 			transition       : 0.2s;
+			cursor: pointer;
 			&:hover {
 				background-color    : #E2965A;
 				border-bottom-color : #D3843B;

@@ -31,5 +31,5 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: build/_output/*
         tag: ${{ github.ref }}
-        overwrite: false
+        overwrite: true
         file_glob: true

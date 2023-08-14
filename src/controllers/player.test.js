@@ -93,6 +93,12 @@ describe('Matching Player Controller', function(){
 		expect($scope.pages).toHaveLength(2);
 	});
 
+	it('should display the keyboard instructions', function () {
+		materiaCallbacks.start(widgetInfo, qset.data);
+		$scope.toggleInstructions();
+		expect($scope.showInstructions).toBe(true);
+	});
+
 	it('should change to the previous page', inject(function ($timeout) {
 		materiaCallbacks.start(widgetInfo, qset.data);
 		Materia.Engine.getImageAssetUrl
@@ -468,6 +474,18 @@ describe('Matching Player Controller', function(){
 		materiaCallbacks.start(widgetInfo, smallQset.data);
 		expect($scope.pages[0].questions[0].text).toEqual('cambiar');
 		expect($scope.pages[0].answers[0].text).toEqual('to change');
+	});
+
+	it('should correctly report the text of a match', function() {
+		materiaCallbacks.start(widgetInfo, qset.data);
+		setupQA();
+
+		$scope.test.answers[1].text = 'test';
+
+		$scope.selectQuestion($scope.test.questions[1]);
+		$scope.selectAnswer($scope.test.answers[1]);
+
+		expect($scope.getMatchWith($scope.test.questions[1])).toBe('test');
 	});
 
 });

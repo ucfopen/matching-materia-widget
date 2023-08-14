@@ -19,7 +19,11 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	$scope.totalItems = 0
 	$scope.setCreated = false
 
+	$scope.completePerPage = []
+
 	$scope.qset = {}
+
+	$scope.showInstructions = false
 
 	# these are used for animation
 	$scope.pageAnimate = false
@@ -37,11 +41,15 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	CIRCLE_OFFSET = 61
 	PROGRESS_BAR_LENGTH = 160
 
+	_boardElement = document.getElementById('gameboard')
+
 	materiaCallbacks.start = (instance, qset) ->
 		$scope.qset = qset
 		$scope.title = instance.name
 		$scope.totalItems = qset.items[0].items.length
 		$scope.totalPages = Math.ceil $scope.totalItems/ITEMS_PER_PAGE
+
+		document.title = instance.name + ' Materia widget'
 
 		# set up the pages
 		for [1..$scope.totalPages]
@@ -49,6 +57,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			$scope.selectedQA.push {question:-1, answer:-1}
 			$scope.questionCircles.push []
 			$scope.answerCircles.push []
+			$scope.completePerPage.push 0
 
 		_itemIndex = 0
 		_pageIndex = 0
@@ -145,11 +154,16 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.currentPage-- unless $scope.currentPage <= 0
 			if direction == 'next'
 				$scope.currentPage++ unless $scope.currentPage >= $scope.totalPages - 1
+
 		, ANIMATION_DURATION/3
 
 		$timeout ->
 			$scope.pageAnimate = false
 		, ANIMATION_DURATION*1.1
+
+		if _boardElement then _boardElement.focus()
+		if direction == 'next' then _assistiveNotification 'Page incremented.'
+		else if direction == 'previous' then _assistiveNotification 'Page decremented.'
 
 
 	$scope.checkForQuestionAudio = (index) ->
@@ -166,6 +180,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			answerIndex: $scope.selectedQA[$scope.currentPage].answer
 			matchPageId: $scope.currentPage
 		}
+
+		if $scope.matches.length == $scope.totalItems then _assistiveAlert 'All matches complete. The done button is now available.'
 
 	_applyCircleColor = () ->
 		# find appropriate circle
@@ -229,7 +245,12 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
 				$scope.matches.splice indexOfAnswer, 1
 
+			_assistiveAlert $scope.pages[$scope.currentPage].questions[$scope.selectedQA[$scope.currentPage].question].text + ' matched with ' + 
+					$scope.pages[$scope.currentPage].answers[$scope.selectedQA[$scope.currentPage].answer].text
+
 			_pushMatch()
+
+			_updateCompletionStatus()
 
 			_applyCircleColor()
 
@@ -239,9 +260,18 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 			$scope.unapplyHoverSelections()
 
+		else if $scope.selectedQA[$scope.currentPage].question != -1 then _assistiveNotification $scope.selectedQuestion.text + ' selected.'
+		else if $scope.selectedQA[$scope.currentPage].answer != -1 then _assistiveNotification $scope.selectedAnswer.text + ' selected.'
+
 	_clearSelections = () ->
 		$scope.selectedQA[$scope.currentPage].question = -1
 		$scope.selectedQA[$scope.currentPage].answer = -1
+
+	_updateCompletionStatus = () ->
+		$scope. completePerPage  = []
+		for match in $scope.matches
+			if !$scope.completePerPage[match.matchPageId] then $scope.completePerPage[match.matchPageId] = 1
+			else $scope.completePerPage[match.matchPageId]++
 
 	_updateLines = () ->
 		$scope.lines = []
@@ -290,6 +320,15 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			return $scope.matches.some( (match) -> match.answerId == item.id)
 
 		return false
+
+	$scope.getMatchWith = (item) ->
+		if item.type == 'question'
+			a = $scope.matches.find( (match) -> match.questionId == item.id)
+			if a then return $scope.pages[a.matchPageId].answers[a.answerIndex].text
+
+		else if item.type == 'answer'
+			q = $scope.matches.find( (match) -> match.answerId == item.id)
+			if q then return $scope.pages[q.matchPageId].questions[q.questionIndex].text
 
 	$scope.drawPrelineToRight = (hoverItem) ->
 		elementId = hoverItem.id
@@ -362,6 +401,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.selectedQuestion = $scope.pages[$scope.currentPage].questions[indexId]
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].question = indexId
+
 		_checkForMatches()
 
 	$scope.selectAnswer = (selectionItem) ->
@@ -374,6 +414,44 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		# selectedQA stores the index of the current selected answer and question for a particular page
 		$scope.selectedQA[$scope.currentPage].answer = indexId
 		_checkForMatches()
+
+	# toggle keyboard instructions modal
+	# certain actions have to be performed on the native dom element, not abstracted through angularjs
+	# ng-attr-inert would retain the attribute, which must be completely removed to make elements non-inert again
+	$scope.toggleInstructions = () ->
+		switch $scope.showInstructions
+			when false
+				$timeout ->
+					dismissElement = document.getElementById('dialog-dismiss')
+					if dismissElement then dismissElement.focus()
+					if _boardElement then _boardElement.setAttribute('inert', true)
+
+			when true
+				$timeout ->
+					if _boardElement then _boardElement.removeAttribute('inert')
+					instructionsElement = document.getElementById('instructions-btn')
+					if instructionsElement then instructionsElement.focus()
+
+		$scope.showInstructions = !$scope.showInstructions
+
+	# manage keypress events when words are focused
+	$scope.handleBoardKeypress = (event, item = null) ->
+		switch event.key
+			when 'Enter'
+				if item and item.type == 'question' then $scope.selectQuestion item
+				if item and item.type == 'answer' then $scope.selectAnswer item
+			when 'ArrowLeft'
+				try
+					if item.type == 'answer' then document.getElementsByClassName('column1')[0].getElementsByClassName('word')[0].focus()
+					event.preventDefault()
+				catch error
+					console.warn error
+			when 'ArrowRight'
+				try
+					if item.type == 'question' then document.getElementsByClassName('column2')[0].getElementsByClassName('word')[0].focus()
+					event.preventDefault()
+				catch error
+					console.warn error
 
 	$scope.submit = () ->
 		qsetItems = $scope.qset.items[0].items
@@ -399,6 +477,14 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		for index in [1..qsetItems.length-1]
 			randomIndex = Math.floor Math.random() * (index + 1)
 			[qsetItems[index], qsetItems[randomIndex]] = [qsetItems[randomIndex], qsetItems[index]]
+
+	_assistiveNotification = (msg) ->
+		notificationEl = document.getElementById('assistive-notification')
+		if notificationEl then notificationEl.innerHTML = msg
+
+	_assistiveAlert = (msg) ->
+		alertEl = document.getElementById('assistive-alert')
+		if alertEl then alertEl.innerHTML = msg
 
 	Materia.Engine.start materiaCallbacks
 ]
