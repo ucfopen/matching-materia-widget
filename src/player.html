@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Materia Widget Player</title>
+		<title>Matching Materia Widget</title>
 		<meta charset="utf-8" />
 
 		<!-- STYLESHEETS -->
@@ -18,13 +18,31 @@
 
 		<header id="header">
 			<h1>{{ title }}</h1>
+			<button id="instructions-btn" class="instructions-btn" ng-click="toggleInstructions()" aria-describedby="screenreader-instructions">Keyboard Instructions</button>
 		</header>
 
-		<section class="gameboard"
-			ng-class="{'pageAnimate': pageAnimate}">
+		<div class="assistive-element" id="assistive-notification" aria-live="polite"></div>
+		<div class="assistive-element" id="assistive-alert" aria-live="assertive"></div>
+
+		<div class="assistive-element" id="screenreader-instructions">
+			Select a question from the question list by using space or enter. Match it to an answer by selecting
+			one from the answer list and using space or enter to confirm your choice. Use the left and right arrow keys to quickly switch
+			between the question and answer lists.
+		</div>
+		<section
+			id="gameboard"
+			class="gameboard"
+			ng-class="{'pageAnimate': pageAnimate}"
+			aria-label="Game board."
+			role="application"
+			tabindex="0">
 			<ul class="column column1">
 				<li class="word"
+					tabindex="0"
+					role="term"
+					aria-label="{{'Question: ' + ($index+1) + ' of ' + pages[currentPage].questions.length + ': ' + question.text + ', ' + (isInMatch(question) ? 'Matched with: ' + getMatchWith(question) : 'Unmatched.') + (checkForQuestionAudio($index) ? ' This question has an audio clue.' : '')}}"
 					ng-repeat="question in pages[currentPage].questions"
+					ng-keyup="handleBoardKeypress($event, question)"
 					ng-click="selectQuestion(question)"
 					ng-mouseover="drawPrelineToLeft(question)"
 					ng-mouseleave="unapplyHoverSelections()"
@@ -128,8 +146,12 @@
 
 			<ul class="column column2">
 				<li class="word"
+					tabindex="0"
+					role="definition"
+					aria-label="{{'Answer. ' + ($index+1) + ' of ' + pages[currentPage].answers.length + ': ' + answer.text + ', ' + (isInMatch(answer) ? 'Matched with: ' + getMatchWith(answer) : 'Unmatched.') + (checkForAnswerAudio($index) ? ' This answer has an audio clue.' : '')}}"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)"
+					ng-keyup="handleBoardKeypress($event, answer)"
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}">
@@ -169,20 +191,24 @@
 
 		<footer ng-class="{'onTop': pageAnimate}">
 			<section id="page-selector">
-				<span class="button" id="prev-button"
+				<button id="prev-button"
 					ng-click="changePage('previous')"
-					ng-class="{'shown': currentPage >= 1}">
+					ng-class="{'shown': currentPage >= 1}"
+					ng-disabled="currentPage < 1"
+					aria-label="{{'Return to page ' + currentPage + ' of ' + totalPages + '. ' + completePerPage[currentPage] + ' of ' + pages[currentPage].questions.length + ' matches complete for the current page.' }}">
 					Previous Page
-				</span>
+				</button>
 				<span id="page-num" ng-class="{'animateRotationRight': pageAnimate && pageNext,
 					'animateRotationLeft': pageAnimate && !pageNext}">
 					Page <span>{{currentPage+1}}</span>/<span>{{totalPages}}</span>
 				</span>
-				<span class="button" id="next-button"
+				<button id="next-button"
 					ng-click="changePage('next')"
-					ng-class="{'shown': currentPage+1 < totalPages}">
+					ng-class="{'shown': currentPage+1 < totalPages}"
+					ng-disabled="currentPage+1 >= totalPages"
+					aria-label="{{ 'Advance to page ' + (currentPage+2) + ' of ' + totalPages + '. ' + completePerPage[currentPage] + ' of ' + pages[currentPage].questions.length + ' matches complete for the current page.' }}">
 					Next Page
-				</span>
+				</button>
 			</section>
 
 			<section id="submit">
@@ -198,12 +224,31 @@
 						</rect>
 					</svg>
 				</div>
-				<div class="button" id="submit-button" ng-click="submit()"
-					ng-class="{'glowing': matches.length == totalItems && setCreated}">
+				<button id="submit-button"
+					aria-label="Submit for scoring"
+					ng-click="submit()"
+					ng-class="{'glowing': matches.length == totalItems && setCreated}" ng-disabled="matches.length != totalItems && setCreated">
 					Done
-				</div>
+			</button>
 			</section>
 		</footer>
+		<dialog
+			class="instructions-dialog"
+			ng-class="{'show' : showInstructions }"
+			role="alertdialog"
+			aria-modal="true"
+			aria-describedby="instructions-dialog-caption"
+			tabindex="0">
+			<span id="instructions-dialog-caption">Use tab and shift-tab to move between items and buttons at the bottom.
+				Use enter or space to select an item to match. Use left arrow and right arrow to quickly switch between the left and right side.
+			</span>
+			<header>Keyboard Instructions</header>
+			<p>Use <span class="highlight">tab</span> and <span class="highlight">shift+tab</span> to move between items and buttons at the bottom.</p>
+			<p>Use <span class="highlight">enter</span> or <span class="highlight">space</span> to select an item to match.</p>
+			<p>Use <span class="highlight">left arrow</span> and <span class="highlight">right arrow</span> to quickly switch between the left and right side.</p>
+			<button id="dialog-dismiss" class="dismiss" ng-click="toggleInstructions()" tabindex="0" autofocus>Okay</button>
+		</dialog>
+		<div class="modal-cover" ng-class="{'show' : showInstructions }"></div>
 		<!-- MAIN PLAYER SCRIPT -->
 		<script src="player.js"></script>
 	</body>

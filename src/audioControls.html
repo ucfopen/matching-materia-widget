@@ -1,11 +1,14 @@
 <div class='audio-controls'>
-	<span class='play-btn'
+	<button class='play-btn'
+		aria-label="Play audio clue."
 		ng-class="{'paused' : audio.paused}"
-		ng-click='$event.stopPropagation(); play()'>
-	</span>
+		ng-click='$event.stopPropagation(); play()'
+		ng-keypress="$event.stopPropagation()">
+	</button>
 	<span class='time'>
 		<span class='seek-bar'>
 			<input type='range'
+				role="slider"
 				min='0.0'
 				max='{{ duration }}'
 				step='0.1'

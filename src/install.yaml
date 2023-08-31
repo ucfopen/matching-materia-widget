@@ -37,3 +37,5 @@ meta_data:
     Students must match one set of words or
     phrases to a corresponding word, phrase,
     or definition.
+  accessibility_keyboard: Full
+  accessibility_reader: Full
