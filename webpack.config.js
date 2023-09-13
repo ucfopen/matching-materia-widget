@@ -15,8 +15,8 @@ copy.push({
 const entries = {
 	'creator': [
 			path.join(srcPath, 'creator.html'),
-			path.join(srcPath, 'controllers', 'creator.coffee'),
 			path.join(srcPath, 'modules', 'matching.coffee'),
+			path.join(srcPath, 'controllers', 'creator.coffee'),
 			path.join(srcPath, 'directives', 'audioControls.coffee'),
 			path.join(srcPath, 'directives', 'focusMe.coffee'),
 			path.join(srcPath, 'directives', 'ngEnter.coffee'),
@@ -25,8 +25,8 @@ const entries = {
 	],
 	'player': [
 			path.join(srcPath, 'player.html'),
-			path.join(srcPath, 'controllers', 'player.coffee'),
 			path.join(srcPath, 'modules', 'matching.coffee'),
+			path.join(srcPath, 'controllers', 'player.coffee'),
 			path.join(srcPath, 'directives', 'audioControls.coffee'),
 			path.join(srcPath, 'player.scss'),
 	],
