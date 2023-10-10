@@ -244,7 +244,7 @@ angular.module('matching', [])
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
 				$scope.matches.splice indexOfAnswer, 1
 
-			_assistiveAlert $scope.pages[$scope.currentPage].questions[$scope.selectedQA[$scope.currentPage].question].text + ' matched with ' + 
+			_assistiveAlert $scope.pages[$scope.currentPage].questions[$scope.selectedQA[$scope.currentPage].question].text + ' matched with ' +
 					$scope.pages[$scope.currentPage].answers[$scope.selectedQA[$scope.currentPage].answer].text
 
 			_pushMatch()
@@ -487,4 +487,3 @@ angular.module('matching', [])
 
 	Materia.Engine.start materiaCallbacks
 ]
-angular.bootstrap(document, ['matching'])
