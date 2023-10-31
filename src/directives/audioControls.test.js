@@ -12,6 +12,11 @@ describe('audioControls Directive', function(){
 	var $compile
 	var element
 
+	beforeAll(() => {
+		require('../modules/matching.coffee')
+		require('./audioControls.coffee')
+	})
+
 	beforeEach(() => {
 		jest.resetModules()
 
@@ -31,8 +36,6 @@ describe('audioControls Directive', function(){
 
 		// load the required code
 		angular.mock.module('matching')
-		require('../modules/matching.coffee')
-		require('./audioControls.coffee')
 	})
 
 	afterEach(() => {

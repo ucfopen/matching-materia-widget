@@ -13,10 +13,8 @@
 		<!-- YOUR PREREQUISITES -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
 
-		<!-- MAIN PLAYER SCRIPT -->
-		<script src="player.js"></script>
 	</head>
-	<body ng-app='matching' ng-controller='matchingPlayerCtrl'>
+	<body ng-controller='matchingPlayerCtrl'>
 
 		<header id="header">
 			<h1>{{ title }}</h1>
@@ -251,5 +249,7 @@
 			<button id="dialog-dismiss" class="dismiss" ng-click="toggleInstructions()" tabindex="0" autofocus>Okay</button>
 		</dialog>
 		<div class="modal-cover" ng-class="{'show' : showInstructions }"></div>
+		<!-- MAIN PLAYER SCRIPT -->
+		<script src="player.js"></script>
 	</body>
 </html>

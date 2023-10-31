@@ -1,6 +1,5 @@
-Matching = angular.module 'matching', ['ngAnimate']
-
-Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
+angular.module 'matching', ['ngAnimate']
+.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	_qset = {}
 	materiaCallbacks = {}
 	# Stores data to be gathered on save.

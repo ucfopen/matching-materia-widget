@@ -1,6 +1,6 @@
-Matching = angular.module 'matching'
+angular.module 'matching'
 
-Matching.directive 'ngEnter', ->
+.directive 'ngEnter', ->
 	return (scope, element, attrs) ->
 		element.bind("keydown keypress", (event) ->
 			if(event.which == 13)
