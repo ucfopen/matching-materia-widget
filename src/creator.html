@@ -31,7 +31,7 @@
 			<div class="questionBankDialog">
 				<div class="enable-qb-question">
 					<strong>Enable question bank? </strong>
-					<div>
+					<div class="enable-qb-options">
 						<span>
 							<input type="radio" ng-model="enableQuestionBank" ng-value=false> No</input>
 							<input type="radio" ng-model="enableQuestionBank" ng-value=true> Yes</input>
@@ -41,14 +41,14 @@
 				<div>
 					<span ng-show="enableQuestionBank" >
 						<strong>How many questions to ask? </strong>
-						<div>
+						<div class="numInput-wrapper">
 							<input class="numInput" type="number" ng-model="questionBankVal" step="1">
 							<span> out of {{widget.wordPairs.length}} </span>
 						</div>
 					</span>
 				</div>
 			</div>
-			<button class="dialogCloseButton" ng-click="(questionBankVal <= widget.wordPairs.length && questionBankVal > 0) && (questionBankDialog = !questionBankDialog)">Okay</button>
+			<button class="dialogCloseButton" ng-click="questionBankDialog = false">Confirm</button>
 		</div>
 		<section class='main-area'>
 			<div ng-show= "questionBankDialog" class="overlay"></div>

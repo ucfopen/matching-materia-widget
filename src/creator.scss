@@ -101,27 +101,43 @@ body {
 		align-items: center;
 		justify-content: center;
 
-		.numInput {
-			width: 30px;
-			margin-top: 10px;
-			margin-bottom: 10px;
+		.numInput-wrapper {
+			display: flex;
+			justify-content: center;
+			width: 100%;
+			align-items: center;
+
+			.numInput {
+				width: 30px;
+				margin: 2px 5px 0 0;
+			}
 		}
 
 		.enable-qb-question {
 			margin-top: 15px;
 			margin-bottom: 15px;
+
+			.enable-qb-options {
+				display: flex;
+				justify-content: center;
+			}
 		}
 
 	}
 
 	.dialogCloseButton {
 		display: block;
-		color: white;
+		color: black;
 		border-radius: 3px;
 		margin-bottom: 10px;
 		height: 30px;
-		width: 60px;
-		background-color: #3393e3;
+		width: 80px;
+		background-color: #7bd9aa;
+
+		&:hover {
+			background-color: #61ac86;
+			color: white;
+		}
 	}
 }
 
@@ -149,12 +165,17 @@ body {
 
 	.qb-button {
 		height: 40px;
-		width: 100px;
+		width: 120px;
 		align-content: center;
 		color: black;
-		background-color: #c5e6a2;
-		border: 2px solid #3393e3;
-		border-radius: 3px;
+		background-color: #1ABC9C;
+		box-shadow: 2px 2px 5px white;
+		border-radius: 5px;
+
+		&:hover {
+			background-color: #127e69;
+			color: white;
+		}
 	}
 
 	.bottom {

@@ -15,6 +15,15 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.enableQuestionBank = false
 	$scope.questionBankVal = 1
 
+	$scope.$watch('questionBankVal', (newVal, oldVal) ->
+		if $scope.widget.wordPairs.length == 0
+			$scope.questionBankVal = 0
+		else if newVal < 1
+			$scope.questionBankVal = 1
+		else if newVal > $scope.widget.wordPairs.length
+			$scope.questionBankVal = $scope.widget.wordPairs.length
+	)
+
 	# Adds and removes a pair of textareas for users to input a word pair.
 	$scope.addWordPair = (q=null, a=null, media=[0,0], id='') ->
 		$scope.widget.wordPairs.push {question:q, answer:a, media:media, id:id}
