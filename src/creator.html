@@ -20,6 +20,7 @@
 	</head>
 	<body ng-app='matching' ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>
+		<div ng-show= "questionBankDialog" class="overlay"></div>
 		<div id='header'>
 			<div class='logo'></div>
 			<h1 id='title' ng-bind='widget.title' ng-click='showTitleDialog = true'></h1>
@@ -48,10 +49,9 @@
 					</span>
 				</div>
 			</div>
-			<button class="dialogCloseButton" ng-click="questionBankDialog = false">Confirm</button>
+			<button class="dialogCloseButton" ng-disabled="questionBankVal < 0 || questionBankVal > widget.wordPairs.length" ng-click="questionBankDialog = false">Confirm</button>
 		</div>
 		<section class='main-area'>
-			<div ng-show= "questionBankDialog" class="overlay"></div>
 			<div class='titles' ng-show='widget.wordPairs.length'>
 				<h1>Left Side</h1>
 				<div class="separate"></div>
