@@ -15,14 +15,15 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.enableQuestionBank = false
 	$scope.questionBankVal = 1
 
-	$scope.$watch('questionBankVal', (newVal, oldVal) ->
-		if $scope.widget.wordPairs.length == 0
-			$scope.questionBankVal = 0
-		else if newVal < 1
-			$scope.questionBankVal = 1
-		else if newVal > $scope.widget.wordPairs.length
-			$scope.questionBankVal = $scope.widget.wordPairs.length
-	)
+	$scope.autoSize = (pair, audio) ->
+		question = pair.question or ''
+		answer = pair.answer or ''
+		len = if question.length > answer.length then question.length else answer.length
+		if audio == true
+			size = if len > 15 then 85 + len * 1.1 else 85
+		else
+			size = if len > 15 then 25 + len * 1.1 else 25
+		height: size + 'px'
 
 	# Adds and removes a pair of textareas for users to input a word pair.
 	$scope.addWordPair = (q=null, a=null, media=[0,0], id='') ->
@@ -93,16 +94,6 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.hideCover = ->
 		$scope.showTitleDialog = $scope.showIntroDialog = $scope.showErrorDialog = false
 
-	$scope.autoSize = (pair, audio) ->
-		question = pair.question or ''
-		answer = pair.answer or ''
-		len = if question.length > answer.length then question.length else answer.length
-		if audio == true
-			size = if len > 15 then 85 + len * 1.1 else 85
-		else
-			size = if len > 15 then 25 + len * 1.1 else 25
-		height: size + 'px'
-
 	$scope.audioUrl = (assetId) ->
 		# use $sce.trustAsResourceUrl to avoid interpolation error
 		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId + ".mp3")
@@ -130,7 +121,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 
 	_buildSaveData = ->
 		_qset.items = []
-		_qset.options = {caseSensitive: null, enableQuestionBank: $scope.enableQuestionBank, questionBankVal: $scope.questionBankVal}
+		_qset.options = {enableQuestionBank: $scope.enableQuestionBank, questionBankVal: $scope.questionBankVal}
 		_qset.items[0] =
 			name: "null"
 			items: []
