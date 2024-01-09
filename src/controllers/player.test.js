@@ -99,6 +99,25 @@ describe('Matching Player Controller', function(){
 		expect($scope.showInstructions).toBe(true);
 	});
 
+	it('should shuffle the questions and answers without disrupting the array', function () {
+		materiaCallbacks.start(widgetInfo, qset.data);
+
+		mock_shuffle = jest.fn($scope._shuffle);
+
+		// Store the initial length of the qset, shuffle, then store the length again
+		qsetItems = $scope.qset.items[0].items;
+		initialArrayLength = qsetItems.length;
+		mock_shuffle(qsetItems);
+		LengthAfterShuffle = $scope.qset.items[0].items.length;
+
+		// Check that the mock function was called and that the shuffle didn't change the length of the array
+		expect(mock_shuffle).toHaveBeenCalled();
+		expect(mock_shuffle).toHaveBeenCalledTimes(1);
+		expect(mock_shuffle).toHaveBeenCalledWith(qsetItems);
+		expect(initialArrayLength).toEqual(LengthAfterShuffle);
+
+	});
+
 	it('should change to the previous page', inject(function ($timeout) {
 		materiaCallbacks.start(widgetInfo, qset.data);
 		Materia.Engine.getImageAssetUrl

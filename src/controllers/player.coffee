@@ -49,7 +49,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 		# Update qset items to only include the number of questions specified in the question bank. Done here since $scope.totalItems depends on it.
 		if qset.options.enableQuestionBank
-			_shuffle qset.items[0].items
+			$scope._shuffle qset.items[0].items
 			qbItemsLength = qset.options.questionBankVal
 			rndStart = Math.floor(Math.random() * (qset.items[0].items.length - qbItemsLength + 1))
 			qset.items[0].items = qset.items[0].items.slice(rndStart, rndStart + qbItemsLength)
@@ -79,8 +79,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 
 		for item in qset.items[0].items
 			if _itemIndex == ITEMS_PER_PAGE or (_pageIndex == $scope.totalPages - 2 && _itemIndex == _splitPoint)
-				_shuffle $scope.pages[_pageIndex].questions
-				_shuffle $scope.pages[_pageIndex].answers
+				$scope._shuffle $scope.pages[_pageIndex].questions
+				$scope._shuffle $scope.pages[_pageIndex].answers
 				_itemIndex = 0
 				_indexShift = 0
 				_pageIndex++
@@ -144,8 +144,8 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			_itemIndex++
 
 		# final shuffling for last page
-		_shuffle $scope.pages[_pageIndex].questions
-		_shuffle $scope.pages[_pageIndex].answers
+		$scope._shuffle $scope.pages[_pageIndex].questions
+		$scope._shuffle $scope.pages[_pageIndex].answers
 		$scope.setCreated = true
 
 		Materia.Engine.setHeight()
@@ -480,7 +480,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 			Materia.Score.submitQuestionForScoring(qsetItems[i].id, mappedQsetItemText, mappedQsetAudioString)
 		Materia.Engine.end true
 
-	_shuffle = (qsetItems) ->
+	$scope._shuffle = (qsetItems) ->
 		# don't shuffle if less than 2 elements
 		return qsetItems unless qsetItems.length >= 2
 		for index in [1..qsetItems.length-1]
