@@ -13,6 +13,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	audioRef = []
 	$scope.questionBankDialog = false
 	$scope.enableQuestionBank = false
+	$scope.questionBankValTemp = 1
 	$scope.questionBankVal = 1
 
 	$scope.autoSize = (pair, audio) ->
@@ -42,6 +43,7 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		_items = qset.items[0].items
 		$scope.enableQuestionBank = if qset.options.enableQuestionBank then qset.options.enableQuestionBank else false
 		$scope.questionBankVal = if qset.options.questionBankVal then qset.options.questionBankVal else 1
+		$scope.questionBankValTemp = if qset.options.questionBankVal then qset.options.questionBankVal else 1
 
 		$scope.$apply ->
 			$scope.widget.title = title
@@ -92,11 +94,18 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 		$scope.hideCover()
 
 	$scope.hideCover = ->
-		$scope.showTitleDialog = $scope.showIntroDialog = $scope.showErrorDialog = false
+		$scope.showTitleDialog = $scope.showIntroDialog = $scope.showErrorDialog = $scope.questionBankDialog = false
+		$scope.questionBankValTemp = $scope.questionBankVal
 
 	$scope.audioUrl = (assetId) ->
 		# use $sce.trustAsResourceUrl to avoid interpolation error
 		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId + ".mp3")
+
+	$scope.validateQuestionBankVal = ->
+		if ($scope.questionBankValTemp >= 1 && $scope.questionBankValTemp <= $scope.widget.wordPairs.length)
+			$scope.questionBankVal = $scope.questionBankValTemp
+		else
+			$scope.questionBankVal = $scope.widget.wordPairs.length
 
 	# prevents duplicate ids
 	createUniqueAudioAnswerId = () ->
