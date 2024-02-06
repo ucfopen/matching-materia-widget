@@ -75,15 +75,15 @@ body {
 	overflow-x: hidden;
 }
 
-.questionBankDialog-wrapper {
+.question-bank-dialog-wrapper {
 	position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	border: 4px solid #1ABC9C;
 	border-radius: 5px;
-	background-color: white;
-	color: black;
+	background-color: #ffffff;
+	color: #000000;
 	height: 200px;
 	width: 300px;
 	display: flex;
@@ -92,7 +92,7 @@ body {
 	flex-direction: column;
 	z-index: 200;
 
-	.questionBankDialog {
+	.question-bank-dialog {
 		margin: 15px;
 		width: 100%;
 		position: relative;
@@ -101,13 +101,13 @@ body {
 		align-items: center;
 		justify-content: center;
 
-		.numInput-wrapper {
+		.num-input-wrapper {
 			display: flex;
 			justify-content: center;
 			width: 100%;
 			align-items: center;
 
-			.numInput {
+			.num-input {
 				width: 30px;
 				margin: 2px 5px 0 0;
 			}
@@ -125,9 +125,9 @@ body {
 
 	}
 
-	.dialogCloseButton {
+	.dialog-close-button {
 		display: block;
-		color: black;
+		color: #000000;
 		border-radius: 3px;
 		margin-bottom: 10px;
 		height: 30px;
@@ -136,12 +136,12 @@ body {
 
 		&:hover {
 			background-color: #61ac86;
-			color: white;
+			color: #ffffff;
 		}
 
 		&:disabled {
 			background-color: #ccc;
-			color: white;
+			color: #ffffff;
 		}
 	}
 }
@@ -172,14 +172,14 @@ body {
 		height: 40px;
 		width: 120px;
 		align-content: center;
-		color: black;
+		color: #000000;
 		background-color: #1ABC9C;
-		box-shadow: 2px 2px 5px white;
-		border-radius: 5px;
+		border-radius  : 5px;
+		border-bottom  : 4px solid #13866f;
 
 		&:hover {
 			background-color: #127e69;
-			color: white;
+			color: #ffffff;
 		}
 	}
 
