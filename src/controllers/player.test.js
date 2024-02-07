@@ -99,23 +99,15 @@ describe('Matching Player Controller', function(){
 		expect($scope.showInstructions).toBe(true);
 	});
 
-	it('should shuffle the questions and answers without disrupting the array', function () {
+	it('should slice the qset if qb is enabled', function () {
+
+		// Enable question bank and set the number of questions to 3
+		qset.data.options = {enableQuestionBank: true, questionBankVal: 3}
+
 		materiaCallbacks.start(widgetInfo, qset.data);
 
-		mock_shuffle = jest.fn($scope._shuffle);
-
-		// Store the initial length of the qset, shuffle, then store the length again
-		qsetItems = $scope.qset.items[0].items;
-		initialArrayLength = qsetItems.length;
-		mock_shuffle(qsetItems);
-		LengthAfterShuffle = $scope.qset.items[0].items.length;
-
-		// Check that the mock function was called and that the shuffle didn't change the length of the array
-		expect(mock_shuffle).toHaveBeenCalled();
-		expect(mock_shuffle).toHaveBeenCalledTimes(1);
-		expect(mock_shuffle).toHaveBeenCalledWith(qsetItems);
-		expect(initialArrayLength).toEqual(LengthAfterShuffle);
-
+		// qset should be sliced to the length given by questionBankVal
+		expect(qset.data.items[0].items.length).toEqual(3);
 	});
 
 	it('should change to the previous page', inject(function ($timeout) {
@@ -493,6 +485,13 @@ describe('Matching Player Controller', function(){
 		materiaCallbacks.start(widgetInfo, smallQset.data);
 		expect($scope.pages[0].questions[0].text).toEqual('cambiar');
 		expect($scope.pages[0].answers[0].text).toEqual('to change');
+	});
+
+	it('should return 0 progress when no items have been matched', function () {
+
+		materiaCallbacks.start(widgetInfo, qset.data);
+		$scope.totalItems = 0;
+		expect($scope.getProgressAmount()).toBe(0);
 	});
 
 	it('should correctly report the text of a match', function() {
