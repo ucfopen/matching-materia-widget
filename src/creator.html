@@ -27,8 +27,9 @@
 			<button
 				class="qb-button"
 				ng-click="questionBankDialog = true"
-				ng-disabled="widget.wordPairs.length < 1">
-				Question Bank
+				ng-disabled="widget.wordPairs.length < 1"
+				ng-class="{'gray-out': enableQuestionBank !== true}">
+				Question Bank: {{enableQuestionBank === true ? "On" : "Off"}}
 			</button>
 			<div class='bottom'></div>
 		</div>
