@@ -104,8 +104,6 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 	$scope.validateQuestionBankVal = ->
 		if ($scope.questionBankValTemp >= 1 && $scope.questionBankValTemp <= $scope.widget.wordPairs.length)
 			$scope.questionBankVal = $scope.questionBankValTemp
-		else
-			$scope.questionBankVal = $scope.widget.wordPairs.length
 
 	# prevents duplicate ids
 	createUniqueAudioAnswerId = () ->

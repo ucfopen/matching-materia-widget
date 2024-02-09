@@ -365,7 +365,7 @@ describe('Matching Creator Controller', function(){
 		$scope.validateQuestionBankVal();
 
 		// expect questionBankVal to change to wordPairs value
-		expect($scope.questionBankVal).toBe(10);
+		expect($scope.questionBankVal).toBe(6);
 
 		// this time questionBankValTemp is valid
 		$scope.questionBankValTemp = 8;
