@@ -41,9 +41,11 @@ Matching.controller 'matchingCreatorCtrl', ['$scope', '$sce', ($scope, $sce) ->
 
 	materiaCallbacks.initExistingWidget = (title, widget, qset, version, baseUrl) ->
 		_items = qset.items[0].items
-		$scope.enableQuestionBank = if qset.options.enableQuestionBank then qset.options.enableQuestionBank else false
-		$scope.questionBankVal = if qset.options.questionBankVal then qset.options.questionBankVal else 1
-		$scope.questionBankValTemp = if qset.options.questionBankVal then qset.options.questionBankVal else 1
+
+		if qset.options
+			$scope.enableQuestionBank = if qset.options.enableQuestionBank then qset.options.enableQuestionBank else false
+			$scope.questionBankVal = if qset.options.questionBankVal then qset.options.questionBankVal else 1
+			$scope.questionBankValTemp = if qset.options.questionBankVal then qset.options.questionBankVal else 1
 
 		$scope.$apply ->
 			$scope.widget.title = title

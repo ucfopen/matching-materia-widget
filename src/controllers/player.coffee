@@ -48,7 +48,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		$scope.title = instance.name
 
 		# Update qset items to only include the number of questions specified in the question bank. Done here since $scope.totalItems depends on it.
-		if qset.options.enableQuestionBank
+		if qset.options && qset.options.enableQuestionBank
 			_shuffle qset.items[0].items
 			qbItemsLength = qset.options.questionBankVal
 			rndStart = Math.floor(Math.random() * (qset.items[0].items.length - qbItemsLength + 1))
