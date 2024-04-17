@@ -213,6 +213,8 @@
 			<div class="box question-bank-dialog"
 				ng-class= '{ show: questionBankDialog }'
 				ng-click= 'hideCover()'>
+				<h1>Question Bank</h1>
+				<p>When the question bank is enabled, the widget can use a subset of word pairs to create a more randomized and unique experience every time the student hits play.</p>
 				<div class="enable-qb-question">
 					<label style="font-weight: bold;">Enable question bank? </label>
 					<div class="enable-qb-options"
@@ -225,7 +227,7 @@
 				</div>
 				<div>
 					<span ng-show="enableQuestionBank" >
-						<label style="font-weight: bold;">How many questions to ask? </label>
+						<label style="font-weight: bold;">How many word pairs per play?</label>
 						<div class="num-input-wrapper"
 							ng-click="$event.stopPropagation()">
 							<input class="num-input" type="number" ng-model="questionBankValTemp" ng-change="validateQuestionBankVal()" step="1">
@@ -233,7 +235,6 @@
 						</div>
 					</span>
 				</div>
-				<p class="qb-warning">If question bank is enabled, questions will be randomized. </p>
 				<button class="dialog-close-button" ng-disabled="questionBankValTemp < 1 || questionBankValTemp > widget.wordPairs.length" ng-click="questionBankDialog = false">Confirm</button>
 			</div>
 		<div class='arrow_box'
