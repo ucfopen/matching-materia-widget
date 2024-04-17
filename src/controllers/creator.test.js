@@ -234,8 +234,8 @@ describe('Matching Creator Controller', function(){
 		//angular's $sce does some weird un/wrapping, usually it would handle this
 		var url = $scope.audioUrl('audioId').$$unwrapTrustedValue();
 
-		expect(Materia.CreatorCore.getMediaUrl).toHaveBeenCalledWith('audioId.mp3');
-		expect(url).toBe('http://mock-url/audioId.mp3');
+		expect(Materia.CreatorCore.getMediaUrl).toHaveBeenCalledWith('audioId');
+		expect(url).toBe('http://mock-url/audioId');
 	});
 
 	it('should import questions without assets', function(){
@@ -345,6 +345,36 @@ describe('Matching Creator Controller', function(){
 		// expect($scope.widget.wordPairs[2].media[1]).toBe('testId2');
 	});
 
+	it('should give default qset options if question bank options are undefined', function () {
+
+		qset.data.options = {};
+		materiaCallbacks.initExistingWidget('matcher', widgetInfo, qset.data);
+
+		expect($scope.enableQuestionBank).toBe(false);
+		expect($scope.questionBankVal).toBe(1);
+		expect($scope.questionBankValTemp).toBe(1);
+	});
+
+	it('should update questionBankVal if questionBankValTemp is valid within the range', function () {
+
+		qset.data.options = {enableQuestionBank: true, questionBankVal: 6};
+		materiaCallbacks.initExistingWidget('matcher', widgetInfo, qset.data);
+
+		// set initial values where questionBankValTemp is invalid
+		$scope.questionBankValTemp = 11;
+		$scope.validateQuestionBankVal();
+
+		// expect questionBankVal to change to wordPairs value
+		expect($scope.questionBankVal).toBe(6);
+
+		// this time questionBankValTemp is valid
+		$scope.questionBankValTemp = 8;
+		$scope.validateQuestionBankVal();
+
+		// expect questionBankVal to be updated to questionBankValTemp
+		expect($scope.questionBankVal).toBe(8);
+
+	});
 
 	it('should autosize correctly', function () {
 		var lessThan15chars = 'small';

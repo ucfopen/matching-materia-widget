@@ -1,6 +1,5 @@
-Matching = angular.module 'matching'
-
-Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
+angular.module('matching', [])
+.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
 	materiaCallbacks = {}
 	$scope.title = ''
 
@@ -46,6 +45,14 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 	materiaCallbacks.start = (instance, qset) ->
 		$scope.qset = qset
 		$scope.title = instance.name
+
+		# Update qset items to only include the number of questions specified in the question bank. Done here since $scope.totalItems depends on it.
+		if qset.options && qset.options.enableQuestionBank
+			_shuffle qset.items[0].items
+			qbItemsLength = qset.options.questionBankVal
+			rndStart = Math.floor(Math.random() * (qset.items[0].items.length - qbItemsLength + 1))
+			qset.items[0].items = qset.items[0].items.slice(rndStart, rndStart + qbItemsLength)
+
 		$scope.totalItems = qset.items[0].items.length
 		$scope.totalPages = Math.ceil $scope.totalItems/ITEMS_PER_PAGE
 
@@ -62,6 +69,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 		_itemIndex = 0
 		_pageIndex = 0
 		_indexShift = 0
+
 		# Splits the the last items over the last two pages
 		_leftover = $scope.totalItems % ITEMS_PER_PAGE
 		_splitPoint = ~~(4 + (_leftover - 1)/2)
@@ -245,7 +253,7 @@ Matching.controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope
 				$scope.answerCircles[$scope.currentPage][match2_AIndex].color = 'c0'
 				$scope.matches.splice indexOfAnswer, 1
 
-			_assistiveAlert $scope.pages[$scope.currentPage].questions[$scope.selectedQA[$scope.currentPage].question].text + ' matched with ' + 
+			_assistiveAlert $scope.pages[$scope.currentPage].questions[$scope.selectedQA[$scope.currentPage].question].text + ' matched with ' +
 					$scope.pages[$scope.currentPage].answers[$scope.selectedQA[$scope.currentPage].answer].text
 
 			_pushMatch()

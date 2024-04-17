@@ -11,19 +11,20 @@
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
 		<script src="materia.creatorcore.js"></script>
 
-		<!-- YOUR PREREQUISITES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
-
-		<!-- MAIN CREATOR SCRIPT -->
-		<script src="creator.js"></script>
 	</head>
-	<body ng-app='matching' ng-controller="matchingCreatorCtrl">
+	<body ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>
 		<div id='header'>
 			<div class='logo'></div>
 			<h1 id='title' ng-bind='widget.title' ng-click='showTitleDialog = true'></h1>
 			<div class='link' ng-click='showTitleDialog = true'>Edit...</div>
+			<button
+				class="qb-button"
+				ng-click="questionBankDialog = true"
+				ng-disabled="widget.wordPairs.length < 1"
+				ng-class="{'gray-out': enableQuestionBank !== true}">
+				Question Bank: {{enableQuestionBank === true ? "On" : "Off"}}
+			</button>
 			<div class='bottom'></div>
 		</div>
 		<section class='main-area'>
@@ -167,10 +168,9 @@
 				Add Pair
 			</button>
 		</section>
-
 		<div id='backgroundcover'
 			ng-click='hideCover()'
-			ng-class='{ show: showTitleDialog || showIntroDialog || showErrorDialog }'>
+			ng-class='{ show: showTitleDialog || showIntroDialog || showErrorDialog || questionBankDialog }'>
 		</div>
 		<div class='box intro'
 			ng-class='{ show: showIntroDialog }'>
@@ -210,9 +210,42 @@
 				value='Okay'
 				ng-click='hideCover()'>
 		</div>
+			<div class="box question-bank-dialog"
+				ng-class= '{ show: questionBankDialog }'
+				ng-click= 'hideCover()'>
+				<h1>Question Bank</h1>
+				<p>When the question bank is enabled, the widget can use a subset of word pairs to create a more randomized and unique experience every time the student hits play.</p>
+				<div class="enable-qb-question">
+					<label style="font-weight: bold;">Enable question bank? </label>
+					<div class="enable-qb-options"
+						ng-click="$event.stopPropagation()">
+						<span>
+							<input type="radio" ng-model="enableQuestionBank" ng-value=false> No</input>
+							<input type="radio" ng-model="enableQuestionBank" ng-value=true ng-change="questionBankVal = widget.wordPairs.length; questionBankValTemp = widget.wordPairs.length"> Yes</input>
+						</span>
+					</div>
+				</div>
+				<div>
+					<span ng-show="enableQuestionBank" >
+						<label style="font-weight: bold;">How many word pairs per play?</label>
+						<div class="num-input-wrapper"
+							ng-click="$event.stopPropagation()">
+							<input class="num-input" type="number" ng-model="questionBankValTemp" ng-change="validateQuestionBankVal()" step="1">
+							<span> out of {{widget.wordPairs.length}} </span>
+						</div>
+					</span>
+				</div>
+				<button class="dialog-close-button" ng-disabled="questionBankValTemp < 1 || questionBankValTemp > widget.wordPairs.length" ng-click="questionBankDialog = false">Confirm</button>
+			</div>
 		<div class='arrow_box'
 			ng-show='!widget.wordPairs.length && step'>
 			<span>Click here to add your first pair</span>
 		</div>
+		<!-- YOUR PREREQUISITES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
+
+		<!-- MAIN CREATOR SCRIPT -->
+		<script src="creator.js"></script>
 	</body>
 </html>

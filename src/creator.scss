@@ -76,6 +76,9 @@ body {
 }
 
 #header {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 	position: relative;
 	top: 0px;
 	left: 0px;
@@ -86,6 +89,47 @@ body {
 	z-index: 100;
 
 	border-bottom: solid 10px #3393e3;
+
+	.qb-button {
+		margin-left: auto;
+		margin-right: 10px;
+		padding: 0.75em 1em;
+
+		color: #fff;
+		background-color: #1ABC9C;
+		border: 1px solid #1ABC9C;
+		border-radius: 5px;
+
+		font-family: "CorbelBold", sans-serif;
+		font-size: 0.9em;
+
+		&:hover {
+			background-color: #127e69;
+			border: 1px solid #127e69;
+			color: #ffffff;
+			cursor: pointer;
+		}
+
+		&:disabled {
+			background-color: #ccc;
+			border: 1px solid #ccc;
+			color: #ffffff;
+			cursor: not-allowed;
+		}
+
+		&.gray-out:not(:disabled) {
+			background-color: #ccc;
+			border: 1px solid #ccc;
+			color: #000;
+
+			&:hover {
+				background-color: #938f8f;
+				border: 1px solid #938f8f;
+				cursor: pointer;
+			}
+
+		}
+	}
 
 	.bottom {
 		position:absolute;
@@ -98,43 +142,44 @@ body {
 
 	.logo {
 		display: block;
-		background: url(assets/materialogo.png) no-repeat;
 		width: 60px;
-		height: 50px;
-		float: left;
-		margin-left: 17px;
-		margin-top: 2px;
+		height: 29px;
+		margin-left: 1em;
+
+		background: url(assets/materia-logo.svg) no-repeat;
 	}
 
 	h1 {
-		margin-left: 8px;
-		font-family: 'Lato', serif;
-		font-weight: 300;
-		font-size: 24px !important;
-		vertical-align: middle;
-		margin-top: 3px;
-		float: left;
-		cursor: pointer;
+		position: relative;
+		z-index: 10;
+
 		max-width: 512px;
+
+		margin: 0.25em 0.25em 0.25em 0.5em;
+		
 		overflow:hidden;
 		white-space: nowrap;
 		background:#333;
-		z-index: 10;
-		position: relative;
+
+		font-weight: 300;
+		font-size: 24px;
+
+		cursor: pointer;
 	}
 
 	div.link {
-		float: left;
-		cursor: pointer;
+		display: inline-block;
+		z-index: 99;
+
 		margin: 5px;
 		margin-top: 5px;
 		padding: 10px;
-		display: inline-block;
-		vertical-align: baseline;
-		z-index: 99;
+		
 		font-size: 12px;
 		color: #ccc;
 		text-decoration: underline;
+
+		cursor: pointer;
 	}
 }
 
@@ -322,7 +367,8 @@ body {
 
 				.play-btn:before {
 					position: absolute;
-					left: 9px;
+					top: -2px;
+					left: 8px;
 
 				}
 			}
@@ -585,6 +631,112 @@ body {
 	margin-top: -63px;
 }
 
+
+.question-bank-dialog {
+	position: fixed;
+	height: 380px;
+	width: 400px;
+	padding: 1em;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-direction: column;
+	gap: 1em;
+	margin: 15px;
+
+	border-radius: 5px;
+
+	p {
+		font-size: 0.9em;
+		margin: 0.5em 1em;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 0.5em;
+	}
+
+	input {
+		margin-top: 0;
+		padding: 0;
+		width: unset;
+		background: #ffffff;
+		color: #000;
+		font-size: 17px;
+		text-align: center;
+		border: none;
+		vertical-align: unset;
+		font-family: 'Lato';
+	}
+
+	.num-input-wrapper {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		align-items: center;
+
+		.num-input {
+			width: 3em;
+			outline: 1px solid #000000;
+			margin: 2px 5px 0 0;
+		}
+	}
+
+	.enable-qb-question {
+
+		margin-top: 15px;
+		margin-bottom: 15px;
+
+		.enable-qb-options {
+			display: flex;
+			justify-content: center;
+		}
+	}
+
+	.qb-warning {
+		font-size: 14px;
+		margin: 0;
+		text-align: center;
+	}
+
+	.dialog-close-button {
+		position: absolute;
+		bottom: 2em;
+		
+		height: 30px;
+		width: 80px;
+
+		margin-top: 10px;
+		margin-bottom: 5px;
+
+		color: #fff;
+		background-color: #3393e3;
+		border: none;
+		border-radius: 5px;
+
+		font-size: 15px;
+		font-family: "CorbelBold", sans-serif;
+
+		&:hover {
+			background-color: #61ac86;
+			color: #ffffff;
+			cursor: pointer;
+		}
+
+		&:disabled {
+			background-color: #ccc;
+			border: 1px solid #a1a0a0;
+			color: #ffffff;
+			cursor: not-allowed;
+		}
+	}
+
+}
+
 @keyframes pounce {
 	0% {
 		margin-left: 150px;
@@ -596,4 +748,3 @@ body {
 		margin-left: 150px;
 	}
 }
-

@@ -1,6 +1,6 @@
-Matching = angular.module 'matching'
+angular.module 'matching'
 
-Matching.directive 'ngAudioControls', ->
+.directive 'ngAudioControls', ->
 	restrict: 'EA'
 	scope:
 		audioSource: '@audioSource'
@@ -43,3 +43,4 @@ Matching.directive 'ngAudioControls', ->
 				$scope.currentTime = $scope.audio.currentTime
 				$scope.$apply()
 	]
+angular.bootstrap(document, ['matching'])

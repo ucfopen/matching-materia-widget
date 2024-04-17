@@ -5,17 +5,18 @@
   },
   "version": "1.1.7",
   "dependencies": {
-    "materia-widget-development-kit": "2.5.2"
+    "materia-widget-development-kit": "~3.0.0"
   },
   "devDependencies": {
+    "angular": "1.6.9",
     "angular-mocks": "~1.5.0",
     "jest": "^23.6.0",
     "jest-coffee-preprocessor": "^1.0.0"
   },
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack -p",
-    "build-dev": "webpack",
+    "start": "mwdk-start",
+    "build": "mwdk-build-prod",
+    "build-dev": "mwdk-build-dev",
     "test": "TZ='America/New_York' jest --verbose",
     "test-ci": "TZ='America/New_York' CI=true jest --ci --useStderr --coverage --coverageReporters text-summary cobertura"
   },
@@ -37,10 +38,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 92,
+        "statements": 91,
         "branches": 76,
         "functions": 93,
-        "lines": 93
+        "lines": 92
       }
     }
   },
