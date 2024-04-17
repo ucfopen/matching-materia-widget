@@ -234,8 +234,8 @@ describe('Matching Creator Controller', function(){
 		//angular's $sce does some weird un/wrapping, usually it would handle this
 		var url = $scope.audioUrl('audioId').$$unwrapTrustedValue();
 
-		expect(Materia.CreatorCore.getMediaUrl).toHaveBeenCalledWith('audioId.mp3');
-		expect(url).toBe('http://mock-url/audioId.mp3');
+		expect(Materia.CreatorCore.getMediaUrl).toHaveBeenCalledWith('audioId');
+		expect(url).toBe('http://mock-url/audioId');
 	});
 
 	it('should import questions without assets', function(){
