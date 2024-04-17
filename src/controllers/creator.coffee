@@ -8,7 +8,7 @@ angular.module 'matching', ['ngAnimate']
 		wordPairs : []
 		uniqueIds : []
 
-	$scope.acceptedMediaTypes = ['mp3']
+	$scope.acceptedMediaTypes = ['audio']
 	audioRef = []
 	$scope.questionBankDialog = false
 	$scope.enableQuestionBank = false
@@ -100,7 +100,7 @@ angular.module 'matching', ['ngAnimate']
 
 	$scope.audioUrl = (assetId) ->
 		# use $sce.trustAsResourceUrl to avoid interpolation error
-		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId + ".mp3")
+		$sce.trustAsResourceUrl Materia.CreatorCore.getMediaUrl(assetId)
 
 	$scope.validateQuestionBankVal = ->
 		if ($scope.questionBankValTemp >= 1 && $scope.questionBankValTemp <= $scope.widget.wordPairs.length)
