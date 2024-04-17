@@ -86,6 +86,10 @@ Object {
       "name": "null",
     },
   ],
+  "options": Object {
+    "enableQuestionBank": false,
+    "questionBankVal": 1,
+  },
 }
 `;
 
@@ -119,6 +123,10 @@ Object {
       "name": "null",
     },
   ],
+  "options": Object {
+    "enableQuestionBank": false,
+    "questionBankVal": 1,
+  },
 }
 `;
 
