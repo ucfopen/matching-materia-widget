@@ -1,6 +1,6 @@
-Matching = angular.module 'matching'
+angular.module 'matching'
 
-Matching.directive 'focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
+.directive 'focusMe', ['$timeout', '$parse', ($timeout, $parse) ->
 	link: (scope, element, attrs) ->
 		model = $parse(attrs.focusMe)
 		scope.$watch model, (value) ->

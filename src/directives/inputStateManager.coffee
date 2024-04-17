@@ -1,6 +1,6 @@
-Matching = angular.module 'matching'
+angular.module 'matching'
 # Directive that watches question/answer inputs and manages error states
-Matching.directive 'inputStateManager', () ->
+.directive 'inputStateManager', () ->
 	restrict: 'A',
 	link: ($scope, $element, $attrs) ->
 		$scope.FOCUS = "focus"

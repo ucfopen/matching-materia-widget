@@ -11,14 +11,8 @@
 		<!-- REQUIRED MATERIA JAVASCRIPT -->
 		<script src="materia.creatorcore.js"></script>
 
-		<!-- YOUR PREREQUISITES -->
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
-
-		<!-- MAIN CREATOR SCRIPT -->
-		<script src="creator.js"></script>
 	</head>
-	<body ng-app='matching' ng-controller="matchingCreatorCtrl">
+	<body ng-controller="matchingCreatorCtrl">
 		<div id='modal'></div>
 		<div id='header'>
 			<div class='logo'></div>
@@ -246,5 +240,11 @@
 			ng-show='!widget.wordPairs.length && step'>
 			<span>Click here to add your first pair</span>
 		</div>
+		<!-- YOUR PREREQUISITES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-animate.min.js"></script>
+
+		<!-- MAIN CREATOR SCRIPT -->
+		<script src="creator.js"></script>
 	</body>
 </html>
