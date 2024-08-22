@@ -128,13 +128,19 @@ angular.module 'matching', ['ngAnimate']
 		assets
 
 	_buildSaveData = ->
+		
+		# validate question bank value in case the word pair count has changed since the dialog was last opened
+		if $scope.questionBankVal > $scope.widget.wordPairs.length then $scope.questionBankVal = $scope.questionBankValTemp = $scope.widget.wordPairs.length
+
 		_qset.items = []
-		_qset.options = {enableQuestionBank: $scope.enableQuestionBank, questionBankVal: $scope.questionBankVal}
 		_qset.items[0] =
 			name: "null"
 			items: []
+		_qset.options =
+			enableQuestionBank: $scope.enableQuestionBank
+			questionBankVal: $scope.questionBankVal
+	
 		wordPairs = $scope.widget.wordPairs
-
 		return false if not wordPairs.length
 
 		toRemove = []
