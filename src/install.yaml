@@ -10,6 +10,7 @@ general:
   is_qset_encrypted: Yes
   is_answer_encrypted: Yes
   is_storage_enabled: No
+  is_generable: True
   api_version: 2
 files:
   creator: creator.html
@@ -39,3 +40,8 @@ meta_data:
     or definition.
   accessibility_keyboard: Full
   accessibility_reader: Full
+  generation_prompt: >
+    Each item in the inner items array represents a matching pair. The text in the questions property represents one half of the pair,
+    and the text in the answers property represents the other half. Every item representing a matched pair contains an assets property,
+    which should always contain an array with 3 index positions: the first two should always be the integer 0, and the third should be a string
+    containing a random integer. 

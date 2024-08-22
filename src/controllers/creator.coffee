@@ -52,9 +52,9 @@ angular.module 'matching', ['ngAnimate']
 			for item in _items
 				$scope.addWordPair(item.questions[0].text, item.answers[0].text, _checkAssets(item), item.id)
 
-	materiaCallbacks.onSaveClicked = ->
+	materiaCallbacks.onSaveClicked = (mode) ->
 		# don't allow empty sets to be saved.
-		if _buildSaveData()
+		if _buildSaveData() or mode is 'history'
 			Materia.CreatorCore.save $scope.widget.title, _qset
 		else
 			$scope.showErrorDialog = true
