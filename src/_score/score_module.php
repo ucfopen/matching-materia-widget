@@ -21,43 +21,68 @@ class Score_Modules_Matching extends Score_Module
 		}
 	}
 
+	// compares two string answers by sanitizing them first
+	public function clean_compare($source, $target)
+	{
+		$source = preg_replace(self::VALID_CHARS, '', $source);
+		$target = preg_replace(self::VALID_CHARS, '', $target);
+
+		if ( ! $this->is_case_sensitive)
+		{
+			// we dont care about case, so just convert all to upper
+			$source = strtoupper($source);
+			$target = strtoupper($target);
+		}
+
+		$source = trim($source);
+		$target = trim($target);
+
+		return $source == $target;
+	}
+
 	public function check_answer($log)
 	{
 		if (isset($this->questions[$log->item_id]))
 		{
 			$question = $this->questions[$log->item_id];
+			$possibleAnswers = [];
 
 			if($log->value != '')
 			{
 				// answer is an audio asset & id
 				$givenAnswer = $log->value;
 				$expectedAnswer = $question->assets[2];
+				$possibleAnswers[] = $expectedAnswer;
+
+				// if another question contains duplicate question text (left side), the answer for that pair should also be valid
+				foreach ($this->questions as $id => $q)
+				{
+					if ($id != $log->item_id && $this->clean_compare($q->questions[0]['text'], $question->questions[0]['text']))
+					{
+						$possibleAnswers[] = $q->assets[2];
+					}
+				}
 			}
 			else
 			{
 				// answer is a text answer
 				$givenAnswer = $log->text;
 				$expectedAnswer = $question->answers[0]['text'];
+				$possibleAnswers[] = $expectedAnswer;
+
+				// if another question contains duplicate question text (left side), the answer for that pair should also be valid
+				foreach ($this->questions as $id => $q)
+				{
+					if ($id != $log->item_id && $this->clean_compare($q->questions[0]['text'], $question->questions[0]['text']))
+					{
+						$possibleAnswers[] = $q->answers[0]['text'];
+					}
+				}
 			}
 
-			$givenAnswer = preg_replace(self::VALID_CHARS, '', $givenAnswer);
-			$expectedAnswer = preg_replace(self::VALID_CHARS, '', $expectedAnswer);
-
-			if ( ! $this->is_case_sensitive)
+			foreach ($possibleAnswers as $answer)
 			{
-				// we dont care about case, so just convert all to upper
-				$givenAnswer = strtoupper($givenAnswer);
-				$expectedAnswer = strtoupper($expectedAnswer);
-			}
-
-			// trim whitespace
-			$givenAnswer = trim($givenAnswer);
-			$expectedAnswer = trim($expectedAnswer);
-
-			// check answer
-			if ($givenAnswer == $expectedAnswer)
-			{
-				return 100;
+				if ($this->clean_compare($answer, $givenAnswer)) return 100;
 			}
 		}
 
