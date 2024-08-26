@@ -29,7 +29,12 @@ angular.module 'matching', ['ngAnimate']
 	$scope.addWordPair = (q=null, a=null, media=[0,0], id='') ->
 		$scope.widget.wordPairs.push {question:q, answer:a, media:media, id:id}
 
-	$scope.removeWordPair = (index) -> $scope.widget.wordPairs.splice(index, 1)
+	$scope.removeWordPair = (index) ->
+		# Update question bank value if it's out of bounds once the word pair is removed
+		if($scope.questionBankVal > $scope.widget.wordPairs.length)
+			$scope.questionBankVal = $scope.questionBankValTemp = $scope.widget.wordPairs.length
+
+		$scope.widget.wordPairs.splice(index, 1)
 
 	$scope.removeAudio = (index, which) -> $scope.widget.wordPairs[index].media.splice(which, 1, 0)
 
