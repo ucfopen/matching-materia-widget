@@ -2,6 +2,10 @@ angular.module('matching', [])
 .controller 'matchingPlayerCtrl', ['$scope', '$timeout', '$sce', ($scope, $timeout, $sce) ->
 	materiaCallbacks = {}
 	$scope.title = ''
+	$scope.maxFontSize = 25;
+	$scope.minFontSize = 15;
+	$scope.characterLimit = 100;
+	$scope.fontSize = $scope.maxFontSize;
 
 	$scope.items = []
 	$scope.pages = []
@@ -12,6 +16,7 @@ angular.module('matching', [])
 	$scope.lines = []
 	$scope.questionCircles = []
 	$scope.answerCircles = []
+
 
 	$scope.totalPages = 1
 	$scope.currentPage = 0
@@ -46,6 +51,9 @@ angular.module('matching', [])
 		$scope.qset = qset
 		$scope.title = instance.name
 
+		$scope.adjustTitleSize();
+
+
 		# Update qset items to only include the number of questions specified in the question bank. Done here since $scope.totalItems depends on it.
 		if qset.options && qset.options.enableQuestionBank
 			_shuffle qset.items[0].items
@@ -57,6 +65,7 @@ angular.module('matching', [])
 		$scope.totalPages = Math.ceil $scope.totalItems/ITEMS_PER_PAGE
 
 		document.title = instance.name + ' Materia widget'
+
 
 		# set up the pages
 		for [1..$scope.totalPages]
@@ -172,6 +181,19 @@ angular.module('matching', [])
 		if _boardElement then _boardElement.focus()
 		if direction == 'next' then _assistiveNotification 'Page incremented.'
 		else if direction == 'previous' then _assistiveNotification 'Page decremented.'
+
+	$scope.adjustTitleSize = () ->
+		length = $scope.title.length;
+		if length > 0
+			sizeReduction = ($scope.maxFontSize - $scope.minFontSize) * (length / $scope.characterLimit)
+			$scope.fontSize = Math.max($scope.minFontSize, $scope.maxFontSize - sizeReduction)
+		else
+			$scope.fontSize = 25
+
+
+
+
+
 
 
 	$scope.checkForQuestionAudio = (index) ->

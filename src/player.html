@@ -17,7 +17,7 @@
 	<body ng-controller='matchingPlayerCtrl'>
 
 		<header id="header">
-			<h1>{{ title }}</h1>
+			<h1 ng-style="{'font-size': fontSize + 'px'}">{{ title }}</h1>
 			<button id="instructions-btn" class="instructions-btn" ng-click="toggleInstructions()" aria-describedby="screenreader-instructions">Keyboard Instructions</button>
 		</header>
 
