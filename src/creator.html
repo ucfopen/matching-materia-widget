@@ -198,7 +198,9 @@
 				placeholder='My Matching widget'
 				ng-model='widget.title'
 				ng-enter='hideCover()'
-				focus-me='showTitleDialog'>
+				focus-me='showTitleDialog'
+				maxlength='100'>
+
 			<input type='submit'
 				value='Done'
 				ng-click='hideCover()'>
