@@ -20,12 +20,26 @@ const getRenderedHeight = () => {
 }
 
 const update = (qset, scoreTable) => {
-	console.log("qset is:", qset);
-	console.log("scoreTable is:", scoreTable); // should include .data array
-
 	//check if instructor hid answers
 	const showAnswers = qset && qset.options ? !qset.options.hide_correct : true;
+    const items = qset.items[0].items
+    console.log(items)
 
+    const findAudio = (text) => {
+        const foundQ = items.find((v)=>(v.questions[0].text == text))
+        const foundA = items.find((v)=>(v.answers[0].text == text))
+        if(!foundQ && !foundA) return false
+
+        if(foundQ && foundQ.questions[0].text == text) {
+            return foundQ.assets[0] != 0
+        }
+
+        if(foundA && foundA.answers[0].text == text) {
+            return foundA.assets[1] != 0
+        }
+
+        return false
+    }
 
 	// erase old cards
 	if (cardListElement) {
@@ -39,25 +53,42 @@ const update = (qset, scoreTable) => {
             const correctAnswer = showAnswers ? row.data[2] : "Hidden"; 
             const isCorrect = row.score === 100;
 
+            const qIsAudio = findAudio(termText);
+            const answerIsAudio = findAudio(userResponse);
+            const correctIsAudio = showAnswers ? findAudio(correctAnswer) : false;
+
             const clone = template.content.cloneNode(true);
             
             const rowContainer = clone.querySelector('.match-row');
+
             const termPill = clone.querySelector('.term-pill');
             const userPill = clone.querySelector('.user-pill');
-            const iconBadge = clone.querySelector('.icon-badge');
-        
-
-            const correctionContainer = clone.querySelector('.correction-container');
             const correctPill = clone.querySelector('.correct-pill');
-            if (row.has_audio){ 
+
+            const iconBadge = clone.querySelector('.icon-badge');
+            const correctionContainer = clone.querySelector('.correction-container');
+
+            if (qIsAudio){ 
                 termPill.innerHTML = `<span class="audio-indicator" aria-hidden="true"></span> ${termText || "Term"}`;
             } else { 
                 termPill.innerHTML = `${termText || "Term"}`;
             }
-            userPill.textContent = userResponse || "No Match";
-            correctPill.textContent = correctAnswer;
 
-            
+            if (answerIsAudio){ 
+                userPill.innerHTML = `<span class="audio-indicator" aria-hidden="true"></span> ${userResponse || "No Match"}`;
+            } else { 
+                userPill.innerHTML = `${userResponse || "No Match"}`;
+            }
+
+            if (correctIsAudio){ 
+                correctPill.innerHTML = `<span class="audio-indicator" aria-hidden="true"></span> ${correctAnswer || "Term"}`;
+            } else { 
+                correctPill.innerHTML = `${correctAnswer}`;
+            }
+
+            // userPill.textContent = userResponse || "No Match";
+            // correctPill.textContent = correctAnswer;
+
             if (isCorrect) {
                 rowContainer.classList.add('state-correct');
                 iconBadge.textContent = '✓';

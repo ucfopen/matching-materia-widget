@@ -45,9 +45,9 @@ describe('Matching Creator Controller', function(){
 
 		// load the required code
 		angular.mock.module('matching')
-		require('../modules/matching.coffee')
+		require('../modules/matching.js')
 		angular.module('ngAnimate', [])
-		require('./creator.coffee')
+		require('./creator.js')
 
 		// mock scope
 		$scope = {

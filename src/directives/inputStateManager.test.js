@@ -13,8 +13,8 @@ describe('inputStateManager Directive', function() {
 
 		// load the required code
 		angular.mock.module('matching')
-		require('../modules/matching.coffee')
-		require('./inputStateManager.coffee')
+		require('../modules/matching.js')
+		require('./inputStateManager.js')
 
 		// initialize the angualr controller
 		inject(function(_$compile_, _$controller_, _$timeout_, _$rootScope_){

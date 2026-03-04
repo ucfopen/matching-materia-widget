@@ -66,9 +66,9 @@ describe('Matching Player Controller', function(){
 
 		// load the required code
 		angular.mock.module('matching')
-		require('../modules/matching.coffee')
+		require('../modules/matching.js')
 		// angular.module('ngAnimate', [])
-		require('./player.coffee')
+		require('./player.js')
 
 		// mock scope
 		$scope = {

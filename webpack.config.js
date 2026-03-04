@@ -9,19 +9,19 @@ const copy = widgetWebpack.getDefaultCopyList()
 const entries = {
 	'creator': [
 			path.join(srcPath, 'creator.html'),
-			path.join(srcPath, 'modules', 'matching.coffee'),
-			path.join(srcPath, 'controllers', 'creator.coffee'),
-			path.join(srcPath, 'directives', 'focusMe.coffee'),
-			path.join(srcPath, 'directives', 'ngEnter.coffee'),
-			path.join(srcPath, 'directives', 'inputStateManager.coffee'),
-			path.join(srcPath, 'directives', 'audioControls.coffee'),
+			path.join(srcPath, 'modules', 'matching.js'),
+			path.join(srcPath, 'controllers', 'creator.js'),
+			path.join(srcPath, 'directives', 'focusMe.js'),
+			path.join(srcPath, 'directives', 'ngEnter.js'),
+			path.join(srcPath, 'directives', 'inputStateManager.js'),
+			path.join(srcPath, 'directives', 'audioControls.js'),
 			path.join(srcPath, 'creator.scss'),
 	],
 	'player': [
 			path.join(srcPath, 'player.html'),
-			path.join(srcPath, 'modules', 'matching.coffee'),
-			path.join(srcPath, 'controllers', 'player.coffee'),
-			path.join(srcPath, 'directives', 'audioControls.coffee'),
+			path.join(srcPath, 'modules', 'matching.js'),
+			path.join(srcPath, 'controllers', 'player.js'),
+			path.join(srcPath, 'directives', 'audioControls.js'),
 			path.join(srcPath, 'player.scss'),
 	],
 	'scorescreen': [
@@ -32,7 +32,7 @@ const entries = {
 
 	'audioControls': [
 			path.join(srcPath, 'audioControls.html'),
-			path.join(srcPath, 'directives', 'audioControls.coffee'),
+			path.join(srcPath, 'directives', 'audioControls.js'),
 			path.join(srcPath, 'audioControls.scss'),
 	]
 }

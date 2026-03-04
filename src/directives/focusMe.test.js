@@ -11,8 +11,8 @@ describe('focusMe Directive', function(){
 
 		// load the required code
 		angular.mock.module('matching')
-		require('../modules/matching.coffee')
-		require('./focusMe.coffee')
+		require('../modules/matching.js')
+		require('./focusMe.js')
 
 		// initialize the angualr controller
 		inject(function(_$compile_, _$controller_, _$timeout_, _$rootScope_){

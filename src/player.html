@@ -36,18 +36,21 @@
 			aria-label="Game board."
 			role="application"
 			tabindex="0">
+
+			<div role="presentation">
 			<ul class="column column1">
 				<li class="word"
+					id="{{'q'+($index)+'/'+currentPage}}"
 					tabindex="0"
 					role="term"
 					aria-label="{{'Question: ' + ($index+1) + ' of ' + pages[currentPage].questions.length + ': ' + question.text + ', ' + (isInMatch(question) ? 'Matched with: ' + getMatchWith(question) : 'Unmatched.') + (checkForQuestionAudio($index) ? ' This question has an audio clue.' : '')}}"
+					title="{{question.text}}"
 					ng-repeat="question in pages[currentPage].questions"
 					ng-keyup="handleBoardKeypress($event, question)"
 					ng-click="selectQuestion(question)"
 					ng-mouseover="drawPrelineToLeft(question)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{'matched' : isInMatch(question)}">
-
 					<div class="word-text">
 						<span class="text-wrapper"
 							ng-class="{'long': (question.text.length > 17)}">
@@ -86,9 +89,10 @@
 					</div>
 				</li>
 			</ul>
+			</div>
 
 			<div class="column svg-column">
-				<svg id="holder" style="height:450px">
+				<svg id="holder">
 
 					<line ng-repeat="line in lines[currentPage]"
 						class="linePlaced"
@@ -144,11 +148,14 @@
 				</svg>
 			</div>
 
+			<div role="presentation">
 			<ul class="column column2">
 				<li class="word"
+					id="{{'a'+($index)+'/'+currentPage}}"
 					tabindex="0"
 					role="definition"
 					aria-label="{{'Answer. ' + ($index+1) + ' of ' + pages[currentPage].answers.length + ': ' + answer.text + ', ' + (isInMatch(answer) ? 'Matched with: ' + getMatchWith(answer) : 'Unmatched.') + (checkForAnswerAudio($index) ? ' This answer has an audio clue.' : '')}}"
+					title="{{answer.text}}"
 					ng-repeat="answer in pages[currentPage].answers"
 					ng-click="selectAnswer(answer)"
 					ng-keyup="handleBoardKeypress($event, answer)"
@@ -158,6 +165,7 @@
 					<span class='clickable'></span>
 					<div class="word-text">
 						<span class="text-wrapper"
+							ng-if="!checkForAnswerAudio($index)"
 							ng-class="{'long': (answer.text.length > 17)}">
 							{{checkForAnswerAudio($index) ? "" : answer.text}}
 						</span>
@@ -166,12 +174,13 @@
 							data-icon="&#xe000;"
 							aria-hidden="true">
 						</span>
+						<div ng-audio-controls
+							audio-source="{{answer.asset}}"
+							ng-if="checkForAnswerAudio($index)">
+						</div>
 					</div>
 
-					<div ng-audio-controls
-						audio-source="{{answer.asset}}"
-						ng-if="checkForAnswerAudio($index)">
-					</div>
+					
 
 					<div class="wrap">
 						<div class="popup"
@@ -187,6 +196,7 @@
 					</div>
 				</li>
 			</ul>
+			</div>
 		</section>
 
 		<footer ng-class="{'onTop': pageAnimate}">
