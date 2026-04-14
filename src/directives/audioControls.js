@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/main/docs/suggestions.md
- */
 angular.module('matching')
 
 .directive('ngAudioControls', () => ({
@@ -28,8 +23,8 @@ angular.module('matching')
         }
 
         $scope.play = function() {
-            if ($scope.audio.paused) { return $scope.audio.play();
-            } else { return $scope.audio.pause(); }
+            if ($scope.audio.paused) { $scope.audio.play();
+            } else { $scope.audio.pause(); }
         };
 
         $scope.toMinutes = function(time) {
@@ -42,20 +37,20 @@ angular.module('matching')
         $scope.preChangeTime = () => $scope.selectingNewTime = true;
         $scope.changeTime = function() {
             $scope.selectingNewTime = false;
-            return $scope.audio.currentTime = $scope.currentTime;
+            $scope.audio.currentTime = $scope.currentTime;
         };
 
         // should only occur once, when the file is done loading
         $scope.audio.ondurationchange = function() {
             $scope.currentTime = 0;
             $scope.duration = $scope.audio.duration;
-            return $scope.$apply();
+            $scope.$apply();
         };
 
         return $scope.audio.ontimeupdate = function() {
             if (!$scope.selectingNewTime) {
                 $scope.currentTime = $scope.audio.currentTime;
-                return $scope.$apply();
+                $scope.$apply();
             }
         };
     }

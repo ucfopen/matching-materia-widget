@@ -299,7 +299,8 @@ html, body {
 		&.column1 {
 			padding-top: 2px;
 			width: 220px;
-			justify-self: end;
+			position: absolute;
+			right: 0;
 		}
 		&.column2 {
 			padding-top: 2px;
@@ -339,16 +340,16 @@ html, body {
 						}
 					}
 					&.hollows {
-						stroke: #1ABC9C;
+						stroke: #1ABC9C44;
 						stroke-width: 2;
-						fill: none;
-						opacity: 0.2;
+						fill: #2f3944;
+						// opacity: 0.2;
 					}
 					&.hollows-hover {
-						opacity: 0.5;
+						stroke: #1ABC9Caa;
 					}
 					&.hollows-selected {
-						opacity: 1;
+						stroke: #1ABC9C;
 					}
 				} //end circle
 
@@ -820,6 +821,14 @@ footer {
 	}
 }
 
+.presgrid {
+	position: relative;
+}
+
+.answerCircle {
+	transform: translate(-20px, 0px);
+}
+
 @media only screen
 and (min-device-width : 768px)
 and (max-device-width : 1024px) {
@@ -882,6 +891,10 @@ and (-webkit-min-device-pixel-ratio: 2){
 		.column {
 			gap: 16px;
 		}
+	}
+
+	.answerCircle {
+		transform: translate(-10px, 0px);
 	}
 
 	.gameboard

@@ -1,11 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
- * DS205: Consider reworking code to avoid use of IIFEs
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/main/docs/suggestions.md
- */
 angular.module('matching', ['ngAnimate'])
 .controller('matchingCreatorCtrl', ['$scope', '$sce', function($scope, $sce) {
 	const _qset = {};
@@ -41,7 +33,7 @@ angular.module('matching', ['ngAnimate'])
 	$scope.addWordPair = function(q=null, a=null, media, id) {
 		if (media == null) { media = [0,0]; }
 		if (id == null) { id = ''; }
-		return $scope.widget.wordPairs.push({question:q, answer:a, media, id});
+		$scope.widget.wordPairs.push({question:q, answer:a, media, id});
 	};
 
 	$scope.removeWordPair = function(index) {
@@ -50,7 +42,7 @@ angular.module('matching', ['ngAnimate'])
 			$scope.questionBankVal = ($scope.questionBankValTemp = $scope.widget.wordPairs.length);
 		}
 
-		return $scope.widget.wordPairs.splice(index, 1);
+		$scope.widget.wordPairs.splice(index, 1);
 	};
 
 	$scope.removeAudio = (index, which) => $scope.widget.wordPairs[index].media.splice(which, 1, 0);
@@ -70,7 +62,7 @@ angular.module('matching', ['ngAnimate'])
 		return $scope.$apply(function() {
 			$scope.widget.title = title;
 			$scope.widget.wordPairs = [];
-			return Array.from(_items).map((item) =>
+			Array.from(_items).map((item) =>
 				$scope.addWordPair(item.questions[0].text, item.answers[0].text, _checkAssets(item), item.id));
 		});
 	};
@@ -78,11 +70,11 @@ angular.module('matching', ['ngAnimate'])
 	materiaCallbacks.onSaveClicked = function(mode) {
 		// don't allow empty sets to be saved.
 		if (_buildSaveData() || (mode === 'history')) {
-			return Materia.CreatorCore.save($scope.widget.title, _qset);
+			Materia.CreatorCore.save($scope.widget.title, _qset);
 		} else {
 			$scope.showErrorDialog = true;
 			$scope.$apply();
-			return Materia.CreatorCore.cancelSave('Widget not ready to save.');
+			Materia.CreatorCore.cancelSave('Widget not ready to save.');
 		}
 	};
 
@@ -106,12 +98,12 @@ angular.module('matching', ['ngAnimate'])
 	$scope.beginMediaImport = function(index, which) {
 		Materia.CreatorCore.showMediaImporter($scope.acceptedMediaTypes);
 		audioRef[0] = index;
-		return audioRef[1] = which;
+		audioRef[1] = which;
 	};
 
 	materiaCallbacks.onMediaImportComplete = function(media) {
 		$scope.widget.wordPairs[audioRef[0]].media.splice(audioRef[1], 1, media[0].id);
-		return $scope.$apply(() => true);
+		$scope.$apply(() => true);
 	};
 
 	$scope.checkMedia = function(index, which) {
@@ -123,12 +115,12 @@ angular.module('matching', ['ngAnimate'])
 	$scope.setTitle = function() {
 		$scope.widget.title = $scope.introTitle || $scope.widget.title;
 		$scope.step = 1;
-		return $scope.hideCover();
+		$scope.hideCover();
 	};
 
 	$scope.hideCover = function() {
 		$scope.showTitleDialog = ($scope.showIntroDialog = ($scope.showErrorDialog = ($scope.questionBankDialog = false)));
-		return $scope.questionBankValTemp = $scope.questionBankVal;
+		$scope.questionBankValTemp = $scope.questionBankVal;
 	};
 
 	$scope.audioUrl = assetId => // use $sce.trustAsResourceUrl to avoid interpolation error
@@ -136,7 +128,7 @@ angular.module('matching', ['ngAnimate'])
 
 	$scope.validateQuestionBankVal = function() {
 		if (($scope.questionBankValTemp >= 1) && ($scope.questionBankValTemp <= $scope.widget.wordPairs.length)) {
-			return $scope.questionBankVal = $scope.questionBankValTemp;
+			$scope.questionBankVal = $scope.questionBankValTemp;
 		}
 	};
 
@@ -204,13 +196,13 @@ angular.module('matching', ['ngAnimate'])
 			if not pair.answer?
 				pair.answer = ''
 			*/
-
 			// checks if there are wordpairs with audio that don't have a description
 			// if any exist the description placeholder is set to Audio
 			if ((pair.media[0] !== 0) && ((pair.question === null) || (pair.question === ''))) {
 				pair.question = 'Audio';
 			}
 			if ((pair.media[1] !== 0) && ((pair.answer === null) || (pair.answer === ''))) {
+
 				pair.answer = 'Audio';
 			}
 
@@ -247,6 +239,6 @@ angular.module('matching', ['ngAnimate'])
         assets: [questionMediaId, answerMediaId, answerAudioId]
     });
 
-	return Materia.CreatorCore.start(materiaCallbacks);
+	Materia.CreatorCore.start(materiaCallbacks);
 }
 ]);
