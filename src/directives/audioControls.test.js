@@ -13,8 +13,8 @@ describe('audioControls Directive', function(){
 	var element
 
 	beforeAll(() => {
-		require('../modules/matching.coffee')
-		require('./audioControls.coffee')
+		require('../modules/matching.js')
+		require('./audioControls.js')
 	})
 
 	beforeEach(() => {
@@ -149,4 +149,3 @@ describe('audioControls Directive', function(){
 		expect($scope.toMinutes(time)).toBe('4:00');
 	});
 });
-
