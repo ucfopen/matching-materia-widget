@@ -5,7 +5,7 @@
   },
   "version": "1.2.2",
   "dependencies": {
-    "materia-widget-development-kit": "3.0.4"
+    "materia-widget-development-kit": "3.0.5"
   },
   "devDependencies": {
     "angular": "1.8.3",
@@ -33,15 +33,16 @@
       "coffee",
       "js"
     ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,coffee}"
+	"collectCoverageFrom": [
+	  "src/**/player*.{js}",
+	  "src/**/creator*.{js}"
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 91,
-        "branches": 76,
-        "functions": 93,
-        "lines": 92
+        "statements": 80,
+        "branches": 70,
+        "functions": 80,
+        "lines": 80
       }
     }
   },

@@ -51,7 +51,11 @@ angular.module('matching', [])
 	// called when the height of the words are changed,
 	// rescales the SVG holder element to the size of the button columns
 	const _rescaleSVG = (skipApply) => {
-		document.getElementById("holder").style.height = `calc(${window.getComputedStyle(document.getElementsByClassName("column1").item(0)).height} + ${16}px)`
+		const holderEl = document.getElementById("holder");
+		const columnEl = document.getElementsByClassName("column1").item(0);
+		if (holderEl && columnEl) {
+			holderEl.style.height = `calc(${window.getComputedStyle(columnEl).height} + ${16}px)`
+		}
 		if(!skipApply)
 			$scope.$apply();
 	}
@@ -230,7 +234,8 @@ angular.module('matching', [])
 				if (!($scope.currentPage >= ($scope.totalPages - 1))) { $scope.currentPage++; }
 			}
 
-			document.getElementById("holder").style.opacity = 0
+			const holderEl = document.getElementById("holder");
+			if (holderEl) { holderEl.style.opacity = 0; }
 		}
 
 		, ANIMATION_DURATION/3);
@@ -238,7 +243,8 @@ angular.module('matching', [])
 		$timeout(() => {
 			$scope.pageAnimate = false
 			_rescaleSVG()
-			document.getElementById("holder").style.opacity = 1
+			const holderEl = document.getElementById("holder");
+			if (holderEl) { holderEl.style.opacity = 1; }
 		}
 		, ANIMATION_DURATION*1.05);
 

@@ -268,9 +268,13 @@ html, body {
 	z-index  : 20;
 	position : absolute;
 	top      : $header_height;
+	left     : 0;
+	right    : 0;
 	width    : 100%;
+	max-width: 720px;
 	height   : max(calc(100% - 103px), 445px);
 	transition : all 600ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+	margin-inline : auto;
 
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -70,7 +70,7 @@ angular.module('matching', ['ngAnimate'])
 	materiaCallbacks.onSaveClicked = function(mode) {
 		// don't allow empty sets to be saved.
 		if (_buildSaveData() || (mode === 'history')) {
-			Materia.CreatorCore.save($scope.widget.title, _qset);
+			return Materia.CreatorCore.save($scope.widget.title, _qset);
 		} else {
 			$scope.showErrorDialog = true;
 			$scope.$apply();
