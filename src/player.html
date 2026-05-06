@@ -53,6 +53,7 @@
 					ng-class="{'matched' : isInMatch(question)}">
 					<div class="word-text">
 						<span class="text-wrapper"
+							ng-if="!checkForQuestionAudio($index)"
 							ng-class="{'long': (question.text.length > 17)}">
 							{{checkForQuestionAudio($index) ? "" : question.text}}
 						</span>
@@ -61,11 +62,12 @@
 							data-icon="&#xe000;"
 							aria-hidden="true">
 						</span>
-					</div>
-
-					<div ng-audio-controls
-						audio-source="{{question.asset}}"
-						ng-if="checkForQuestionAudio($index)">
+						<div
+							class="audio-wrapper" 
+							ng-audio-controls
+							audio-source="{{question.asset}}"
+							ng-if="checkForQuestionAudio($index)">
+						</div>
 					</div>
 
 					<div class="wrap">
@@ -176,7 +178,9 @@
 							data-icon="&#xe000;"
 							aria-hidden="true">
 						</span>
-						<div ng-audio-controls
+						<div
+							class="audio-wrapper" 
+							ng-audio-controls
 							audio-source="{{answer.asset}}"
 							ng-if="checkForAnswerAudio($index)">
 						</div>
