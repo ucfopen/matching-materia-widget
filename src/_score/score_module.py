@@ -1,4 +1,5 @@
 import re
+
 from scoring.module import ScoreModule
 
 VALID_CHARS = r'[^\w!@#$%^&*?=\-+<>,\.;:"\'\(\) \t|]'
@@ -21,10 +22,10 @@ class Matching(ScoreModule):
             )
 
             for q in self.questions:
-                if (log.item_id != q.item_id and
-                    self.clean_compare(question["questions"][0]["text"],
-                                       q.data["questions"][0]["text"])):
-                    possible_answers.append(q.data["qssets"][2])
+                if log.item_id != q.item_id and self.clean_compare(
+                    question["questions"][0]["text"], q.data["questions"][0]["text"]
+                ):
+                    possible_answers.append(q.data["assets"][2])
 
         else:
             given_answer = log.text
@@ -32,9 +33,9 @@ class Matching(ScoreModule):
             possible_answers.append(expected_answer)
 
             for q in self.questions:
-                if (log.item_id != q.item_id and
-                    self.clean_compare(question["questions"][0]["text"],
-                                       q.data["questions"][0]["text"])):
+                if log.item_id != q.item_id and self.clean_compare(
+                    question["questions"][0]["text"], q.data["questions"][0]["text"]
+                ):
                     possible_answers.append(q.data["answers"][0]["text"])
 
         for answer in possible_answers:

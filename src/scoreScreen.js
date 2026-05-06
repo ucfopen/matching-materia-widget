@@ -86,9 +86,6 @@ const update = (qset, scoreTable) => {
                 correctPill.innerHTML = `${correctAnswer}`;
             }
 
-            // userPill.textContent = userResponse || "No Match";
-            // correctPill.textContent = correctAnswer;
-
             if (isCorrect) {
                 rowContainer.classList.add('state-correct');
                 iconBadge.textContent = '✓';
@@ -96,7 +93,7 @@ const update = (qset, scoreTable) => {
                 correctionContainer.style.display = 'none';
             } else {
                 rowContainer.classList.add('state-incorrect');
-                iconBadge.textContent = '✕';
+                iconBadge.innerHTML = '&#10005;';
                 
                 if (showAnswers) {
                     correctionContainer.style.display = 'flex';
