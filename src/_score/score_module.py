@@ -14,7 +14,9 @@ class Matching(ScoreModule):
         answer = question["answers"][0]["text"]
         possible_answers = []
 
-        if log.value != "":
+        # this was previously only checking for empty string values
+        # ideally we want to avoid anything falsy, maybe we reverse this if/else?
+        if log.value:
             given_answer = log.value
             expected_answer = question["assets"][2]
             possible_answers.append(
