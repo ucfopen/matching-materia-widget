@@ -265,7 +265,7 @@ html, body {
 }
 
 .gameboard {
-	z-index  : 20;
+	z-index  : 1;
 	position : absolute;
 	top      : $header_height;
 	left     : 0;
@@ -368,7 +368,6 @@ html, body {
 		}
 
 		.word {
-			z-index       : 0;
 			text-align    : center;
 			font-size     : 25px;
 			width         : 255px;
@@ -396,7 +395,6 @@ html, body {
 			}
 			.word-text {
 				cursor           : pointer;
-				z-index          : -3;
 				position         : relative;
 				background-color : #1ABC9C;
 				// margin-top       : 10px;

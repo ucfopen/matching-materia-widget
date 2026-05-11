@@ -69,7 +69,6 @@
 							ng-if="checkForQuestionAudio($index)">
 						</div>
 					</div>
-
 					<div class="wrap">
 						<div class="popup"
 							ng-hide="checkForQuestionAudio($index)"
@@ -80,13 +79,6 @@
 							<div class="popup-arrow"
 								ng-class="{'left': (question.text.length > 61)}">
 							</div>
-						</div>
-					</div>
-
-					<div class="wrap">
-						<div class="popup" ng-class="{'shown': (question.text.length > 61)}">
-							<div class="popup-text left">{{question.text}}</div>
-							<div class="popup-arrow" ng-class="{'left': (question.text.length > 61)}"></div>
 						</div>
 					</div>
 				</li>
@@ -166,7 +158,6 @@
 					ng-mouseover="drawPrelineToRight(answer)"
 					ng-mouseleave="unapplyHoverSelections()"
 					ng-class="{matched : isInMatch(answer)}">
-					<span class='clickable'></span>
 					<div class="word-text">
 						<span class="text-wrapper"
 							ng-if="!checkForAnswerAudio($index)"
@@ -185,9 +176,6 @@
 							ng-if="checkForAnswerAudio($index)">
 						</div>
 					</div>
-
-					
-
 					<div class="wrap">
 						<div class="popup"
 							ng-hide="checkForAnswerAudio($index)"
