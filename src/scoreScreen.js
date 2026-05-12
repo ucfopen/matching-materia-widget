@@ -23,7 +23,6 @@ const update = (qset, scoreTable) => {
 	//check if instructor hid answers
 	const showAnswers = qset && qset.options ? !qset.options.hide_correct : true;
     const items = qset.items[0].items
-    console.log(items)
 
     const findAudio = (text) => {
         const foundQ = items.find((v)=>(v.questions[0].text == text))
