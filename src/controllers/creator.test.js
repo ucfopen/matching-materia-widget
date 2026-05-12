@@ -44,10 +44,10 @@ describe('Matching Creator Controller', function(){
 		qset = widgetInfo.qset;
 
 		// load the required code
-		angular.mock.module('matching')
-		require('../modules/matching.coffee')
+		// stub ngAnimate before loading creator.js which declares the matching module with it as a dependency
 		angular.module('ngAnimate', [])
-		require('./creator.coffee')
+		require('./creator.js')
+		angular.mock.module('matching')
 
 		// mock scope
 		$scope = {

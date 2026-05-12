@@ -1,53 +1,59 @@
 <!doctype html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="materia.scorecore.js"></script>
-
         <link rel="stylesheet" type="text/css" href="scorescreen.css" />
         <title>Matching Score Screen</title>
     </head>
-
     <body>
         <section id="mainContainer" class="container">
-            <p id="message"></p>
-            <h1 id="responses" class="headings">Your Guesses:</h1>
-            <table id="table" aria-hidden="true">
-                <thead>
-                    <tr id="theadRow">
-                        <td></td>
-                        <td>The Question</td>
-                        <td>Your Response</td>
-                        <td>Correct Answer</td>
+            <h1 id="responses" class="headings">Review Your Answers Below</h1>
+            
+            <ul id="score-card-list">
+            </ul>
+        </section>
 
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                    <!--dynamically allocate these rows from the -->
-                    <!-- <tr id="row1"> -->
-                    <!--   <td></td> -->
-                    <!-- </tr> -->
-                </tbody>
-            </table>
-
+        <section id="scoreTableContainer" class="container" style="display:none;">
             <table id="screenReader" class="screenReader" role="table" aria-live="polite">
                 <thead>
                     <tr>
-                        <th>Question Score</th>
-                        <th>Category</th>
+                        <th>Question</th>
                         <th>Your Response</th>
                         <th>Correct Answer</th>
                     </tr>
                 </thead>
-                <tbody id="screenReaderTbody">
-                    <!--dynamically allocate these rows and cells-->
-                </tbody>
+                <tbody id="screenReaderTbody"></tbody>
             </table>
         </section>
+
+        <template id="card-template">
+            <li class="match-row">
+                
+                <div class="interaction-container">
+                    
+                    <div class="pill term-pill">
+                        <span class="audio-indicator" aria-hidden="true">🔊</span>
+                        Term Text
+                    </div>
+
+                    <div class="connector">
+                        <div class="line"></div>
+                        <div class="icon-badge"></div>
+                    </div>
+
+                    <div class="pill user-pill">User Answer</div>
+                </div>
+
+                <div class="correction-container">
+                    <span class="correction-label">Correct answer:</span>
+                    <div class="pill correct-pill">Correct Answer Text</div>
+                </div>
+            </li>
+        </template>
+
         <script src="scorescreen.js"></script>
     </body>
-
 </html>

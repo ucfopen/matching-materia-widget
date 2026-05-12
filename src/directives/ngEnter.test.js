@@ -12,8 +12,8 @@ describe('ngEnter Directive', function(){
 
 		// load the required code
 		angular.mock.module('matching')
-		require('../modules/matching.coffee')
-		require('./ngEnter.coffee')
+		require('../modules/matching.js')
+		require('./ngEnter.js')
 
 		// initialize the angualr controller
 		inject(function(_$compile_, _$controller_, _$timeout_, _$rootScope_){
